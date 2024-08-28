@@ -11,7 +11,7 @@ const { file } = Astro.props;
 ---
 <a
     class="border rounded-lg py-2 px-3  flex flex-row gap-3 items-center cursor-pointer hover:bg-muted"
-    href={file.isDirectory ? (Astro.params.path ? ("/" + Astro.params.path  + "/" + file.name) : ("/" + file.name)) : ''}
+    href={file.isDirectory ? (Astro.params.path ? ("/files/" + Astro.params.path  + "/" + file.name) : ("/files/" + file.name)) : ''}
 >
     <img src={file.iconPath} class="w-6 h-6"/>
     <!-- <Folder className="w-6 h-6"/> -->

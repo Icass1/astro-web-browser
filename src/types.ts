@@ -6,3 +6,9 @@ export interface FileStats {
     iconPath: string,
     shared: boolean,
 }
+
+export interface UserAttributres {
+
+    id: string
+    name: string
+}

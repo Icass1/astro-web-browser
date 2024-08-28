@@ -41,14 +41,14 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ className }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setThemeState("theme-light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setThemeState("dark")}>
-          Dark
+        <DropdownMenuItem>
+          <Button onClick={() => setThemeState("theme-light")} variant='ghost' className="hover:bg-muted w-full">Light</Button>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Button onClick={() => setThemeState("system")} variant='ghost'>System</Button>
+          <Button onClick={() => setThemeState("dark")} variant='ghost' className="hover:bg-muted w-full">Dark</Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Button onClick={() => setThemeState("system")} variant='ghost' className="hover:bg-muted w-full">System</Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
