@@ -1,0 +1,67 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+
+import Details from '@/components/FileViews/Details.astro';
+
+import {ScrollArea} from '@/components/ui/scroll-area'
+
+import {getFileIcon, getFolderIcon} from '@/lib/getIcons'
+  
+import fs from 'fs/promises';
+import path from 'path';
+import type { FileStats } from '@/types';
+// Ensure the component runs at runtime
+export const prerender = false;
+
+// Define the directory you want to list
+const directoryPath = path.join("/home/icass", Astro.params.path || ""); // replace 'your-directory' with the path
+
+// Read the directory
+let directoryListing: FileStats[] | undefined = undefined;
+try {
+    const files: string[]  = (await fs.readdir(directoryPath)).slice(0,100);
+
+    // Iterate over the files and get stats for each
+    directoryListing = await Promise.all(
+        files.map(async (file): Promise<FileStats> => {
+            const filePath = path.join(directoryPath, file);
+            const stats = await fs.stat(filePath);
+
+            // console.log(file, stats.isDirectory(), getFileIcon(file))
+
+            // Return file details
+            return {
+                name: file,
+                size: stats.size.toString(), // File size in bytes
+                modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
+                isDirectory: stats.isDirectory(),
+                iconPath: stats.isDirectory() ?  getFolderIcon(file) : getFileIcon(file),
+                shared: false,
+            };
+        })
+    );
+
+} catch (error) {
+  console.error('Error reading directory:', error);
+}
+
+---
+<Layout title={Astro.params.path ? Astro.params.path.split("/")[Astro.params.path.split("/").length -1] :  "FileBrowser"}>
+    <div class="h-full p-4 flex flex-col">
+        <Header/>
+        <ScrollArea className="h-full relative" client:visible>
+            {directoryListing ? 
+                <div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]  gap-2">
+                   {
+                        directoryListing.map((file) => (
+                            <Details file={file}/> 
+                        ))
+                    }
+                </div>
+                :
+                <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit">Directory not found</div>
+            }
+        </ScrollArea>
+    </div>
+</Layout>

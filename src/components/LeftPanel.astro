@@ -1,0 +1,37 @@
+---
+import ModeToggle from "./ModeToggle";
+import { Button } from "./ui/button";
+import { Folder, File, Image, Video, MoreVertical, Share2, Edit, Trash, Download, ChevronRight } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+
+const recentDirectories = ["/", "/Documents", "/Pictures"]
+const pinnedDirectories = ["/Documents/Work/", "/Pictures/Vacation/"]
+---
+
+
+
+<div class="">
+    <ModeToggle className='m-2' client:visible></ModeToggle>
+
+    <div class="p-2 flex flex-col items-start">
+        <h3 class="font-semibold mb-2">Recent Directories</h3>
+        {recentDirectories.map(directory => (
+            <a class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")} href={directory}>
+                <Folder className="w-4 h-4 mr-2"/>
+                {directory}
+            </a>
+        ))}
+
+    </div>
+    <div class="p-2">
+        <h3 class="font-semibold mb-2">Pinned Directories</h3>
+        {pinnedDirectories.map(directory => (
+
+            <a class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")} href={directory}>
+                <Folder className="w-4 h-4 mr-2"/>
+                {directory}
+            </a>
+        ))}
+    </div>
+</div>

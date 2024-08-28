@@ -1,0 +1,24 @@
+---
+import { Button } from "./ui/button";
+import {ChevronRight} from 'lucide-react'
+---
+
+<div class="mb-4" data-id="21">
+    <h2 class="text-2xl font-bold mb-2" data-id="22">File Browser</h2>
+
+    <div class="flex items-center space-x-2 w-full" data-id="23">
+        <div class="flex flex-row items-center w-full overflow-x-hidden">
+            <a class="font-semibold hover:bg-muted px-2 rounded py-1" href="/">Home</a>
+            {Astro.params.path?.split("/").map((dir, index, path)=> (
+                <div class="w-7 h-7">
+                    <ChevronRight className='w-7 h-7'/>     
+                </div>
+                <a class="font-semibold hover:bg-muted rounded px-2 py-1" href={"/" + path.slice(0, index+1).join("/")}>{dir}</a>
+            ))}
+        </div>
+
+        <!-- <Input value={"asdf"} readOnly className="flex-grow" /> -->
+        <Button variant="outline">Upload</Button>
+        <Button variant="outline">New Folder</Button>
+    </div>
+</div>

@@ -1,4 +1,9 @@
 ---
+import LeftPanel from '@/components/LeftPanel.astro';
+
+import '@/styles/globals.css'
+import { ViewTransitions } from 'astro:transitions';
+
 interface Props {
 	title: string;
 }
@@ -6,8 +11,28 @@ interface Props {
 const { title } = Astro.props;
 ---
 
+<!-- <script is:inline>
+	const getThemePreference = () => {
+		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+			return localStorage.getItem('theme');
+		}
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	};
+	const isDark = getThemePreference() === 'dark';
+	console.log("isDark", isDark, getThemePreference())
+	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+ 
+	if (typeof localStorage !== 'undefined') {
+		const observer = new MutationObserver(() => {
+			const isDark = document.documentElement.classList.contains('dark');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		});
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+	}
+</script> -->
+
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
@@ -15,9 +40,16 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<ViewTransitions>
 	</head>
 	<body>
-		<slot />
+		<main class="grid grid-cols-[200px_2px_1fr]">
+			<LeftPanel></LeftPanel>
+			<div class="bg-border mt-[20px] h-[calc(100%_-_40px)] rounded-full"></div>
+			<div class="overflow-hidden">
+				<slot />
+			</div>
+		</main>
 	</body>
 </html>
 <style is:global>
@@ -31,10 +63,15 @@ const { title } = Astro.props;
 			rgb(var(--accent-light)) 30%,
 			white 60%
 		);
+		color-scheme: dark white;
 	}
 	html {
 		font-family: system-ui, sans-serif;
 		background: #13151a;
+	}
+	main, body, html {
+		height: 100%;
+		width: 100%;
 	}
 	code {
 		font-family:

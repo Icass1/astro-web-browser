@@ -1,0 +1,87 @@
+---
+import Layout from './src/layouts/Layout.astro';
+import ModeToggle from "@/components/ModeToggle"
+
+
+import { Folder, File, Image, Video, MoreVertical, Share2, Edit, Trash, Download, ChevronRight } from "lucide-react"
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import Header from '@/components/Header.astro';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+const mockFileSystem = {
+  "/": [
+    { id: 1, name: "Documents", type: "folder", size: "-", modified: "2023-05-15", shared: false },
+    { id: 2, name: "Pictures", type: "folder", size: "-", modified: "2023-05-14", shared: false },
+    { id: 3, name: "notes.txt", type: "text", size: "10 KB", modified: "2023-05-12", shared: false },
+  ],
+  "/Documents/": [
+    { id: 4, name: "Work", type: "folder", size: "-", modified: "2023-05-13", shared: false },
+    { id: 5, name: "Personal", type: "folder", size: "-", modified: "2023-05-12", shared: false },
+    { id: 6, name: "report.pdf", type: "file", size: "1.2 MB", modified: "2023-05-11", shared: true },
+  ],
+  "/Pictures/": [
+    { id: 7, name: "Vacation", type: "folder", size: "-", modified: "2023-05-10", shared: false },
+    { id: 8, name: "image.jpg", type: "image", size: "2.5 MB", modified: "2023-05-09", shared: true },
+  ],
+  "/Documents/Work/": [
+    { id: 9, name: "project.docx", type: "file", size: "500 KB", modified: "2023-05-08", shared: false },
+  ],
+  "/Pictures/Vacation/": [
+    { id: 10, name: "beach.jpg", type: "image", size: "3.5 MB", modified: "2023-05-07", shared: false },
+    { id: 11, name: "mountains.jpg", type: "image", size: "4.2 MB", modified: "2023-05-06", shared: false },
+  ],
+}
+---
+
+
+<Layout title="RockhHstingFiles">
+	<div class="flex-1 p-4" data-id="20">
+		<Header/>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+			{mockFileSystem["/"]?.map((file) => (
+				<div
+				  class="border rounded-lg p-4 flex items-start space-x-4 cursor-pointer hover:bg-muted"
+				>
+				  <Folder className="w-6 h-6"></Folder>
+				  <div class="flex-grow">
+					<h3 class="font-semibold">{file.name}</h3>
+					<p class="text-sm text-muted-foreground">
+						{file.size  == '-' ? ' ': file.size + ' • '}
+					  	{file.modified}
+					</p>
+					{file.shared && <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />}
+				  </div>
+				  <DropdownMenu client:visible>
+					<DropdownMenuTrigger asChild>
+					  <Button variant="ghost" className="h-8 w-8 p-0">
+						<MoreVertical className="h-4 w-4" />
+					  </Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+					  <DropdownMenuItem>
+						<Edit className="mr-2 h-4 w-4" />
+						<span>Rename</span>
+					  </DropdownMenuItem>
+					  <DropdownMenuItem>
+						<Download className="mr-2 h-4 w-4" />
+						<span>Download</span>
+					  </DropdownMenuItem>
+					  <DropdownMenuItem>
+						<Share2 className="mr-2 h-4 w-4" />
+						<span>Share</span>
+					  </DropdownMenuItem>
+					  <DropdownMenuSeparator />
+					  <DropdownMenuItem>
+						<Trash className="mr-2 h-4 w-4" />
+						<span>Delete</span>
+					  </DropdownMenuItem>
+					</DropdownMenuContent>
+				  </DropdownMenu>
+				</div>
+			  ))}
+		</div>
+	</div>
+</Layout>
