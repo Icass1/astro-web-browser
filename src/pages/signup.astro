@@ -3,8 +3,38 @@ import Layout from "@/layouts/Layout.astro";
 
 export const prerender = false
 
+
+// Disable signup feature
+return new Response(
+	JSON.stringify({
+		error: ""
+	}),
+	{
+		status: 404
+	}
+);
+
+
 ---
 <Layout title="Signup">
+	<script>
+		const errorMessageElement = document.getElementById("form-error")!;
+	
+		document.forms[0].addEventListener("submit", async (e) => {
+			e.preventDefault();
+			errorMessageElement.innerText = "";
+			const formElement = e.target as HTMLFormElement;
+			const response = await fetch(formElement.action, {
+				method: formElement.method,
+				body: new FormData(formElement)
+			});
+			if (response.ok) {
+				window.location.href = "/";
+			} else {
+				errorMessageElement.innerText = (await response.json()).error;
+			}
+		});
+	</script>
 
     <h1>Create an account</h1>
     <form method="post" action="/api/signup">
@@ -18,23 +48,3 @@ export const prerender = false
     <a href="/login">Sign in</a>
 </Layout>
 
-
-
-<script>
-	const errorMessageElement = document.getElementById("form-error")!;
-
-	document.forms[0].addEventListener("submit", async (e) => {
-		e.preventDefault();
-		errorMessageElement.innerText = "";
-		const formElement = e.target as HTMLFormElement;
-		const response = await fetch(formElement.action, {
-			method: formElement.method,
-			body: new FormData(formElement)
-		});
-		if (response.ok) {
-			window.location.href = "/";
-		} else {
-			errorMessageElement.innerText = (await response.json()).error;
-		}
-	});
-</script>

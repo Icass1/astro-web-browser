@@ -2,21 +2,31 @@
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 
-import Details from '@/components/FileViews/Details.astro';
+// import Details from '@/components/FileViews/Details.astro';
+import Details from '@/components/FileViews/Details';
+
+import MainView from '@/components/MainView'
+
+import '@/styles/globals.css'
 
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {getDirectory} from '@/lib/getDirectory'
 
 import path from 'path';
+import type { FileStats } from '@/types';
 
 // Ensure the component runs at runtime
-export const prerender = false;
+// export const prerender = false;
 
-console.log(Astro.locals.user)
+if (!Astro.locals.user) {
+    return Astro.redirect("/login")
+}
+
+
 
 
 // Define the directory you want to list
-const directoryPath = path.join("/home/icass", Astro.params.path || ""); // replace 'your-directory' with the path
+const directoryPath = path.join(Astro.locals.user.scope, Astro.params.path || ""); // replace 'your-directory' with the path
 
 // Read the directory
 let directoryListing = undefined;
@@ -30,20 +40,21 @@ try {
 
 ---
 <Layout title={Astro.params.path ? Astro.params.path.split("/")[Astro.params.path.split("/").length -1] :  "FileBrowser"}>
-    <div class="h-full p-4 flex flex-col">
+    <div class="h-full m-4 pb-8 flex flex-col">
         <Header/>
-        <ScrollArea className="h-full relative" client:visible>
-            {directoryListing ? 
-                <div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]  gap-2">
+        <!-- <DropArea client:visible/> -->
+        <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:visible/>
+
+            <!-- {directoryListing ? 
+                <div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-2 px-1">
                    {
                         directoryListing.map((file) => (
-                            <Details file={file}/> 
+                            <Details path={Astro.params.path} file={file} client:visible/> 
                         ))
                     }
                 </div>
                 :
                 <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit">Directory not found</div>
-            }
-        </ScrollArea>
+            } -->
     </div>
 </Layout>

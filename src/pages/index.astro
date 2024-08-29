@@ -1,10 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 
-console.log(Astro.locals.user)
 
-return Astro.redirect("/files");
-
+if (Astro.locals.user) {
+    return Astro.redirect("/files");
+} else {
+    return Astro.redirect("/login");
+}
 ---
 
 <Layout title='FileBrowser'>

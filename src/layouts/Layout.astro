@@ -1,5 +1,6 @@
 ---
 import LeftPanel from '@/components/LeftPanel.astro';
+import { Toaster } from '@/components/ui/sonner';
 
 import '@/styles/globals.css'
 import { ViewTransitions } from 'astro:transitions';
@@ -9,6 +10,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+
 ---
 
 <!-- <script is:inline>
@@ -50,6 +53,8 @@ const { title } = Astro.props;
 				<slot />
 			</div>
 		</main>
+		<Toaster client:idle></Toaster>
+	
 	</body>
 </html>
 <style is:global>

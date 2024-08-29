@@ -6,8 +6,13 @@ console.log("CREATE TABLE IF NOT EXISTS user")
 db.exec(`CREATE TABLE IF NOT EXISTS user (
     id TEXT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL
+    password_hash TEXT NOT NULL,
+    scope TEXT DEFAULT "/" NOT NULL
 )`);
+
+console.log("ALTER TABLE user ADD COLUMN IF ")
+// db.exec(`ALTER TABLE user ADD COLUMN IF NOT EXISTS scope TEXT DEFAULT '/'`)
+
 
 console.log("CREATE TABLE IF NOT EXISTS session")
 db.exec(`CREATE TABLE IF NOT EXISTS session (

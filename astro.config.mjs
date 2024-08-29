@@ -7,6 +7,7 @@ import db from "@astrojs/db";
 
 // https://astro.build/config
 export default defineConfig({
+  prefetch: false,
   integrations: [tailwind({
     applyBaseStyles: false
   }), react(), db()],

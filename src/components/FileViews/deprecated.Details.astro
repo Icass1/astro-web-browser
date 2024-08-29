@@ -1,7 +1,7 @@
 ---
 import type { FileStats } from '@/types';
 import FileDropdownMenu from '../DropdownMenu';
-import { Folder, Share2 } from "lucide-react"
+import { Share2 } from "lucide-react"
 
 interface Props {
     file: FileStats
@@ -24,7 +24,7 @@ const { file } = Astro.props;
     </div>
     <div class="flex flex-row items-center">
         {file.shared && <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />}
-        <FileDropdownMenu client:visible/>
+        <FileDropdownMenu client:idle/>
     </div>
 </a>
 
