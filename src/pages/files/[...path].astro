@@ -39,19 +39,6 @@ try {
 <Layout title={Astro.params.path ? Astro.params.path.split("/")[Astro.params.path.split("/").length -1] :  "FileBrowser"}>
     <div class="h-full m-4 pb-8 flex flex-col">
         <Header/>
-        <!-- <DropArea client:visible/> -->
         <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:visible/>
-
-            <!-- {directoryListing ? 
-                <div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-2 px-1">
-                   {
-                        directoryListing.map((file) => (
-                            <Details path={Astro.params.path} file={file} client:visible/> 
-                        ))
-                    }
-                </div>
-                :
-                <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit">Directory not found</div>
-            } -->
     </div>
 </Layout>

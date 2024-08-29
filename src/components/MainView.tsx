@@ -1,15 +1,19 @@
 import type { FileStats } from "@/types"
-import Details from "./FileViews/Details"
-import { useEffect, useRef, useState, type DragEvent } from 'react';
+import DetailsView from "./FileViews/DetailsView"
+import BigView from "./FileViews/BigView"
+import { useEffect, useRef, useState, type ComponentType, type DragEvent } from 'react';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
+import type { JsxElement } from "typescript";
 
 
 export default function MainView({ path, directoryListing }: { path: string, directoryListing: FileStats[] | undefined }) {
 
     const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
+
+    const [view, setView] = useState<string>("details")
 
     const onDrop = async (files: FileList) => {
 
@@ -81,27 +85,44 @@ export default function MainView({ path, directoryListing }: { path: string, dir
         return <div className="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit">Directory not found</div>
     }
 
+    const getGridCols = () => {
+        switch (view) {
+            case "details":
+                return "grid-cols-1"
+            case "big":
+                return "grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
+        }
+    }
+
+    const getFileView = (file: FileStats) => {
+        switch (view) {
+            case "details":
+                return <DetailsView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+            case "big":
+                return <BigView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+        }
+    }
+
     return (
-        <div
-            className="relative h-full pb-24"
+    
+        <ScrollArea
+            className={cn("relative h-full border border-solid rounded-lg", isDragging && !overDirectory ? ' border-blue-300' : 'border-background',)}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
-            <ScrollArea className="relative h-full">
-                <div
-                    className={cn("grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-2 px-1 border border-solid rounded-lg", isDragging && !overDirectory ? ' border-blue-300' : 'border-background')}
-                >
-                    {
-                        directoryListing.map((file) => (
-                            <Details setOverDirectory={setOverDirectory} key={file.name} path={path} file={file} />
-                        ))
-                    }
-                </div>
-            </ScrollArea>
-        </div>
-
+            <div
+                className={cn("grid gap-2 px-1 ", getGridCols())}
+            >
+                {
+                    directoryListing.map((file) => (
+                        getFileView(file)
+                        // <DetailsView setOverDirectory={setOverDirectory} key={file.name} path={path} file={file} />
+                    ))
+                }
+            </div>
+        </ScrollArea>
     )
 
 }
