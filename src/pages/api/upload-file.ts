@@ -22,7 +22,6 @@ export async function POST(context: APIContext): Promise<Response> {
 
         const file = formData.get("file") as File
         const filePath = formData.get("path") as string
-        const content = await file.text()
 
         const stream = file.stream()
         const reader = stream.getReader()
