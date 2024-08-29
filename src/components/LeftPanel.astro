@@ -1,12 +1,19 @@
 ---
 import ModeToggle from "./ModeToggle";
 import { Folder } from "lucide-react"
-import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils";
+
+import { buttonVariants } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+
+import { SetScope } from "./Buttons";
+import {getDiskInfoStorage} from '@/lib/getDiskInfo'
+
 
 const recentDirectories = ["/", "/Documents", "/Pictures"]
 const pinnedDirectories = ["/Documents/Work/", "/Pictures/Vacation/"]
-import { SetScope } from "./Buttons";
+
+const diskInfo = await getDiskInfoStorage("/home/icass")
 
 ---
 
@@ -16,6 +23,11 @@ import { SetScope } from "./Buttons";
     <h1 class="p-2 font-bold text-lg">Welcome, {Astro.locals.user?.username}</h1>
     <div class="w-full px-2">
         <SetScope className="w-full" scope={Astro.locals.user?.scope || "None"} client:visible/>
+    </div>
+
+    <div class='w-full p-2'>
+        <Progress value={diskInfo.used/diskInfo.totalSize*100} className='w-full h-2'/>
+        <label class="text-xs font-semibold text-muted-foreground">{Math.round(diskInfo.used)} GB used of {Math.round(diskInfo.totalSize)} GB</label>
     </div>
 
     <div class="p-2 flex flex-col items-start">
