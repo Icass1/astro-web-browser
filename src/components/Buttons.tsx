@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
 import '@/styles/globals.css'
+import { uploadFile } from "@/lib/uploadFile"
 
 
 export function NewFolder({ path }: { path: string }) {
@@ -86,21 +87,40 @@ export function NewFolder({ path }: { path: string }) {
 
 }
 
-export function Upload() {
+export function Upload({ path }: { path: string }) {
+
+    const handleUpload = () => {
+
+        const input = document.createElement("input")
+        input.type = "file"
+        input.multiple = true
+        input.click()
+
+        input.onchange = (e: Event) => {
+            console.log(e)
+            const files = e.target.files
+
+            for (let fileToUpload of files) {
+                uploadFile(path, fileToUpload)
+            }
+        }
+    }
+
     return (
         <Button
             variant="outline"
             className=" flex flex-row gap-2 hover:bg-muted "
-            onClick={() => { toast("Upload", { duration: 1000, style: { fontSize: '14px', color: '#ed4337' } }) }}
+            onClick={handleUpload}
         >
             <UploadIcon className="w-4 h-4" />
             <label>Upload</label>
-        </Button>
+        </Button >
     )
 }
 
 
 export function SetScope({ className = '', scope }: { className: string, scope: string }) {
+    const closeRef = useRef<HTMLButtonElement | null>(null);
 
     const handleChangeScope = (e: BaseSyntheticEvent) => {
         fetch("/api/set-scope", {
@@ -111,12 +131,12 @@ export function SetScope({ className = '', scope }: { className: string, scope: 
         }).then(response => {
             if (response.ok) {
                 toast("Scope changed")
+                closeRef.current?.click()
             } else {
                 response.json().then(data => {
                     console.log(data)
                 })
-                console.log("Error", response.statusText)
-                toast("Error")
+                toast("Error", { style: { color: '#ed4337' } })
             }
         })
     }
@@ -150,8 +170,12 @@ export function SetScope({ className = '', scope }: { className: string, scope: 
                         />
                     </div>
                 </div>
-                <DialogClose>
+
+                <DialogFooter>
                     <Button type="submit" disabled={newScope == scope} onClick={handleChangeScope}>Save changes</Button>
+                </DialogFooter>
+                <DialogClose className="hidden">
+                    <button type="submit" ref={closeRef}></button>
                 </DialogClose>
             </DialogContent>
         </Dialog>
