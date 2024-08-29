@@ -11,7 +11,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
 )`);
 
 console.log("ALTER TABLE user ADD COLUMN IF ")
-// db.exec(`ALTER TABLE user ADD COLUMN IF NOT EXISTS scope TEXT DEFAULT '/'`)
+db.exec(`ALTER TABLE user ADD COLUMN scope TEXT DEFAULT '/'`)
 
 
 console.log("CREATE TABLE IF NOT EXISTS session")

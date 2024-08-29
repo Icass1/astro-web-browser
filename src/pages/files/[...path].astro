@@ -2,18 +2,15 @@
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 
-// import Details from '@/components/FileViews/Details.astro';
-import Details from '@/components/FileViews/Details';
-
 import MainView from '@/components/MainView'
 
 import '@/styles/globals.css'
 
-import {ScrollArea} from '@/components/ui/scroll-area'
 import {getDirectory} from '@/lib/getDirectory'
 
 import path from 'path';
-import type { FileStats } from '@/types';
+
+// import {db} from '@/lib/db'
 
 // Ensure the component runs at runtime
 // export const prerender = false;
@@ -23,10 +20,10 @@ if (!Astro.locals.user) {
 }
 
 
-
-
 // Define the directory you want to list
+// const directoryPath = path.join("/home/icass", Astro.params.path || ""); // replace 'your-directory' with the path
 const directoryPath = path.join(Astro.locals.user.scope, Astro.params.path || ""); // replace 'your-directory' with the path
+
 
 // Read the directory
 let directoryListing = undefined;
