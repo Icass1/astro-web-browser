@@ -3,7 +3,7 @@ import { folderExtensions } from "./supportedFolders";
 
 export function getFileIcon(filename: string) {
 
-    let icon;
+    let icon = '/icons/default_file.svg';
 
 
     for (let k of fileExtensions.supported) {
@@ -38,11 +38,11 @@ export function getFileIcon(filename: string) {
         if (k?.languages) {
             for (let ext of k?.languages) {
                 if (k.filename) {
-                    if (filename === ext) {
-                        // console.log(k.icon)
-                        icon = "/icons/file_type_" + k.icon + ".svg"
-                        // return "/icons/file_type_" + k.icon + ".svg"
-                    }
+                    // if (filename === ext) {
+                    //     // console.log(k.icon)
+                    //     icon = "/icons/file_type_" + k.icon + ".svg"
+                    //     // return "/icons/file_type_" + k.icon + ".svg"
+                    // }
                 } else if (filename.endsWith("." + ext.defaultExtension)) {
                     // console.log(k.icon)
                     icon = "/icons/file_type_" + k.icon + ".svg"
@@ -66,4 +66,6 @@ export function getFolderIcon(filename: string) {
             }
         }
     }
+    return '/icons/default_folder.svg';
+
 }

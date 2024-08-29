@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import LoginForm from '@/components/auth/LoginForm'
+
+if (Astro.locals.user) {
+	return Astro.redirect("/");
+}
+---
+
+
+<Layout title="Login">
+    <h1>Sign in</h1>
+    <form method="post" action="/api/login">
+        <label for="username">Username</label>
+        <input name="username" id="username" class="text-foreground" /><br />
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="text-foreground" /><br />
+        <button>Continue</button>
+        <p id="form-error"></p>
+    </form>
+    <a href="/signup">Create an account</a>
+</Layout>
+
+<script>
+	const errorMessageElement = document.getElementById("form-error")!;
+
+	document.forms[0].addEventListener("submit", async (e) => {
+		e.preventDefault();
+		errorMessageElement.innerText = "";
+		const formElement = e.target as HTMLFormElement;
+		const response = await fetch(formElement.action, {
+			method: formElement.method,
+			body: new FormData(formElement)
+		});
+		if (response.ok) {
+			window.location.href = "/";
+		} else {
+			errorMessageElement.innerText = (await response.json()).error;
+		}
+	});
+</script>
