@@ -3,34 +3,48 @@ import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 
 import MainView from '@/components/MainView'
+import FileContentView from '@/components/ContentFile/FileContentView'
 
 import '@/styles/globals.css'
 
 import {getDirectory} from '@/lib/getDirectory'
+// @ts-ignore  
+import { isText } from 'istextorbinary'
+
+import {fileTypeFromBuffer} from 'file-type'
 
 import path from 'path';
-
-// import {db} from '@/lib/db'
-
-// Ensure the component runs at runtime
-// export const prerender = false;
+import fs from 'fs/promises';
 
 if (!Astro.locals.user) {
     return Astro.redirect("/login")
 }
 
-
 // Define the directory you want to list
 // const directoryPath = path.join("/home/icass", Astro.params.path || ""); // replace 'your-directory' with the path
 const directoryPath = path.join(Astro.locals.user.scope, Astro.params.path || ""); // replace 'your-directory' with the path
 
-
 // Read the directory
 let directoryListing = undefined;
+
+let isDirectory = true;
+let fileContent
+let isTextFile;
+let stat;
+let fileType;
 try {
+    stat = await fs.stat(directoryPath)
 
-    directoryListing = await getDirectory(directoryPath)
+    isDirectory = stat.isDirectory()
+    if (isDirectory) {
+        directoryListing = await getDirectory(directoryPath)
+    } else {
+        fileContent = await fs.readFile(directoryPath)
+        isTextFile = isText(directoryPath, fileContent, () => {}) as unknown
+        fileType = await fileTypeFromBuffer(fileContent)
+        console.log(fileType, isTextFile)
 
+    }
 } catch (error) {
   console.error('Error reading directory:', error);
 }
@@ -39,6 +53,18 @@ try {
 <Layout title={Astro.params.path ? Astro.params.path.split("/")[Astro.params.path.split("/").length -1] :  "FileBrowser"}>
     <div class="h-full m-4 pb-8 flex flex-col">
         <Header/>
-        <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:visible/>
+        {isDirectory ?
+            <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:visible/>
+        :
+            <FileContentView 
+                path={Astro.params.path}
+                fileContent={fileContent}
+                stat={stat} 
+                isText={isTextFile as boolean}
+                fileExt={fileType?.ext}
+                fileType={fileType?.mime}
+                client:visible
+            /> 
+        }
     </div>
 </Layout>
