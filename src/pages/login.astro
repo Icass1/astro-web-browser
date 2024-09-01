@@ -1,13 +1,156 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import '@/styles/globals.css'
 
-if (Astro.locals.user) {
-	return Astro.redirect("/");
-}
+import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+
+// if (Astro.locals.user) {
+// 	return Astro.redirect("/");
+// }
+
+import { fileExtensions } from "@/lib/supportedExtensions";
+import { LogIn } from "lucide-react";
+import ModeToggle from "@/components/ModeToggle";
+
+
+
 ---
 
+<!doctype html>
+<html lang="en" class="dark">
 
-<Layout title="Login">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Astro description" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<meta name="generator" content={Astro.generator} />
+	<title>Login</title>
+	<ViewTransitions>
+</head>
+
+<body>
+	<main class="overflow-hidden h-full w-full">
+		<ModeToggle className="m-4" client:visible/>
+		<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full space-y-8 p-8 bg-background rounded-xl shadow-lg">
+			<div class="text-center">
+				<h2 class="mt-6 text-3xl font-extrabold text-foreground">Sign in to your account</h2>
+				<p class="mt-2 text-sm text-fo">
+					Or{" "}
+					<a href="/signup" class="font-medium text-primary hover:text-primary/80">
+						create a new account
+					</a>
+				</p>
+			</div>
+			<form class="mt-8 space-y-6" method="post" action="/api/login">
+				<div class="space-y-4">
+					<div>
+						<Label htmlFor="email">Username</Label>
+						<Input id="username" name="username" autoComplete="username" required className="mt-1" />
+					</div>
+					<div>
+						<Label htmlFor="password">Password</Label>
+						<div class="relative mt-1">
+							<Input id="password" name="password" type="password"
+								autoComplete="current-password" required />
+						</div>
+					</div>
+				</div>
+
+				<!-- <div class="flex items-center justify-between">
+					<div class="flex items-center">
+						<Checkbox id="remember-me" />
+						<Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+							Remember me
+						</Label>
+					</div>
+
+					<div class="text-sm">
+						<a href="#" class="font-medium text-primary hover:text-primary/80">
+							Forgot your password?
+						</a>
+					</div>
+				</div> -->
+				<p id="form-error" class='text-[#ed4337]'></p>
+
+				<Button type="submit" className="w-full flex justify-center items-center">
+					<LogIn className="w-4 h-4 mr-2" />
+					Sign in
+				</Button>
+			</form>
+		</div>
+
+
+
+		<script>
+			const errorMessageElement = document.getElementById("form-error")!;
+
+			console.log(document.forms)
+
+			document.forms[0].addEventListener("submit", async (e) => {
+				e.preventDefault();
+				errorMessageElement.innerText = "";
+				const formElement = e.target as HTMLFormElement;
+				const response = await fetch(formElement.action, {
+					method: formElement.method,
+					body: new FormData(formElement)
+				});
+				if (response.ok) {
+					window.location.href = "/";
+				} else {
+					errorMessageElement.innerText = (await response.json()).error;
+				}
+			});
+		</script>
+		</div>
+	</main>
+</body>
+
+</html>
+
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+		color-scheme: dark white;
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+	}
+	main, body, html {
+		margin: 0px;
+		height: 100%;
+		width: 100%;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>
+
+
+
+
+<!-- <Layout title="Login">
     <h1>Sign in</h1>
     <form method="post" action="/api/login">
         <label for="username">Username</label>
@@ -18,23 +161,22 @@ if (Astro.locals.user) {
         <p id="form-error"></p>
     </form>
     <a href="/signup">Create an account</a>
-</Layout>
-
-<script>
-	const errorMessageElement = document.getElementById("form-error")!;
-
-	document.forms[0].addEventListener("submit", async (e) => {
-		e.preventDefault();
-		errorMessageElement.innerText = "";
-		const formElement = e.target as HTMLFormElement;
-		const response = await fetch(formElement.action, {
-			method: formElement.method,
-			body: new FormData(formElement)
+	<script>
+		const errorMessageElement = document.getElementById("form-error")!;
+	
+		document.forms[0].addEventListener("submit", async (e) => {
+			e.preventDefault();
+			errorMessageElement.innerText = "";
+			const formElement = e.target as HTMLFormElement;
+			const response = await fetch(formElement.action, {
+				method: formElement.method,
+				body: new FormData(formElement)
+			});
+			if (response.ok) {
+				window.location.href = "/";
+			} else {
+				errorMessageElement.innerText = (await response.json()).error;
+			}
 		});
-		if (response.ok) {
-			window.location.href = "/";
-		} else {
-			errorMessageElement.innerText = (await response.json()).error;
-		}
-	});
-</script>
+	</script>
+</Layout> -->
