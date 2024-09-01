@@ -13,7 +13,7 @@ export default function MainView({ path, directoryListing }: { path: string, dir
     const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
 
-    const [view, setView] = useState<string>("details")
+    const [view, setView] = useState< "big" | "details">("big")
 
     const onDrop = async (files: FileList) => {
 

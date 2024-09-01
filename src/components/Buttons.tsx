@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRef, useState, type BaseSyntheticEvent } from "react"
+import { useRef, useState, type BaseSyntheticEvent, type ChangeEvent, type FormEvent } from "react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -96,9 +96,14 @@ export function Upload({ path }: { path: string }) {
         input.multiple = true
         input.click()
 
-        input.onchange = (e: Event) => {
+        input.onchange = (e) => {
+
+            const a = e as unknown
+            const event = a as React.ChangeEvent<HTMLInputElement>
             console.log(e)
-            const files = e.target.files
+            if (!event?.target?.files) { return }
+            const files = event.target.files
+
 
             for (let fileToUpload of files) {
                 uploadFile(path, fileToUpload)
