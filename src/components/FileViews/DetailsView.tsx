@@ -20,7 +20,7 @@ export default function DetailsView({ file, path, setOverDirectory }: { file: Fi
                     :
                     <label></label>
             }
-            <FileDropdownMenu />
+            <FileDropdownMenu file={file} path={path} />
         </BaseFile>
     )
 }

@@ -54,13 +54,10 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
 
         if (transferData) {
             const data = JSON.parse(transferData)
-            const src = data.path + "/" + data.fileName
-            const dest = path + "/" + file.name + "/" + data.fileName
-
+            const src = (path ? (path + "/") : "") + data.fileName
+            const dest = (path ? (path + "/") : "") + file.name + "/" + data.fileName
             console.log(src, "->", dest)
-
         }
-
 
         if (event.dataTransfer.files.length > 0) {
             onDrop(event.dataTransfer.files);
@@ -78,7 +75,8 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
         >
             <a
                 className={cn("border rounded-lg py-2 px-3 cursor-pointer hover:bg-muted", isDragging ? 'border-blue-500' : '', className)}
-                href={file.isDirectory ? (path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name)) : ''}
+                href={(path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name))}
+            // href={file.isDirectory ? (path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name)) : ''}
             >
                 {children}
             </a >

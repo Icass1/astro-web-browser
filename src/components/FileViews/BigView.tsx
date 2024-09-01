@@ -21,7 +21,7 @@ export default function BigView({ file, path, setOverDirectory }: { file: FileSt
             </div>
             <div className="flex flex-row items-center">
                 {file.shared && <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />}
-                <FileDropdownMenu />
+                <FileDropdownMenu file={file} path={path}/>
             </div>
         </BaseFile>
     )
