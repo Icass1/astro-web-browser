@@ -66,11 +66,14 @@ export async function POST(context: APIContext): Promise<Response> {
 	const userId = generateId(15);
 
 	try {
+		const users = db.prepare("SELECT * FROM user").all()
+
 		console.log("Inserting into user")
-		db.prepare("INSERT INTO user (id, username, password_hash) VALUES(?, ?, ?)").run(
+		db.prepare("INSERT INTO user (id, username, password_hash, admin) VALUES(?, ?, ?, ?)").run(
 			userId,
 			username,
-			passwordHash
+			passwordHash,
+			users.length == 0 ? 1 : 0
 		);
 		console.log("done")
 
