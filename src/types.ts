@@ -5,6 +5,7 @@ export interface FileStats {
     isDirectory: boolean,
     iconPath: string,
     shared: boolean,
+    mime: string
 }
 
 export interface UserAttributres {

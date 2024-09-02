@@ -1,10 +1,12 @@
 import type { FileStats } from "@/types";
 import fs from 'fs/promises';
 import path from 'path';
-import {getFileIcon, getFolderIcon} from '@/lib/getIcons'
+import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
+// @ts-ignore
+import { fileTypeFromFile } from 'file-type'
 
 
-export async  function getDirectory(directoryPath: string) {
+export async function getDirectory(directoryPath: string) {
 
     let directoryListing: FileStats[] | undefined = undefined;
 
@@ -16,7 +18,14 @@ export async  function getDirectory(directoryPath: string) {
             const filePath = path.join(directoryPath, file);
             const stats = await fs.stat(filePath);
 
-            // console.log(file, stats.isDirectory(), getFileIcon(file))
+
+            let fileType
+            
+            if (stats.isFile()) {
+                fileType = await fileTypeFromFile(filePath) || {mime: "none"}
+            } else {
+                fileType = {mime: "dir"}
+            }
 
             // Return file details
             return {
@@ -26,6 +35,7 @@ export async  function getDirectory(directoryPath: string) {
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: false,
+                mime: fileType.mime,
             };
         })
     );
