@@ -20,30 +20,30 @@ const getVideoMetadata = (videoFilePath: string): Promise<ffmpeg.FfprobeData> =>
 
 const getFirstFrameBuffer = async (videoFilePath: string): Promise<Buffer> => {
 
-    let metadata: ffmpeg.FfprobeData
+    // let metadata: ffmpeg.FfprobeData
 
-    try {
-        metadata = await getVideoMetadata(videoFilePath)
-    } catch (error) {
-    }
+    // try {
+    //     metadata = await getVideoMetadata(videoFilePath)
+    // } catch (error) {
+    // }
 
     return new Promise((resolve, reject) => {
-        let width = 300;
-        let height = 300;
+        // let width = 300;
+        // let height = 300;
 
-        if (!metadata) {
-            reject("Metadata not found")
-        }
+        // if (!metadata) {
+        //     reject("Metadata not found")
+        // }
 
-        if (metadata.streams[0].width && metadata.streams[0].height) {
-            if (metadata.streams[0].width > metadata.streams[0].height) {
-                width = Math.round(metadata.streams[0].width / metadata.streams[0].height * 300)
-                height = 300
-            } else {
-                height = Math.round(metadata.streams[0].height / metadata.streams[0].width * 300)
-                width = 300
-            }
-        }
+        // if (metadata.streams[0].width && metadata.streams[0].height) {
+        //     if (metadata.streams[0].width > metadata.streams[0].height) {
+        //         width = Math.round(metadata.streams[0].width / metadata.streams[0].height * 300)
+        //         height = 300
+        //     } else {
+        //         height = Math.round(metadata.streams[0].height / metadata.streams[0].width * 300)
+        //         width = 300
+        //     }
+        // }
 
         ffmpeg(videoFilePath)
 
@@ -51,7 +51,7 @@ const getFirstFrameBuffer = async (videoFilePath: string): Promise<Buffer> => {
                 timestamps: ['0:00'],
                 filename: 'thumbnail.png',
                 folder: '/tmp',
-                size: `${width}x${height}`,
+                // size: `${width}x${height}`,  
             })
             .on('end', async () => {
                 console.log("ffmpeg end")

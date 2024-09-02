@@ -39,7 +39,6 @@ export async function GET(context: APIContext): Promise<Response> {
                     status: 501
                 }
             );
-
         } else {
             const fileContent = await fs.readFile(directoryPath)
             const fileType = await fileTypeFromBuffer(fileContent)

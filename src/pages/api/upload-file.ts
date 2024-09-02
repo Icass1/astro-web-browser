@@ -17,6 +17,8 @@ export async function POST(context: APIContext): Promise<Response> {
     }
     try {
 
+        console.log(context.request)
+
         const formData = await context.request.formData();
 
         const file = formData.get("file") as File
@@ -41,7 +43,10 @@ export async function POST(context: APIContext): Promise<Response> {
                 status: 200
             }
         );
-    } catch {
+    } catch (error) {
+
+        console.log(error)
+
         return new Response(
             JSON.stringify({
                 error: "Unable to upload the file"
@@ -51,5 +56,4 @@ export async function POST(context: APIContext): Promise<Response> {
             }
         );
     }
-
 }

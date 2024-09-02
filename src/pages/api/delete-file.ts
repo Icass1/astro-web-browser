@@ -29,7 +29,7 @@ export async function POST(context: APIContext): Promise<Response> {
     try {
 
         if (data.isDirectory) {
-            await fs.rmdir(path.join(context.locals.user.scope, data.path))
+            await fs.rm(path.join(context.locals.user.scope, data.path), {recursive: true})
         } else {
             await fs.rm(path.join(context.locals.user.scope, data.path))
         }

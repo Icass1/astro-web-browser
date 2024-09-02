@@ -11,6 +11,7 @@ import Galery from "./FileViews/Galery";
 
 import { $viewIndex } from "./viewIndex"
 import { useStore } from '@nanostores/react';
+import { uploadFile } from "@/lib/uploadFile";
 
 
 export default function MainView({ path, directoryListing }: { path: string, directoryListing: FileStats[] | undefined }) {
@@ -24,29 +25,31 @@ export default function MainView({ path, directoryListing }: { path: string, dir
 
         for (let fileToUpload of files) {
             // Create a FormData object
-            toast(`Uploading '${fileToUpload.name}'`)
 
-            const formData = new FormData();
-            formData.append('file', fileToUpload);
-            formData.append('path', path ? (path) : (''));
+            uploadFile(path ? (path) : (''), fileToUpload)
+            // toast(`Uploading '${fileToUpload.name}'`)
 
-            try {
-                // Send the file to the server
-                const response = await fetch('/api/upload-file', {
-                    method: 'POST',
-                    body: formData,
-                });
+            // const formData = new FormData();
+            // formData.append('file', fileToUpload);
+            // formData.append('path', path ? (path) : (''));
 
-                if (!response.ok) {
-                    throw new Error(`Error uploading file: ${response.statusText}`);
-                }
+            // try {
+            //     // Send the file to the server
+            //     const response = await fetch('/api/upload-file', {
+            //         method: 'POST',
+            //         body: formData,
+            //     });
 
-                const result = await response.json();
-                console.log('File upload successful:', result);
-                toast(`'${fileToUpload.name}' uploaded succesfully`)
-            } catch (error) {
-                toast(`'${fileToUpload.name}' couldn't be uploaded`, { style: { color: '#ed4337' } })
-            }
+            //     if (!response.ok) {
+            //         throw new Error(`Error uploading file: ${response.statusText}`);
+            //     }
+
+            //     const result = await response.json();
+            //     console.log('File upload successful:', result);
+            //     toast(`'${fileToUpload.name}' uploaded succesfully`)
+            // } catch (error) {
+            //     toast(`'${fileToUpload.name}' couldn't be uploaded`, { style: { color: '#ed4337' } })
+            // }
         }
     }
 
