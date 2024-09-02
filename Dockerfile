@@ -10,7 +10,7 @@ RUN pnpm install
 
 COPY . .
 
-ENV ASTRO_DATABASE_FILE=/home/icass/astro-web-browser/production_database.db
+ENV ASTRO_DATABASE_FILE=/usr/src/app/database.db
 
 RUN pnpm run build
 
