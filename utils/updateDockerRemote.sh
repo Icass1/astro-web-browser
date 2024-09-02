@@ -1,0 +1,1 @@
+ssh -t icass@12.12.12.3 "cd /home/icass/HomeDrive/root/Programming/music-player-nextjs; sudo sh utils/updateDocker.sh"
