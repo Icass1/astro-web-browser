@@ -1,6 +1,6 @@
 import type { FileStats } from "@/types";
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 // @ts-ignore
 import { fileTypeFromFile } from 'file-type'
@@ -30,14 +30,13 @@ export async function getDirectory(directoryPath: string) {
 
     let directoryListing: FileStats[] | undefined = undefined;
 
-    const files: string[] = (await fs.readdir(directoryPath)).slice(0, 100);
+    const files: string[] = (await fs.readdir(directoryPath));
 
     // Iterate over the files and get stats for each
     directoryListing = await Promise.all(
         files.map(async (file): Promise<FileStats> => {
             const filePath = path.join(directoryPath, file);
             const stats = await fs.stat(filePath);
-
 
             let fileType
 
@@ -60,5 +59,25 @@ export async function getDirectory(directoryPath: string) {
         })
     );
 
-    return directoryListing
+    let directoriesOut = directoryListing.filter(el => el.isDirectory).sort(function (a, b) {
+        if (a.name < b.name) {
+            return -1;
+        }
+        if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+
+    let filesOut = directoryListing.filter(el => !el.isDirectory).sort(function (a, b) {
+        if (a.name < b.name) {
+            return -1;
+        }
+        if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+
+    return [...directoriesOut, ...filesOut].slice(0, 50)
 }
