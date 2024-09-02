@@ -49,7 +49,7 @@ export async function GET(context: APIContext): Promise<Response> {
             return new Response(fileContent, {
                 headers: {
                     'Content-Type': `${fileType?.mime}`, // MIME type of the file
-                    'Cache-Control': 'no-cache', // Prevent caching
+                    'Cache-Control': 'public, max-age=3600', // Prevent caching
                     'Custom-Header': 'CustomHeaderValue', // Example of a custom header
                     'Content-Disposition': 'inline'
                 },

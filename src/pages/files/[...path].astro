@@ -32,6 +32,7 @@ let fileContent
 let isTextFile;
 let stat;
 let fileType;
+
 try {
     stat = await fs.stat(directoryPath)
 
@@ -42,8 +43,10 @@ try {
         fileContent = await fs.readFile(directoryPath)
         isTextFile = isText(directoryPath, fileContent, () => {}) as unknown
         fileType = await fileTypeFromBuffer(fileContent)
-        console.log(fileType, isTextFile)
 
+        if (!isTextFile) {
+            fileContent = undefined
+        }
     }
 } catch (error) {
   console.error('Error reading directory:', error);
@@ -59,7 +62,6 @@ try {
             <FileContentView 
                 path={Astro.params.path}
                 fileContent={fileContent}
-                stat={stat} 
                 isText={isTextFile as boolean}
                 fileExt={fileType?.ext}
                 fileType={fileType?.mime}
