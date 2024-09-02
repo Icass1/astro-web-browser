@@ -19,11 +19,10 @@ export async function POST(context: APIContext): Promise<Response> {
     const data = await context.request.json()
     try {
 
-        if (data.isDirectory) { 
+        if (data.isDirectory) {
             await fs.rmdir(path.join(context.locals.user.scope, data.path))
         } else {
             await fs.rm(path.join(context.locals.user.scope, data.path))
-            
         }
 
         return new Response(
@@ -35,15 +34,24 @@ export async function POST(context: APIContext): Promise<Response> {
             }
         );
     } catch (error) {
-        console.log(error)
-        return new Response(
-            JSON.stringify({
-                error: "File already exists"
-            }),
-            {
-                status: 500
-            }
-        );
+        if (error.code == "ENOTEMPTY") {
+            return new Response(
+                JSON.stringify({
+                    error: "Directory not empty"
+                }),
+                {
+                    status: 500
+                }
+            );
+        } else {
+            return new Response(
+                JSON.stringify({
+                    error: "Error deleting file"
+                }),
+                {
+                    status: 500
+                }
+            );
+        }
     }
-
 }
