@@ -6,6 +6,26 @@ import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 import { fileTypeFromFile } from 'file-type'
 
 
+function getFileSize(size: number) {
+
+    let units = ["KB", "MB", "GB", "TB"]
+
+    let outUnitIndex = 0
+    let outSize = Math.round(size / 1000)
+
+    for (let i of Array(units.length - 1)) {
+        if (outSize > 1000) {
+            outSize = Math.round(outSize / 1000)
+            outUnitIndex++;
+        } else {
+            break;
+        }
+    }
+
+    return outSize.toString() + " " + units[outUnitIndex]
+}
+
+
 export async function getDirectory(directoryPath: string) {
 
     let directoryListing: FileStats[] | undefined = undefined;
@@ -20,17 +40,17 @@ export async function getDirectory(directoryPath: string) {
 
 
             let fileType
-            
+
             if (stats.isFile()) {
-                fileType = await fileTypeFromFile(filePath) || {mime: "none"}
+                fileType = await fileTypeFromFile(filePath) || { mime: "none" }
             } else {
-                fileType = {mime: "dir"}
+                fileType = { mime: "dir" }
             }
 
             // Return file details
             return {
                 name: file,
-                size: stats.size.toString(), // File size in bytes
+                size: getFileSize(stats.size), // File size in bytes
                 modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
