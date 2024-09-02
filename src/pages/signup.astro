@@ -1,50 +1,144 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-
-export const prerender = false
 
 
-// Disable signup feature
-return new Response(
-	JSON.stringify({
-		error: ""
-	}),
-	{
-		status: 404
-	}
-);
+import '@/styles/globals.css'
 
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"
+import ModeToggle from "@/components/ModeToggle";
+
+import { LogIn } from "lucide-react";
+
+import { db } from "@/lib/db";
+import type {SignupDB} from '@/types'
+import { ViewTransitions } from "astro:transitions";
+
+const signup = (db.prepare("SELECT signup FROM config WHERE id='1'").get() as SignupDB).signup
+
+if (signup != 1) {
+	// Disable signup feature
+	return new Response(
+		JSON.stringify({
+			error: ""
+		}),
+		{
+			status: 404
+		}
+	);
+}
 
 ---
-<Layout title="Signup">
-	<script>
-		const errorMessageElement = document.getElementById("form-error")!;
-	
-		document.forms[0].addEventListener("submit", async (e) => {
-			e.preventDefault();
-			errorMessageElement.innerText = "";
-			const formElement = e.target as HTMLFormElement;
-			const response = await fetch(formElement.action, {
-				method: formElement.method,
-				body: new FormData(formElement)
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Astro description" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+	<meta name="generator" content={Astro.generator} />
+	<title>Signup</title>
+	<ViewTransitions>
+</head>
+
+<body>
+	<main class="overflow-hidden h-full w-full">
+		<ModeToggle className="m-4" client:visible/>
+		<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full space-y-8 p-8 bg-background rounded-xl shadow-lg">
+			<div class="text-center">
+				<h2 class="mt-6 text-3xl font-extrabold text-foreground">Sign up to <label class="text-cyan-200">FileBrowser</label></h2>
+					<p class="mt-2 text-sm text-fo">
+						Or{" "}
+						<a href="/login" class="font-medium text-primary hover:text-primary/80">
+							log in
+						</a>
+						with an existing account
+					</p>
+			</div>
+			<form class="mt-8 space-y-6" method="post" action="/api/signup">
+				<div class="space-y-4">
+					<div>
+						<Label htmlFor="email">Username</Label>
+						<Input id="username" name="username" required className="mt-1" />
+					</div>
+					<div>
+						<Label htmlFor="password">Password</Label>
+						<div class="relative mt-1">
+							<Input id="password" name="password" type="password"
+								autoComplete="current-password" required />
+						</div>
+					</div>
+				</div>
+				<p id="form-error" class='text-[#ed4337]'></p>
+
+				<Button type="submit" className="w-full flex justify-center items-center">
+					<LogIn className="w-4 h-4 mr-2" />
+					Sign up
+				</Button>
+			</form>
+		</div>
+
+
+
+		<script>
+			const errorMessageElement = document.getElementById("form-error")!;
+
+			console.log(document.forms)
+
+			document.forms[0].addEventListener("submit", async (e) => {
+				e.preventDefault();
+				errorMessageElement.innerText = "";
+				const formElement = e.target as HTMLFormElement;
+				const response = await fetch(formElement.action, {
+					method: formElement.method,
+					body: new FormData(formElement)
+				});
+				if (response.ok) {
+					window.location.href = "/";
+				} else {
+					errorMessageElement.innerText = (await response.json()).error;
+				}
 			});
-			if (response.ok) {
-				window.location.href = "/";
-			} else {
-				errorMessageElement.innerText = (await response.json()).error;
-			}
-		});
-	</script>
+		</script>
+		</div>
+	</main>
+</body>
 
-    <h1>Create an account</h1>
-    <form method="post" action="/api/signup">
-        <label for="username">Username</label>
-        <input name="username" id="username" class="text-foreground" /><br />
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" class="text-foreground"/><br />
-        <button>Continue</button>
-        <p id="form-error"></p>
-    </form>
-    <a href="/login">Sign in</a>
-</Layout>
+</html>
 
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+		color-scheme: dark white;
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+	}
+	main, body, html {
+		margin: 0px;
+		height: 100%;
+		width: 100%;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>
