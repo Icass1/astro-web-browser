@@ -5,8 +5,8 @@ import {type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
 import BaseFile from "./Base";
 
-
 export default function BigView({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
+
     return (
         <BaseFile className="flex flex-row gap-3 items-center" file={file} path={path} setOverDirectory={setOverDirectory}>
             <img src={file.iconPath} className="w-6 h-6" />
