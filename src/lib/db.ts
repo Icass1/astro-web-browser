@@ -35,7 +35,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS config (
 )`);
 
 const config = db.prepare("SELECT * FROM config WHERE id='1'").get()
-if (!config)  {
+if (!config) {
     console.log("Not config found")
     db.exec("INSERT INTO config (id) VALUES(1)")
 }
