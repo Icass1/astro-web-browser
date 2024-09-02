@@ -1,7 +1,16 @@
 import type { APIContext } from "astro";
+import { promises as fs } from 'fs';
 
-import fs from 'fs/promises';
-import path from 'path';
+// import fs from 'fs/promises';
+// import path from 'path';
+import * as path from 'path'
+
+interface ErrnoException extends Error {
+    errno?: number | undefined;
+    code?: string | undefined;
+    path?: string | undefined;
+    syscall?: string | undefined;
+}
 
 export async function POST(context: APIContext): Promise<Response> {
 
@@ -33,7 +42,8 @@ export async function POST(context: APIContext): Promise<Response> {
                 status: 200
             }
         );
-    } catch (error) {
+    } catch (err) {
+        let error = err as ErrnoException
         if (error.code == "ENOTEMPTY") {
             return new Response(
                 JSON.stringify({

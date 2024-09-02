@@ -100,21 +100,17 @@ export function Upload({ path }: { path: string }) {
         input.click()
 
         input.onchange = (e) => {
-
             const a = e as unknown
             const event = a as React.ChangeEvent<HTMLInputElement>
             console.log(e)
             if (!event?.target?.files) { return }
             const files = event.target.files
-            
-            for (let index=0; index<files.length; index++) {
-                uploadFile(path, files.item(index))
 
+            for (let index = 0; index < files.length; index++) {
+                if (files.item(index)) {
+                    uploadFile(path, files.item(index) as File)
+                }
             }
-
-            // for (let fileToUpload of files) {
-            //     uploadFile(path, fileToUpload)
-            // }
         }
     }
 

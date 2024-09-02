@@ -46,6 +46,7 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
             if (response.ok) {
                 toast("File deleted")
                 closeDeleteDialogRef.current?.click()
+                // @ts-ignore
                 navigation.reload()
             } else {
                 response.json().then(data => {
@@ -57,11 +58,18 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
         })
     }
 
-    const onDrop = async (files: FileList[]) => {
-        for (let fileToUpload of files) {
-            // Create a FormData object
-            uploadFile((path ? (path + "/") : ('')) + file.name, fileToUpload)
+    const onDrop = async (files: FileList) => {
+
+
+        for (let index = 0; index < files.length; index++) {
+            if (files.item(index)) {
+                uploadFile((path ? (path + "/") : ('')) + file.name, files.item(index) as File)
+            }
         }
+        // for (let fileToUpload of files) {
+        //     // Create a FormData object
+        //     uploadFile((path ? (path + "/") : ('')) + file.name, fileToUpload)
+        // }
     }
 
     const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
@@ -102,6 +110,7 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
             const dest = (path ? (path + "/") : "") + file.name + "/" + data.fileName
             console.log(src, "->", dest)
         }
+
 
         if (event.dataTransfer.files.length > 0) {
             onDrop(event.dataTransfer.files);
