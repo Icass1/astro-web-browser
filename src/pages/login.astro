@@ -14,7 +14,7 @@ import type {SignupDB} from '@/types'
 
 const signup = (db.prepare("SELECT signup FROM config WHERE id='1'").get() as SignupDB).signup
 
-console.log(signup)
+console.log("login.astro signup", signup)
 
 ---
 

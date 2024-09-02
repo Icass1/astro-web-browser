@@ -16,6 +16,8 @@ import {fileTypeFromBuffer} from 'file-type'
 import path from 'path';
 import fs from 'fs/promises';
 
+console.log("[...path].astro Astro.locals.user", Astro.locals.user)
+
 if (!Astro.locals.user) {
     return Astro.redirect("/login")
 }
