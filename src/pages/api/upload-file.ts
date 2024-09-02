@@ -2,7 +2,6 @@ import type { APIContext } from "astro";
 
 import fs from 'fs/promises';
 import path from 'path';
-import formidable from 'formidable';
 
 export async function POST(context: APIContext): Promise<Response> {
 
@@ -22,6 +21,7 @@ export async function POST(context: APIContext): Promise<Response> {
 
         const file = formData.get("file") as File
         const filePath = formData.get("path") as string
+
 
         const stream = file.stream()
         const reader = stream.getReader()

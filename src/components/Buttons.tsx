@@ -23,7 +23,6 @@ import { useStore } from '@nanostores/react';
 import { Images, List, Table } from "lucide-react"
 
 export function NewFolder({ path }: { path: string }) {
-
     const handleNewFolder = (e: BaseSyntheticEvent) => {
         console.log("New Folder", e.target, folderName, path)
         fetch("/api/create-file", {
@@ -36,6 +35,8 @@ export function NewFolder({ path }: { path: string }) {
             if (response.ok) {
                 toast("Folder created")
                 closeRef.current?.click()
+                // @ts-ignore
+                navigation.reload()
             } else {
                 console.log("error")
                 response.json().then(data => {
@@ -47,7 +48,6 @@ export function NewFolder({ path }: { path: string }) {
     }
 
     const [folderName, setFolderName] = useState<string>("New folder");
-
     const closeRef = useRef<HTMLButtonElement | null>(null);
 
     return (
@@ -106,11 +106,15 @@ export function Upload({ path }: { path: string }) {
             console.log(e)
             if (!event?.target?.files) { return }
             const files = event.target.files
+            
+            for (let index=0; index<files.length; index++) {
+                uploadFile(path, files.item(index))
 
-
-            for (let fileToUpload of files) {
-                uploadFile(path, fileToUpload)
             }
+
+            // for (let fileToUpload of files) {
+            //     uploadFile(path, fileToUpload)
+            // }
         }
     }
 
