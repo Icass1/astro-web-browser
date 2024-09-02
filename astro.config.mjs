@@ -19,7 +19,7 @@ export default defineConfig({
     
     }),
     server: {
-        port: 8081,
+        port: 4321,
         host: true,
     },
     vite: {

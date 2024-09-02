@@ -5,11 +5,16 @@ import '@/styles/globals.css'
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
-
-import { LogIn } from "lucide-react";
 import ModeToggle from "@/components/ModeToggle";
 
+import { LogIn } from "lucide-react";
 
+import { db } from "@/lib/db";
+import type {SignupDB} from '@/types'
+
+const signup = (db.prepare("SELECT signup FROM config WHERE id='1'").get() as SignupDB).signup
+
+console.log(signup)
 
 ---
 
@@ -20,7 +25,7 @@ import ModeToggle from "@/components/ModeToggle";
 	<meta charset="UTF-8" />
 	<meta name="description" content="Astro description" />
 	<meta name="viewport" content="width=device-width" />
-	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 	<meta name="generator" content={Astro.generator} />
 	<title>Login</title>
 	<ViewTransitions>
@@ -32,12 +37,14 @@ import ModeToggle from "@/components/ModeToggle";
 		<div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full space-y-8 p-8 bg-background rounded-xl shadow-lg">
 			<div class="text-center">
 				<h2 class="mt-6 text-3xl font-extrabold text-foreground">Sign in to your account</h2>
-				<p class="mt-2 text-sm text-fo">
-					Or{" "}
-					<a href="/signup" class="font-medium text-primary hover:text-primary/80">
-						create a new account
-					</a>
-				</p>
+				{signup == 1 &&
+					<p class="mt-2 text-sm text-fo">
+						Or{" "}
+						<a href="/signup" class="font-medium text-primary hover:text-primary/80">
+							create a new account
+						</a>
+					</p>
+				}
 			</div>
 			<form class="mt-8 space-y-6" method="post" action="/api/login">
 				<div class="space-y-4">
@@ -139,37 +146,3 @@ import ModeToggle from "@/components/ModeToggle";
 			monospace;
 	}
 </style>
-
-
-
-
-<!-- <Layout title="Login">
-    <h1>Sign in</h1>
-    <form method="post" action="/api/login">
-        <label for="username">Username</label>
-        <input name="username" id="username" class="text-foreground" /><br />
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" class="text-foreground" /><br />
-        <button>Continue</button>
-        <p id="form-error"></p>
-    </form>
-    <a href="/signup">Create an account</a>
-	<script>
-		const errorMessageElement = document.getElementById("form-error")!;
-	
-		document.forms[0].addEventListener("submit", async (e) => {
-			e.preventDefault();
-			errorMessageElement.innerText = "";
-			const formElement = e.target as HTMLFormElement;
-			const response = await fetch(formElement.action, {
-				method: formElement.method,
-				body: new FormData(formElement)
-			});
-			if (response.ok) {
-				window.location.href = "/";
-			} else {
-				errorMessageElement.innerText = (await response.json()).error;
-			}
-		});
-	</script>
-</Layout> -->

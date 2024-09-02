@@ -1,6 +1,8 @@
 import { Lucia } from "lucia";
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import sqlite from "better-sqlite3";
+import type { DatabaseUser } from "./types";
+
 
 const db = sqlite("database.db");
 
@@ -20,7 +22,8 @@ export const lucia = new Lucia(adapter, {
         return {
             username: attributes.username,
             id: attributes.id,
-            scope: attributes.scope
+            scope: attributes.scope,
+            admin: attributes.admin
         };
     }
 });
@@ -28,11 +31,6 @@ export const lucia = new Lucia(adapter, {
 declare module "lucia" {
     interface Register {
         Lucia: typeof lucia;
-        DatabaseUserAttributes: DatabaseUserAttributes;
+        DatabaseUserAttributes: DatabaseUser;
     }
-}
-interface DatabaseUserAttributes {
-    id: string;
-    username: string;
-    scope: string;
 }

@@ -8,8 +8,18 @@ export interface FileStats {
     mime: string
 }
 
-export interface UserAttributres {
+export interface DatabaseUser {
+    id: string;
+    username: string;
+    password_hash: string;
+    scope: string;
+    admin: boolean;
+}
 
-    id: string
-    name: string
+export interface DatabaseConfig {
+    signup: number,
+}
+
+export interface SignupDB {
+	signup: number
 }

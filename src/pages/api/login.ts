@@ -2,7 +2,7 @@ import { lucia } from "@/auth";
 import { verify } from "@node-rs/argon2";
 import { db } from "../../lib/db";
 
-import type { DatabaseUser } from "../../lib/db";
+import type {DatabaseUser} from '@/types'
 import type { APIContext } from "astro";
 
 export async function POST(context: APIContext): Promise<Response> {

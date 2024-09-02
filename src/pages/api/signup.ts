@@ -3,10 +3,28 @@ import { generateId } from "lucia";
 import { hash } from "@node-rs/argon2";
 import { db } from "@/lib/db";
 import { SqliteError } from "better-sqlite3";
+import type { SignupDB } from '@/types'
 
 import type { APIContext } from "astro";
 
 export async function POST(context: APIContext): Promise<Response> {
+
+	const signup = db.prepare("SELECT signup FROM config WHERE id='1'").get() as SignupDB
+
+	console.log(signup)
+
+	if (signup.signup != 1) {
+		// Disable signup feature
+		return new Response(
+			JSON.stringify({
+				error: "Signup disabled"
+			}),
+			{
+				status: 404
+			}
+		);
+	}
+
 	const formData = await context.request.formData();
 	const username = formData.get("username");
 	// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _

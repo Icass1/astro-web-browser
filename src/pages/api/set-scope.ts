@@ -3,13 +3,13 @@ import { db } from "../../lib/db";
 import type { APIContext } from "astro";
 
 export async function POST(context: APIContext): Promise<Response> {
-    if (!context.locals.user) {
+    if (context.locals.user?.admin !== true) {
         return new Response(
             JSON.stringify({
-                error: "User not logged in"
+                error: "User is not admin"
             }),
             {
-                status: 401
+                status: 403
             }
         );
     }
