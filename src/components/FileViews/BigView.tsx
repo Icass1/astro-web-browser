@@ -15,13 +15,12 @@ export default function BigView({ file, path, setOverDirectory }: { file: FileSt
             >
                 <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
                 <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">
-                    {file.isDirectory ? ' ' : file.size + ' B • '}
+                    {file.isDirectory ? ' ' : file.size + ' • '}
                     {file.modified}
                 </p>
             </div>
             <div className="flex flex-row items-center">
                 {file.shared && <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />}
-                <FileDropdownMenu file={file} path={path}/>
             </div>
         </BaseFile>
     )

@@ -1,5 +1,4 @@
 import type { FileStats } from "@/types";
-import FileDropdownMenu from "../DropdownMenu";
 import { Share2 } from "lucide-react";
 import { type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
@@ -11,25 +10,38 @@ export default function Galery({ file, path, setOverDirectory }: { file: FileSta
 
     const filePreview = () => {
         if (file.mime.startsWith("image")) {
-            return <img className="top-1/2 relative -translate-y-1/2" src={"/file/" + path + "/" + file.name} />
+            return <img className="top-1/2 relative -translate-y-1/2 select-none" src={"/file/" + path + "/" + file.name} />
         } else if (file.mime.startsWith("video")) {
-            return <img className="top-1/2 relative -translate-y-1/2" src={"/preview/" + path + "/" + file.name} />
+            return <img className="top-1/2 relative -translate-y-1/2 select-none" src={"/preview/" + path + "/" + file.name} />
         } else {
-            return <img src={file.iconPath} />
+            return <img
+                className="select-none"
+                src={file.iconPath}
+            />
         }
     }
 
     return (
-        <BaseFile className="shadow p-0 flex flex-col gap-2" file={file} path={path} setOverDirectory={setOverDirectory}>
-            <div className="relative aspect-square overflow-hidden">
+        <BaseFile className="shadow relative p-0 flex flex-col gap-2" file={file} path={path} setOverDirectory={setOverDirectory}>
+            <div className="relative aspect-square overflow-hidden select-none">
                 {filePreview()}
             </div>
-            <div className="p-2">
-                <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
-                <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">
-                    {file.isDirectory ? ' ' : file.size + ' B • '}
-                    {file.modified}
-                </p>
+            <div className="absolute h-auto w-full aspect-square"></div>
+
+
+            <div className="p-2 grid grid-cols-[1fr_min-content] gap-2 w-full items-center justify-between ">
+
+                <div className="min-w-0 max-w-full">
+                    <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
+                    <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">
+                        {file.isDirectory ? ' ' : file.size + ' • '}
+                        {file.modified}
+                    </p>
+                </div>
+                {file.shared ? <Share2 className="text-blue-500 w-5 h-5 mr-2" />
+                    :
+                    <label />
+                }
             </div>
         </BaseFile>
     )

@@ -7,11 +7,11 @@ import BaseFile from "./Base";
 
 export default function DetailsView({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
     return (
-        <BaseFile className="grid grid-cols-[24px_2fr_250px_30px_30px] gap-3 items-center border-0 py-1" file={file} path={path} setOverDirectory={setOverDirectory}>
+        <BaseFile className="grid grid-cols-[24px_2fr_250px_30px] gap-3 items-center border-0 py-1" file={file} path={path} setOverDirectory={setOverDirectory}>
             <img src={file.iconPath} className="w-6 h-6" />
             <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
             <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">
-                {file.isDirectory ? ' ' : file.size + ' B • '}
+                {file.isDirectory ? ' ' : file.size + ' • '}
                 {file.modified}
             </p>
             {
@@ -20,7 +20,6 @@ export default function DetailsView({ file, path, setOverDirectory }: { file: Fi
                     :
                     <label></label>
             }
-            <FileDropdownMenu file={file} path={path} />
         </BaseFile>
     )
 }
