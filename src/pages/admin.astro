@@ -1,0 +1,87 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { db} from "@/lib/db";
+import type {DatabaseUser, DatabaseConfig} from '@/types'
+
+if (!Astro.locals.user?.admin) {    
+    return new Response(
+        JSON.stringify({
+            error: ""
+        }),
+        {
+            status: 404
+        }
+    );
+}
+
+const users = db.prepare("SELECT * FROM user").all() as DatabaseUser[]
+const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
+
+---
+<Layout title="Admin">
+    
+    <h1 class="text-4xl font-bold pt-4 pl-6">Admin</h1>
+    
+    <form action="/api/admin-panel" method="post">
+        <div class="p-4 flex flex-col gap-4">
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded">
+                <h1 class="font-semibold text-lg">Users</h1>
+                <table >
+                    <tr>
+                        { Object.keys(users[0]).map(column => (
+                            <th class="border border-solid border-white">{column}</th>
+                        ))}
+                    </tr>
+
+                    { users.map(user => (
+                        <tr> 
+                            { Object.keys(user).map(column => (
+                                <td class="border border-solid border-white">
+                                    <div>
+                                        {/* @ts-ignore */}
+                                        <input class="p-1 w-52 bg-transparent" name={`${user.id}|${column}`} value={user[column]}/>
+                                    </div>
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </table>
+            </div>
+
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+                <div>Enable signup</div>
+                <input id='enableSignupHidden' name="enable_signup" type="hidden" value="off" checked>
+                <input id='enableSignup' name="enable_signup" type="checkbox" value="on" checked={config.signup == 1}>
+            </div>
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+                <button>Save</button>
+            </div>
+        </div>
+    </form>
+	<script>
+        import { toast } from "sonner";
+
+        document.forms[0].addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+    
+            if ((document.getElementById("enableSignup") as HTMLInputElement).checked) {
+                (document.getElementById('enableSignupHidden') as HTMLInputElement).disabled = true;
+            }
+            const formElement = e.target as HTMLFormElement;
+            const response = await fetch(formElement.action, {
+                method: formElement.method,
+                body: new FormData(formElement)
+            });
+            (document.getElementById('enableSignupHidden') as HTMLInputElement).disabled = false;
+
+            if (response.ok) {
+                toast("Data saved")
+            } else {
+                toast((await response.json()).error, { style: { color: '#ed4337' } })
+            }
+        });
+    </script>
+
+</Layout>
