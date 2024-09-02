@@ -38,7 +38,7 @@ export default function FileDropdownMenu({ file, path }: { file: FileStats, path
             } else {
                 response.json().then(data => {
                     toast(data.error, { style: { color: '#ed4337' } })
-                }).catch(error => {
+                }).catch(() => {
                     toast("Error deleting file", { style: { color: '#ed4337' } })
                 })
             }

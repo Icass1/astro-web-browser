@@ -27,7 +27,7 @@ export async function POST(context: APIContext): Promise<Response> {
 
         const stream = file.stream()
         const reader = stream.getReader()
-        const { value, done } = await reader.read();
+        const { value } = await reader.read();
 
         const localFilePath = path.join(context.locals.user.scope, filePath, file.name); // Update this path as needed
 

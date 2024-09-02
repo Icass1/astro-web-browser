@@ -16,7 +16,7 @@ function getFileSize(size: number) {
     for (let i of Array(units.length - 1)) {
         if (outSize > 1000) {
             outSize = Math.round(outSize / 1000)
-            outUnitIndex++;
+            outUnitIndex = i;
         } else {
             break;
         }

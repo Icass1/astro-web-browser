@@ -1,5 +1,3 @@
-import type { Stats } from "fs";
-import { ScrollArea } from "../ui/scroll-area";
 import { Uint8ArrayToStr } from "@/lib/uint8ArrayToStr";
 import TextFileView from "./TextFile";
 

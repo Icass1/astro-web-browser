@@ -1,6 +1,6 @@
-import { getDiskInfo, getDiskInfoSync } from 'node-disk-info'
-import fs from 'fs/promises';
-import path from 'path';
+import { getDiskInfo, } from 'node-disk-info'
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import type Drive from 'node-disk-info/dist/classes/drive';
 
 interface DiskInfoStorageInterface {

@@ -1,6 +1,4 @@
-import React, { useState, type DragEvent } from 'react';
-
-
+import { useState, type DragEvent } from 'react';
 
 const DropArea = () => {
     const [isDragging, setIsDragging] = useState(false);

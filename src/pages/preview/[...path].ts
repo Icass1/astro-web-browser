@@ -1,49 +1,13 @@
 import type { APIContext } from "astro";
 
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { fileTypeFromBuffer } from 'file-type'
 import ffmpeg from 'fluent-ffmpeg';
-// import sharp from 'sharp';
-
-const getVideoMetadata = (videoFilePath: string): Promise<ffmpeg.FfprobeData> => {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(videoFilePath, (err, metadata) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(metadata);
-            }
-        });
-    });
-};
 
 const getFirstFrameBuffer = async (videoFilePath: string): Promise<Buffer> => {
 
-    // let metadata: ffmpeg.FfprobeData
-
-    // try {
-    //     metadata = await getVideoMetadata(videoFilePath)
-    // } catch (error) {
-    // }
-
     return new Promise((resolve, reject) => {
-        // let width = 300;
-        // let height = 300;
-
-        // if (!metadata) {
-        //     reject("Metadata not found")
-        // }
-
-        // if (metadata.streams[0].width && metadata.streams[0].height) {
-        //     if (metadata.streams[0].width > metadata.streams[0].height) {
-        //         width = Math.round(metadata.streams[0].width / metadata.streams[0].height * 300)
-        //         height = 300
-        //     } else {
-        //         height = Math.round(metadata.streams[0].height / metadata.streams[0].width * 300)
-        //         width = 300
-        //     }
-        // }
 
         ffmpeg(videoFilePath)
 

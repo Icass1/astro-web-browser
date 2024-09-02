@@ -1,11 +1,9 @@
 import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
-import { useEffect, useRef, useState, type ComponentType, type DragEvent } from 'react';
-import { toast } from "sonner";
+import { useState, type DragEvent } from 'react';
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
-import type { JsxElement } from "typescript";
 
 import Galery from "./FileViews/Galery";
 

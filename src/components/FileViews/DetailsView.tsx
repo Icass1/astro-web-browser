@@ -1,5 +1,4 @@
 import type { FileStats } from "@/types";
-import FileDropdownMenu from "../DropdownMenu";
 import { Share2 } from "lucide-react";
 import { type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'

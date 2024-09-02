@@ -130,7 +130,7 @@ export function Upload({ path }: { path: string }) {
 export function SetScope({ className = '', scope }: { className: string, scope: string }) {
     const closeRef = useRef<HTMLButtonElement | null>(null);
 
-    const handleChangeScope = (e: BaseSyntheticEvent) => {
+    const handleChangeScope = () => {
         fetch("/api/set-scope", {
             method: 'POST',
             body: JSON.stringify({

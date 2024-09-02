@@ -1,5 +1,5 @@
 import type { FileStats } from "@/types";
-import { Share2, Edit, Trash, Download, Anchor } from "lucide-react"
+import { Share2, Edit, Trash, Download } from "lucide-react"
 import { useRef, useState, type Dispatch, type DragEvent, type ReactElement, type SetStateAction } from 'react';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -157,7 +157,7 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
             } else {
                 response.json().then(data => {
                     toast(data.error, { style: { color: '#ed4337' } })
-                }).catch(error => {
+                }).catch(() => {
                     toast("Error deleting file", { style: { color: '#ed4337' } })
                 })
             }
@@ -186,7 +186,7 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
             } else {
                 response.json().then(data => {
                     toast(data.error, { style: { color: '#ed4337' } })
-                }).catch(error => {
+                }).catch(() => {
                     toast("Error renaming file", { style: { color: '#ed4337' } })
                 })
             }
