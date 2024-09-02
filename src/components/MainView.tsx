@@ -7,13 +7,18 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import type { JsxElement } from "typescript";
 
+import Galery from "./FileViews/Galery";
+
+import { $viewIndex } from "./viewIndex"
+import { useStore } from '@nanostores/react';
+
 
 export default function MainView({ path, directoryListing }: { path: string, directoryListing: FileStats[] | undefined }) {
 
     const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
 
-    const [view, setView] = useState< "big" | "details">("big")
+    const view = useStore($viewIndex)
 
     const onDrop = async (files: FileList) => {
 
@@ -24,7 +29,6 @@ export default function MainView({ path, directoryListing }: { path: string, dir
             const formData = new FormData();
             formData.append('file', fileToUpload);
             formData.append('path', path ? (path) : (''));
-
 
             try {
                 // Send the file to the server
@@ -91,6 +95,8 @@ export default function MainView({ path, directoryListing }: { path: string, dir
                 return "grid-cols-1"
             case "big":
                 return "grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
+            case "galery":
+                return "grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]"
         }
     }
 
@@ -100,11 +106,13 @@ export default function MainView({ path, directoryListing }: { path: string, dir
                 return <DetailsView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
             case "big":
                 return <BigView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+            case "galery":
+                return <Galery key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
         }
     }
 
     return (
-    
+
         <ScrollArea
             className={cn("relative h-full border border-solid rounded-lg", isDragging && !overDirectory ? ' border-blue-300' : 'border-background',)}
             onDragEnter={handleDragEnter}

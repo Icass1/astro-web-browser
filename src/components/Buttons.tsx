@@ -11,13 +11,16 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRef, useState, type BaseSyntheticEvent, type ChangeEvent, type FormEvent } from "react"
+import { useRef, useState, type BaseSyntheticEvent } from "react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
 import '@/styles/globals.css'
 import { uploadFile } from "@/lib/uploadFile"
+import { $viewIndex } from "./viewIndex"
+import { useStore } from '@nanostores/react';
 
+import { Images, List, Table } from "lucide-react"
 
 export function NewFolder({ path }: { path: string }) {
 
@@ -185,6 +188,45 @@ export function SetScope({ className = '', scope }: { className: string, scope: 
             </DialogContent>
         </Dialog>
     )
+}
 
 
+export function ChangeView({ className = '' }: { className?: string }) {
+
+    const view = useStore($viewIndex)
+
+    const changeView = () => {
+        switch (view) {
+            case "big":
+                $viewIndex.set("details")
+                return
+            case "details":
+                $viewIndex.set("galery")
+                return
+            case "galery":
+                $viewIndex.set("big")
+                return
+            default:
+                $viewIndex.set("galery")
+                return
+        }
+    }
+
+
+    const getIcon = () => {
+        switch ($viewIndex.get()) {
+            case "big":
+                return <Table className="w-5 h-5" />
+            case "details":
+                return <List className="w-5 h-5" />
+            case "galery":
+                return <Images className="w-5 h-5" />
+        }
+    }
+
+    return (
+        <Button variant="outline" className={cn("flex flex-row gap-2 hover:bg-muted", className)} onClick={changeView}>
+            {getIcon()}
+        </Button>
+    )
 }

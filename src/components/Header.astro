@@ -1,6 +1,6 @@
 ---
-import {NewFolder, Upload} from "./Buttons";
-import {ChevronRight} from 'lucide-react'
+import { ChangeView, NewFolder, Upload } from "./Buttons";
+import { ChevronRight } from 'lucide-react'
 
 ---
 
@@ -18,10 +18,8 @@ import {ChevronRight} from 'lucide-react'
             ))}
         </div>
 
-        <!-- <Input value={"asdf"} readOnly className="flex-grow" /> -->
-        <!-- <Button variant="outline">Upload</Button> -->
+        <ChangeView client:visible />
         <Upload path={Astro.params.path || "/"} client:visible/>
         <NewFolder client:visible path={Astro.params.path || "/"}/>
-        <!-- <Button variant="outline" onClick={() => {console.log("ASDF")}} client:load>New Folder</Button> -->
     </div>
 </div>
