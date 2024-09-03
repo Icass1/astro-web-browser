@@ -13,15 +13,14 @@ function getFileSize(size: number) {
     let outUnitIndex = 0
     let outSize = Math.round(size / 1000)
 
-    for (let i of Array(units.length - 1)) {
+    for (let _ of Array(units.length - 1)) {
         if (outSize > 1000) {
             outSize = Math.round(outSize / 1000)
-            outUnitIndex = i;
+            outUnitIndex++;
         } else {
             break;
         }
     }
-
     return outSize.toString() + " " + units[outUnitIndex]
 }
 

@@ -21,7 +21,14 @@ export async function getDiskInfoStorage(filePath: string): Promise<DiskInfoStor
         const directory = stats.isDirectory() ? absolutePath : path.dirname(absolutePath);
 
         // Retrieve disk information
-        const disks = await getDiskInfo();
+        let disks = await getDiskInfo();
+
+        disks.sort((a, b) => {
+            if (a.mounted.length > b.mounted.length) {
+                return -1
+            }
+            return 0
+        })
 
         // Find the disk that matches the path
         const disk = disks.find(disk => directory.startsWith(disk.mounted)) as Drive;

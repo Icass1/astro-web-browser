@@ -11,7 +11,11 @@ import {getDiskInfoStorage} from '@/lib/getDiskInfo'
 const recentDirectories = ["/files", "/files/Documents", "/files/Pictures"]
 const pinnedDirectories = ["/files/Documents/Work", "/files/Pictures/Vacation"]
 
-const diskInfo = await getDiskInfoStorage("/home/icass")
+if (!Astro.locals.user) {
+    return
+}
+
+const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
 ---
 
 <div class="px-1">
