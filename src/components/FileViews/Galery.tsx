@@ -1,20 +1,32 @@
 import type { FileStats } from "@/types";
 import { Share2 } from "lucide-react";
-import { type Dispatch, type SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
 import BaseFile from "./Base";
+import { Skeleton } from "../ui/skeleton";
 
 
 
 export default function Galery({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
 
+    const [loaded, setLoaded] = useState<boolean>(false)
+
     const filePreview = () => {
         if (file.mime.startsWith("image")) {
-            return <img className="top-1/2 relative -translate-y-1/2 select-none" src={"/file/" + path + "/" + file.name} />
+            return <img
+                onLoad={() => { setLoaded(true) }}
+                className="top-1/2 relative -translate-y-1/2 select-none"
+                src={"/file/" + path + "/" + file.name}
+            />
         } else if (file.mime.startsWith("video")) {
-            return <img className="top-1/2 relative -translate-y-1/2 select-none" src={"/preview/" + path + "/" + file.name} />
+            return <img
+                onLoad={() => { setLoaded(true) }}
+                className="top-1/2 relative -translate-y-1/2 select-none"
+                src={"/preview/" + path + "/" + file.name}
+            />
         } else {
             return <img
+                onLoad={() => { setLoaded(true) }}
                 className="select-none"
                 src={file.iconPath}
             />
@@ -26,8 +38,12 @@ export default function Galery({ file, path, setOverDirectory }: { file: FileSta
             <div className="relative aspect-square overflow-hidden select-none">
                 {filePreview()}
             </div>
-            <div className="absolute h-auto w-full aspect-square"></div>
 
+            <div className="absolute h-auto w-full aspect-square">
+                {!loaded &&
+                    <Skeleton className="h-full w-full relative"></Skeleton>
+                }
+            </div>
 
             <div className="p-2 grid grid-cols-[1fr_min-content] gap-2 w-full items-center justify-between ">
 

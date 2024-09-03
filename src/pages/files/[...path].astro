@@ -16,8 +16,6 @@ import {fileTypeFromBuffer} from 'file-type'
 import path from 'path';
 import fs from 'fs/promises';
 
-console.log("[...path].astro Astro.locals.user", Astro.locals.user)
-
 if (!Astro.locals.user) {
     return Astro.redirect("/login")
 }
@@ -59,7 +57,7 @@ try {
     <div class="h-full m-4 pb-8 flex flex-col">
         <Header/>
         {isDirectory ?
-            <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:visible/>
+            <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:only="react"/>
         :
             <FileContentView 
                 path={Astro.params.path}

@@ -78,5 +78,5 @@ export async function getDirectory(directoryPath: string) {
         return 0;
     });
 
-    return [...directoriesOut, ...filesOut].slice(0, 50)
+    return [...directoriesOut, ...filesOut]
 }
