@@ -17,10 +17,6 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
 // db.exec("DROP TABLE config")
 // db.exec("DELETE FROM config WHERE id = '1.0'")
 
-
-
-
-
 // console.log("CREATE TABLE IF NOT EXISTS session")
 db.exec(`CREATE TABLE IF NOT EXISTS session (
     id TEXT NOT NULL PRIMARY KEY,
