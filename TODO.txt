@@ -1,0 +1,102 @@
+User auth
+    DONE - Login
+    DONE - Logout
+    Change password
+
+Text editor
+
+File container
+    If is shared -> show icon
+    Preview
+    File name
+    Date modified
+    Size
+    Context Menu
+        Delete
+        Rename
+        Details
+            Big Preview
+            File name
+            Size
+            Date modified
+            If image -> image Size
+        If image -> Resize
+        Open in VScode
+        Open in text editor
+        If image or video -> View
+        Copy
+        Cut
+        Share File
+        If shared -> Stop sharing button
+    Double click
+        If directory -> move to that directory
+        If image or video -> Open player
+        If text file -> open text editor
+        Else show Details
+    Drag to other directory or to Current path
+
+Main container
+    Current path
+        If click in directory, move to that directory
+        Drop file or directory, move that file or directory to that location
+    Download directory
+    Files in current directory
+    Drop file to upload
+    Context menu
+        If shared -> Stop sharing button
+        Upload file/folder
+        Download directory
+        New file
+        New folder
+        Share directory
+    Selection area
+        Context menu
+            Delete
+            Compress to zip file
+            Power Rename
+            Copy
+            Cut
+
+Left panel
+    Recently visited directories
+    Pinned directories
+    Shares
+
+Shares
+    Custom path
+    Password Optional
+    See times accessed
+    See times downloaded
+    Editable Share
+        Normal main container View
+    Duration
+
+
+Admin panel
+    Create user
+    User
+        Set scope
+        Limit storage
+        Remove
+        Edit permissions
+        Change password
+        See shares
+
+Database
+    Users
+        ID
+        User name
+        Password
+        Salt
+        Scope
+        Admin
+        Shares | List of IDs
+    Shares
+        ID
+        Path (URL)
+        Local path
+        Password
+        Times accessed
+        Times downloaded
+        Editable
+        Expiration date
