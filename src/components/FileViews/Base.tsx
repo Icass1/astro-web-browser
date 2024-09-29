@@ -281,6 +281,12 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
                             <span>Share</span>
                         </ContextMenuItem>
                     </div>
+                    <div className='hover:bg-muted transition-colors rounded'>
+                        <ContextMenuItem>
+                            <img src="/icons/file_type_vscode.svg" className="mr-2 h-4 w-4" />
+                            <span>Open with VSCode</span>
+                        </ContextMenuItem>
+                    </div>
                     <ContextMenuSeparator />
                     <ContextMenuItem className='w-full p-0'>
                         <DialogTrigger className='w-full'>
