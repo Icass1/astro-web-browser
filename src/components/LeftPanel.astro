@@ -28,6 +28,17 @@ const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
         <label class="text-xs font-semibold text-muted-foreground">{Math.round(diskInfo.used)} GB used of {Math.round(diskInfo.totalSize)} GB</label>
     </div>
 
+    {
+        Astro.locals.user.admin ?
+        <div class="w-full px-2">
+            <a class={cn(buttonVariants({variant: "outline"}), "hover:bg-muted w-full text-center")} href="/admin">
+                Admin
+            </a>
+        </div>
+        :
+        <></>
+    }
+
     <div class="p-2 flex flex-col items-start">
         <h3 class="font-semibold mb-2">Recent Directories</h3>
         {recentDirectories.map(directory => (
