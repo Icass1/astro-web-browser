@@ -60,13 +60,20 @@ if (signup != 1) {
 			<form class="mt-8 space-y-6" method="post" action="/api/signup">
 				<div class="space-y-4">
 					<div>
-						<Label htmlFor="email">Username</Label>
+						<Label htmlFor="username">Username</Label>
 						<Input id="username" name="username" required className="mt-1" />
 					</div>
 					<div>
 						<Label htmlFor="password">Password</Label>
 						<div class="relative mt-1">
 							<Input id="password" name="password" type="password"
+								autoComplete="current-password" required />
+						</div>
+					</div>
+					<div>
+						<Label htmlFor="repeat-password">Repeat password</Label>
+						<div class="relative mt-1">
+							<Input id="repeat-password" name="repeat-password" type="password"
 								autoComplete="current-password" required />
 						</div>
 					</div>
@@ -89,11 +96,22 @@ if (signup != 1) {
 
 			document.forms[0].addEventListener("submit", async (e) => {
 				e.preventDefault();
+
+				
+				
 				errorMessageElement.innerText = "";
 				const formElement = e.target as HTMLFormElement;
+
+
+				let formData = new FormData(formElement)
+				if (formData.get("password") !== formData.get("repeat-password")) {
+					errorMessageElement.innerText = "Password do not match"
+					return
+				}
+				
 				const response = await fetch(formElement.action, {
 					method: formElement.method,
-					body: new FormData(formElement)
+					body: formData
 				});
 				if (response.ok) {
 					window.location.href = "/";
