@@ -17,6 +17,18 @@ export interface DatabaseUser {
     shares: string;
 }
 
+
+export interface DatabaseShare {
+    id: string;
+    path: string;
+    local_path: string;
+    password: string;
+    times_accessed: number;
+    times_downloaded: number;
+    editable: boolean;
+    expires_at: number;
+}
+
 export interface DatabaseConfig {
     signup: number,
 }
