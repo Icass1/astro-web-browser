@@ -1,5 +1,11 @@
 import type { FileStats } from "@/types";
-import { Share2, Edit, Trash, Download } from "lucide-react"
+import {
+    Share2,
+    Edit,
+    Trash,
+    Download,
+    TableProperties,
+} from "lucide-react"
 import { useRef, useState, type Dispatch, type DragEvent, type ReactElement, type SetStateAction } from 'react';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -24,20 +30,17 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 
 export default function BaseFile({ file, path, setOverDirectory, children, className }: { className?: string, file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, children: ReactElement[] }) {
 
     const [isDragging, setIsDragging] = useState(false);
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
-    // const navigation = useNavigation()
 
     const [actualDialog, setActualDialog] = useState<"rename" | "delete">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
-
     const onDrop = async (files: FileList) => {
-
         for (let index = 0; index < files.length; index++) {
             if (files.item(index)) {
                 uploadFile((path ? (path + "/") : ('')) + file.name, files.item(index) as File)
@@ -47,14 +50,12 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
 
     const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-        // event.stopPropagation();
         setIsDragging(true);
         setOverDirectory(true)
     };
 
     const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-        // event.stopPropagation();
 
         if (!event.currentTarget.contains(event.relatedTarget as Node)) {
             setIsDragging(false);
@@ -64,7 +65,6 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
 
     const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-        // event.stopPropagation();
     };
 
     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
@@ -287,6 +287,12 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
                             <span>Open with VSCode</span>
                         </ContextMenuItem>
                     </div>
+                    <div className='hover:bg-muted transition-colors rounded'>
+                        <ContextMenuItem>
+                            <TableProperties className="mr-2 h-4 w-4" />
+                            <span>Details</span>
+                        </ContextMenuItem>
+                    </div>
                     <ContextMenuSeparator />
                     <ContextMenuItem className='w-full p-0'>
                         <DialogTrigger className='w-full'>
@@ -302,6 +308,5 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
             </ContextMenu>
             {getDialogContent()}
         </Dialog>
-
     )
 }
