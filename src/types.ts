@@ -14,6 +14,7 @@ export interface DatabaseUser {
     password_hash: string;
     scope: string;
     admin: boolean;
+    shares: string;
 }
 
 export interface DatabaseConfig {
