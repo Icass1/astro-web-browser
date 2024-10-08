@@ -8,12 +8,12 @@ Text editor
 File container
     If is shared -> show icon
     Preview
-    File name
-    Date modified
-    Size
+    DONE - File name
+    Date modified - Size
+    DONE - Size
     Context Menu
-        Delete
-        Rename
+        DONE - Delete
+        Rename - Delete
         Details
             Big Preview
             File name
