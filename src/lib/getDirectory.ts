@@ -1,9 +1,11 @@
-import type { FileStats } from "@/types";
+import type { DatabaseShare, FileStats } from "@/types";
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 // @ts-ignore
 import { fileTypeFromFile } from 'file-type'
+import { db } from "@/lib/db";
+
 
 
 function getFileSize(size: number) {
@@ -45,14 +47,20 @@ export async function getDirectory(directoryPath: string) {
                 fileType = { mime: "dir" }
             }
 
+            let share = db.prepare(`SELECT * FROM shares WHERE local_path='${filePath.replace(/'/g, "''")}'`).get() as DatabaseShare | undefined
+            if (share?.expires_at && new Date(share?.expires_at) < new Date()) {
+                share = undefined
+            }
+
             // Return file details
             return {
                 name: file,
                 size: getFileSize(stats.size), // File size in bytes
-                modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
+                // modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
+                modified: `${stats.mtime.getDate()}/${stats.mtime.getMonth()+1}/${stats.mtime.getFullYear()} ${stats.mtime.getHours()}:${stats.mtime.getMinutes()}`, // Last modified date
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
-                shared: false,
+                shared: share == undefined ? false : true,
                 mime: fileType.mime,
             };
         })

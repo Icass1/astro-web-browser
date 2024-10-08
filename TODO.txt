@@ -6,10 +6,10 @@ User auth
 Text editor
 
 File container
-    If is shared -> show icon
+    DONE - If is shared -> show icon 
     Preview
     DONE - File name
-    Date modified - Size
+    DONE - Date modified - Size
     DONE - Size
     Context Menu
         DONE - Delete
@@ -20,6 +20,10 @@ File container
             Size
             Date modified
             If image -> image Size
+            Share info
+                Downloads
+                Visits
+                Expriation date
         If image -> Resize
         Open in VScode
         Open in text editor
@@ -37,11 +41,12 @@ File container
 
 Main container
     Current path
-        If click in directory, move to that directory
+        DONE - If click in directory, move to that directory
         Drop file or directory, move that file or directory to that location
     Download directory
-    Files in current directory
-    Drop file to upload
+    DONE - Files in current directory
+    DONE - Drop file to upload
+    Drop folder to upload
     Context menu
         If shared -> Stop sharing button
         Upload file/folder

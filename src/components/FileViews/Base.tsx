@@ -278,7 +278,7 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
                             <Share2 className="mr-2 h-4 w-4" />
-                            <span>Share</span>
+                            <span>{file.shared ? 'Stop share' : 'Share'}</span>
                         </ContextMenuItem>
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
