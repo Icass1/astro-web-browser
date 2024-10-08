@@ -63,7 +63,7 @@ export async function POST(context: APIContext): Promise<Response> {
 		outputLen: 32,
 		parallelism: 1
 	});
-	const userId = generateId(15);
+	const userId = generateId(16);
 
 	try {
 		const users = db.prepare("SELECT * FROM user").all()
