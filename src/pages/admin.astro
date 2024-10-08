@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { db} from "@/lib/db";
-import type {DatabaseUser, DatabaseConfig} from '@/types'
+import type { DatabaseUser,  DatabaseConfig, DatabaseShare} from '@/types'
 
 if (!Astro.locals.user?.admin) {    
     return new Response(
@@ -15,7 +15,9 @@ if (!Astro.locals.user?.admin) {
 }
 
 const users = db.prepare("SELECT * FROM user").all() as DatabaseUser[]
+const shares = db.prepare("SELECT * FROM shares").all() as DatabaseShare[]
 const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
+
 
 ---
 <Layout title="Admin">
@@ -46,6 +48,30 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
                         </tr>
                     ))}
                 </table>
+
+                <h1 class="font-semibold text-lg">Shares</h1>
+                <table >
+                    <tr>
+                        { Object.keys(shares[0] || []).map(column => (
+                            <th class="border border-solid border-white">{column}</th>
+                        ))}
+                    </tr>
+
+                    { shares.map(share => (
+                        <tr> 
+                            { Object.keys(share).map(column => (
+                                <td class="border border-solid border-white">
+                                    <div>
+                                        {/* @ts-ignore */}
+                                        <input class="p-1 w-52 bg-transparent" name={`${share.id}|${column}`} value={share[column]}/>
+                                    </div>
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </table>
+
+
             </div>
 
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
