@@ -1,5 +1,5 @@
 import type { SqliteError } from "better-sqlite3";
-import { db } from "../../lib/db";
+import { db } from "@/lib/db";
 
 import type { APIContext } from "astro";
 

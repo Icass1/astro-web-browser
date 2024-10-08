@@ -1,6 +1,6 @@
 
 import { Fragment } from "react/jsx-runtime";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 export default function TextFileView({ fileContent }: { fileContent: string }) {

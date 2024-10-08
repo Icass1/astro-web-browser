@@ -1,9 +1,10 @@
 
 import type { SqliteError } from "better-sqlite3";
-import { db } from "../../lib/db";
+import { db } from "@/lib/db";
 
 import type { APIContext } from "astro";
 
+// https://github.com/gitpod-io/openvscode-server/issues/320
 
 export async function POST(context: APIContext): Promise<Response> {
 

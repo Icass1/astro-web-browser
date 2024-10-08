@@ -3,7 +3,7 @@ import { Share2 } from "lucide-react";
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
 import BaseFile from "./Base";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 
