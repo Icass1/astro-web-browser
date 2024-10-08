@@ -13,11 +13,23 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
 
 // console.log("ALTER TABLE")
 // db.exec(`UPDATE user SET admin = 1 WHERE id = 'qzwnikdpu60pb3v'`)
-// db.exec(`ALTER TABLE config ADD COLUMN id TEXT NOT NULL PRIMARY KEY`)
+// db.exec(`ALTER TABLE user ADD COLUMN shares TEXT DEFAULT '[]' NOT NULL `)
 // db.exec("DROP TABLE config")
 // db.exec("DELETE FROM config WHERE id = '1.0'")
 
-// console.log("CREATE TABLE IF NOT EXISTS session")
+// console.log("CREATE TABLE IF NOT EXISTS shartes")
+
+db.exec(`CREATE TABLE IF NOT EXISTS shares (
+    id TEXT NOT NULL PRIMARY KEY,
+    path TEXT NOT NULL,
+    local_path TEXT NOT NULL,
+    password TEXT default NULL,
+    times_accessed INTEGER DEFAULT 0 NOT NULL,
+    times_downloaded INTEGER DEFAULT 0 NOT NULL,
+    editable BOOLEAN DEFAULT 0 NOT NULL,
+    expires_at INTEGER
+)`);
+
 db.exec(`CREATE TABLE IF NOT EXISTS session (
     id TEXT NOT NULL PRIMARY KEY,
     expires_at INTEGER NOT NULL,
