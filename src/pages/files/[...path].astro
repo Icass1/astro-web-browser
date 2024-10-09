@@ -57,7 +57,7 @@ try {
     <div class="h-full m-4 pb-8 flex flex-col">
         <Header/>
         {isDirectory ?
-            <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:only="react"/>
+            <MainView directoryListing={directoryListing} path={Astro.params.path as string} client:only="react" editable={true}/>
         :
             <FileContentView 
                 path={Astro.params.path}
