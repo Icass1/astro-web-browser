@@ -31,13 +31,32 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
+import ShareDialog from "../ShareDialog";
 
-export default function BaseFile({ file, path, setOverDirectory, children, className }: { className?: string, file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, children: ReactElement[] }) {
+export default function BaseFile(
+    {
+        file,
+        path,
+        setOverDirectory,
+        children,
+        className,
+        href,
+        editable
+    }: {
+        className?: string,
+        file: FileStats,
+        path: string | undefined,
+        setOverDirectory: Dispatch<SetStateAction<boolean>>,
+        children: ReactElement[],
+        href: string,
+        editable: boolean
+    }
+) {
 
     const [isDragging, setIsDragging] = useState(false);
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
 
-    const [actualDialog, setActualDialog] = useState<"rename" | "delete">("rename")
+    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
     const onDrop = async (files: FileList) => {
@@ -136,6 +155,8 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
 
         const downloadElement = document.createElement("a")
         downloadElement.href = "/file/" + (path ? (path + "/") : '') + file.name
+        // href={(path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name))}
+
         downloadElement.download = file.name
 
         downloadElement.click()
@@ -232,9 +253,16 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
         )
     }
 
+    const getShareDialogContent = () => {
+        return <ShareDialog path={(path ? (path + "/") : "") + file.name} type={file.isDirectory ? 'directory' : 'file'} />
+
+    }
+
     const getDialogContent = () => {
         if (actualDialog == "delete") {
             return getDeleteDialogContent()
+        } else if (actualDialog == "share") {
+            return getShareDialogContent()
         } else if (actualDialog == "rename") {
             return getRenameDialogContent()
         }
@@ -254,14 +282,14 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
                     >
                         <a
                             className={cn("border rounded-lg py-2 px-3 cursor-pointer hover:bg-muted", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
-                            href={(path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name))}
+                            href={href}
                         >
                             {children}
                         </a >
                     </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
-                    <div className='hover:bg-muted transition-colors rounded'>
+                    <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <DialogTrigger className='w-full'>
                             <ContextMenuItem onClick={() => { setActualDialog("rename") }}>
                                 <Edit className="mr-2 h-4 w-4" />
@@ -270,40 +298,49 @@ export default function BaseFile({ file, path, setOverDirectory, children, class
                         </DialogTrigger>
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem onClick={handleDownload} >
+                        <ContextMenuItem onClick={handleDownload}>
                             <Download className="mr-2 h-4 w-4" />
                             <span>Download</span>
                         </ContextMenuItem>
                     </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem>
-                            <Share2 className="mr-2 h-4 w-4" />
-                            <span>{file.shared ? 'Stop share' : 'Share'}</span>
+
+                    <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
+                        <ContextMenuItem className="p-0">
+                            <DialogTrigger className='w-full'>
+                                <div className='transition-colors rounded'>
+                                    <ContextMenuItem onClick={() => { setActualDialog("share") }}>
+                                        <Share2 className="mr-2 h-4 w-4" />
+                                        <span>{file.shared ? 'Stop share' : 'Share'}</span>
+                                    </ContextMenuItem>
+                                </div>
+                            </DialogTrigger>
+
                         </ContextMenuItem>
                     </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
+
+                    <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <ContextMenuItem>
                             <img src="/icons/file_type_vscode.svg" className="mr-2 h-4 w-4" />
                             <span>Open with VSCode</span>
                         </ContextMenuItem>
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem>
+                        <ContextMenuItem >
                             <TableProperties className="mr-2 h-4 w-4" />
                             <span>Details</span>
                         </ContextMenuItem>
                     </div>
-                    <ContextMenuSeparator />
-                    <ContextMenuItem className='w-full p-0'>
-                        <DialogTrigger className='w-full'>
-                            <div className='hover:bg-destructive transition-colors rounded'>
-                                <ContextMenuItem onClick={() => { setActualDialog("delete") }}>
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    <span>Delete</span>
-                                </ContextMenuItem>
-                            </div>
-                        </DialogTrigger>
-                    </ContextMenuItem>
+
+                    <ContextMenuSeparator className={cn(!editable && 'hidden')} />
+
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                        <div className='hover:bg-destructive transition-colors rounded'>
+                            <ContextMenuItem onClick={() => { setActualDialog("delete") }}>
+                                <Trash className="mr-2 h-4 w-4" />
+                                <span>Delete</span>
+                            </ContextMenuItem>
+                        </div>
+                    </DialogTrigger>
                 </ContextMenuContent>
             </ContextMenu>
             {getDialogContent()}

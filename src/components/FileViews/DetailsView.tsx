@@ -4,9 +4,11 @@ import { type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
 import BaseFile from "./Base";
 
-export default function DetailsView({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
+export default function DetailsView(
+    { file, path, setOverDirectory, href, editable }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, href: string, editable: boolean }
+) {
     return (
-        <BaseFile className="grid grid-cols-[24px_2fr_250px_30px] gap-3 items-center border-0 py-1" file={file} path={path} setOverDirectory={setOverDirectory}>
+        <BaseFile className="grid grid-cols-[24px_2fr_250px_30px] gap-3 items-center border-0 py-1" file={file} path={path} setOverDirectory={setOverDirectory} href={href} editable={editable}>
             <img src={file.iconPath} className="w-6 h-6" />
             <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
             <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">

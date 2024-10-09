@@ -7,7 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 
 
-export default function Galery({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
+export default function Galery(
+    { file, path, setOverDirectory, href, editable }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, href: string, editable: boolean }
+) {
 
     const [loaded, setLoaded] = useState<boolean>(false)
 
@@ -34,7 +36,7 @@ export default function Galery({ file, path, setOverDirectory }: { file: FileSta
     }
 
     return (
-        <BaseFile className="shadow relative p-0 flex flex-col gap-2" file={file} path={path} setOverDirectory={setOverDirectory}>
+        <BaseFile className="shadow relative p-0 flex flex-col gap-2" file={file} path={path} setOverDirectory={setOverDirectory} href={href} editable={editable}>
             <div className="relative aspect-square overflow-hidden select-none">
                 {filePreview()}
             </div>

@@ -1,13 +1,15 @@
 import type { FileStats } from "@/types";
 import { Share2 } from "lucide-react";
-import {type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
 import BaseFile from "./Base";
 
-export default function BigView({ file, path, setOverDirectory }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>> }) {
+export default function BigView(
+    { file, path, setOverDirectory, href, editable }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, href: string, editable: boolean }
+) {
 
     return (
-        <BaseFile className="flex flex-row gap-3 items-center" file={file} path={path} setOverDirectory={setOverDirectory}>
+        <BaseFile className="flex flex-row gap-3 items-center" file={file} path={path} setOverDirectory={setOverDirectory} href={href} editable={editable}>
             <img src={file.iconPath} className="w-6 h-6" />
             <div
                 className="flex-grow w-0"
