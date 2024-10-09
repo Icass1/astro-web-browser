@@ -1,12 +1,16 @@
 ---
 import ModeToggle from "./ModeToggle";
-import { Folder } from "lucide-react"
 import { cn } from "@/lib/utils";
+import { db } from "@/lib/db";
 
 import { buttonVariants } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 
 import {getDiskInfoStorage} from '@/lib/getDiskInfo'
+
+import type { DatabaseUser, DatabaseShare} from '@/types'
+
+import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 
 const recentDirectories = ["/files", "/files/Documents", "/files/Pictures"]
 const pinnedDirectories = ["/files/Documents/Work", "/files/Pictures/Vacation"]
@@ -16,6 +20,18 @@ if (!Astro.locals.user) {
 }
 
 const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
+
+const userShares = JSON.parse((db.prepare(`SELECT shares FROM user WHERE id='${(Astro.locals.user?.id as string)}'`).get() as DatabaseUser).shares) as string[]
+const shares =( db.prepare("SELECT * FROM shares").all() as DatabaseShare[]).filter(share => {
+    if (userShares.includes(share.id)) {
+        return true
+    }
+})
+
+if (userShares.length != shares.length) {
+    // User has a share that doesn't exist
+}
+
 ---
 
 <div class="px-1">
@@ -39,11 +55,17 @@ const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
         <></>
     }
 
+    <div class="w-full px-2 mt-2">
+        <div class={cn(buttonVariants({variant: "outline"}), "hover:bg-destructive w-full text-center cursor-pointer")}>
+            Logout
+        </div>
+    </div>
+
     <div class="p-2 flex flex-col items-start">
         <h3 class="font-semibold mb-2">Recent Directories</h3>
         {recentDirectories.map(directory => (
             <a class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")} href={directory}>
-                <Folder className="w-4 h-4 mr-2"/>
+                <img src={getFolderIcon(directory.replace("files", "").split("/")[directory.split("/").length-1] || "Home")} class="w-5 h-5 mr-2" />
                 {directory.replace("files", "").split("/")[directory.split("/").length-1] || "Home"}
             </a>
         ))}
@@ -52,9 +74,23 @@ const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
         <h3 class="font-semibold mb-2">Pinned Directories</h3>
         {pinnedDirectories.map(directory => (
             <a class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")} href={directory}>
-                <Folder className="w-4 h-4 mr-2"/>
+                {/* <Folder className="w-4 h-4 mr-2"/> */}
+                <img src={getFolderIcon(directory.replace("files", "").split("/")[directory.split("/").length-1] || "Home")} class="w-5 h-5 mr-2" />
                 {directory.replace("files", "").split("/")[directory.split("/").length-1] || "Home"}
             </a>
+        ))}
+    </div>
+    <div class="p-2">
+        <h3 class="font-semibold mb-2">Shares</h3>
+        {shares.map(share => (
+            <div class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")}>
+                {share.type == "directory" ? 
+                    <img src={getFolderIcon(share.local_path.split("/")[share.local_path.split("/").length - 1])} class="w-5 h-5 mr-2" />
+                    :
+                    <img src={getFileIcon(share.local_path.split("/")[share.local_path.split("/").length - 1])} class="w-5 h-5 mr-2" />
+                }
+                {share.local_path.split("/")[share.local_path.split("/").length - 1]}
+            </div>
         ))}
     </div>
 </div>
