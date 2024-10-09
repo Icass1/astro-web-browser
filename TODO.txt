@@ -13,7 +13,10 @@ File container
     DONE - Size
     Context Menu
         DONE - Delete
-        Rename - Delete
+            Check if path is shared and remove share
+        DONE - Rename
+        DONE - Download
+        Add to pinned folder
         Details
             Big Preview
             File name
@@ -25,19 +28,19 @@ File container
                 Visits
                 Expriation date
         If image -> Resize
-        Open in VScode
-        Open in text editor
+        If folder -> Open in VScode
+        If text file -> Open in text editor
         If image or video -> View
         Copy
         Cut
-        Share File
+        DONE - Share File
         If shared -> Stop sharing button
     Double click
         If directory -> move to that directory
         If image or video -> Open player
         If text file -> open text editor
         Else show Details
-    Drag to other directory or to Current path
+    DONE - Drag to other directory or to Current path
 
 Main container
     Current path
@@ -53,10 +56,11 @@ Main container
         Download directory
         New file
         New folder
-        Share directory
+        DONE - Share directory
     Selection area
         Context menu
             Delete
+                Check if path is shared and remove share
             Compress to zip file
             Power Rename
             Copy
@@ -74,34 +78,35 @@ Shares
     See times downloaded
     Editable Share
         Normal main container View
-    Duration
-
+        Open in VSCode
+    Expiration date
 
 Admin panel
     Create user
     User
-        Set scope
+        DONE - Set scope
         Limit storage
         Remove
         Edit permissions
         Change password
-        See shares
+        DONE - See shares
 
 Database
     Users
-        ID
-        User name
-        Password
-        Salt
-        Scope
-        Admin
-        Shares | List of IDs
+        DONE - ID
+        DONE - User name
+        DONE - Password
+        DONE - Salt
+        DONE - Scope
+        DONE - Admin
+        DONE - Shares | List of IDs
     Shares
-        ID
-        Path (URL)
-        Local path
-        Password
-        Times accessed
-        Times downloaded
-        Editable
-        Expiration date
+        DONE - ID
+        DONE - Path (URL)
+        DONE - Local path
+        DONE - Password
+        DONE - Times accessed
+        DONE - Times downloaded
+        DONE - Editable
+        DONE - Expiration date
+        Type (file | directory)
