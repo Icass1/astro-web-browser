@@ -13,9 +13,6 @@ import { db } from "@/lib/db";
 import type {SignupDB} from '@/types'
 
 const signup = (db.prepare("SELECT signup FROM config WHERE id='1'").get() as SignupDB).signup
-
-console.log("login.astro signup", signup)
-
 ---
 
 <!doctype html>
@@ -61,20 +58,6 @@ console.log("login.astro signup", signup)
 					</div>
 				</div>
 
-				<!-- <div class="flex items-center justify-between">
-					<div class="flex items-center">
-						<Checkbox id="remember-me" />
-						<Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-							Remember me
-						</Label>
-					</div>
-
-					<div class="text-sm">
-						<a href="#" class="font-medium text-primary hover:text-primary/80">
-							Forgot your password?
-						</a>
-					</div>
-				</div> -->
 				<p id="form-error" class='text-[#ed4337]'></p>
 
 				<Button type="submit" className="w-full flex justify-center items-center">
@@ -89,8 +72,6 @@ console.log("login.astro signup", signup)
 		<script>
 			const errorMessageElement = document.getElementById("form-error")!;
 
-			console.log(document.forms)
-
 			document.forms[0].addEventListener("submit", async (e) => {
 				e.preventDefault();
 				errorMessageElement.innerText = "";
@@ -101,7 +82,9 @@ console.log("login.astro signup", signup)
 				});
 				if (response.ok) {
 					window.location.href = "/";
+					console.log("Login correct")
 				} else {
+					console.log("Login error")
 					errorMessageElement.innerText = (await response.json()).error;
 				}
 			});

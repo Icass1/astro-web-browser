@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# export ASTRO_DATABASE_FILE=/home/icass/astro-web-browser/production_database.db
+
 set -e
 docker buildx build -t astro-web-browser -f Dockerfile .
 

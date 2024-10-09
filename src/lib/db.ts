@@ -8,7 +8,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
     username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     scope TEXT DEFAULT "/" NOT NULL,
-    admin BOOLEAN DEFAULT 0 NOT NULL
+    admin BOOLEAN DEFAULT 0 NOT NULL,
+    shares TEXT DEFAULT "[]" NOT NULL
 )`);
 
 // console.log("ALTER TABLE")
@@ -19,7 +20,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
 
 // console.log("CREATE TABLE IF NOT EXISTS shartes")
 
-db.exec(`CREATE TABLE IF NOT EXISTS shares (
+db.exec(`CREATE TABLE IF NOT EXISTS share (
     id TEXT NOT NULL PRIMARY KEY,
     path TEXT NOT NULL,
     local_path TEXT NOT NULL,

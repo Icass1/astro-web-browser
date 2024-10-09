@@ -27,7 +27,7 @@ import {
 
 const share = db
     .prepare(
-        `SELECT * FROM shares WHERE id='${Astro.params.shareId as string}'`,
+        `SELECT * FROM share WHERE id='${Astro.params.shareId as string}'`,
     )
     .get() as DatabaseShare;
 

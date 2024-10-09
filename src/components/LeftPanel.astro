@@ -22,7 +22,7 @@ if (!Astro.locals.user) {
 const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
 
 const userShares = JSON.parse((db.prepare(`SELECT shares FROM user WHERE id='${(Astro.locals.user?.id as string)}'`).get() as DatabaseUser).shares) as string[]
-const shares =( db.prepare("SELECT * FROM shares").all() as DatabaseShare[]).filter(share => {
+const shares =( db.prepare("SELECT * FROM share").all() as DatabaseShare[]).filter(share => {
     if (userShares.includes(share.id)) {
         return true
     }
