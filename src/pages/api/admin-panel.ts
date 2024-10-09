@@ -21,12 +21,14 @@ export async function POST(context: APIContext): Promise<Response> {
 
 	}
 
+	console.log("admin-panel", formData.entries())
+
 	for (let k of formData.entries()) {
-		const [id, column] = k[0].split("|")
+		const [table, id, column] = k[0].split("|")
 
 		if (id && column) {
 			try {
-				db.exec(`UPDATE user SET ${column} = '${k[1]}' WHERE id = '${id}'`)
+				db.exec(`UPDATE ${table} SET ${column} = '${k[1]}' WHERE id = '${id}'`)
 			} catch (err) {
 				const error = err as SqliteError
 				return new Response(
