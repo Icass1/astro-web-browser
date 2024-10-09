@@ -1,9 +1,9 @@
 import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
-import { useEffect, useRef, useState, type Dispatch, type DragEvent, type SetStateAction, type SyntheticEvent } from 'react';
+import { useEffect, useRef, useState, type DragEvent } from 'react';
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import Galery from "./FileViews/Galery";
 
@@ -13,15 +13,12 @@ import { uploadFile } from "@/lib/uploadFile";
 import useWindowSize from "@/hooks/useWindowSize";
 
 import {
-    CalendarIcon,
-    Eye,
+    Download,
     FilePlus,
     FolderPlus,
     Share2,
     TableProperties
 } from "lucide-react";
-import { generateId } from "lucia";
-import { format } from "date-fns"
 
 import {
     ContextMenu,
@@ -32,58 +29,14 @@ import {
 
 import {
     Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
-    DialogFooter,
-    DialogClose,
 } from "@/components/ui/dialog"
 
-import { Checkbox } from "@/components/ui/checkbox"
+import ShareDialog from "./ShareDialog";
 
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { toast } from "sonner";
-
-export function DatePicker({ date, setDate }: { date: Date | undefined, setDate: Dispatch<SetStateAction<Date | undefined>> }) {
-
-    return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    className={cn(
-                        "w-[280px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                    )}
-                >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                />
-            </PopoverContent>
-        </Popover>
-    )
-}
-
-export default function MainView({ path, directoryListing }: { path: string, directoryListing: FileStats[] | undefined }) {
+export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: FileStats[] | undefined, editable: boolean }) {
 
     const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
@@ -92,12 +45,6 @@ export default function MainView({ path, directoryListing }: { path: string, dir
     const size = useWindowSize()
 
     const [actualDialog, setActualDialog] = useState<"share">("share")
-    const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
-    const [shareExpriesAtDate, setShareExpriesAtDate] = useState<Date>()
-    const [sharePassword, setSharePassword] = useState<string>('')
-    const [shareUrl, setShareUrl] = useState<string>(generateId(16))
-    const [shareEditable, setShareEditable] = useState<boolean>(false)
-    const sharePasswordRef = useRef<HTMLInputElement>(null)
 
     const onDrop = async (files: FileList) => {
         for (let fileToUpload of files) {
@@ -163,13 +110,19 @@ export default function MainView({ path, directoryListing }: { path: string, dir
     }, [view])
 
     const getFileView = (file: FileStats) => {
+
+        const shareId = location.pathname.split("/")[2]
+        const href = location.pathname.startsWith("/files") ? (path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name)) : (path ? (`/share/${shareId}/` + path + "/" + file.name) : (`/share/${shareId}/` + file.name))
+
         switch (view) {
             case "details":
-                return <DetailsView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+                return <DetailsView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
             case "big":
-                return <BigView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+                return <BigView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
             case "galery":
-                return <Galery key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} />
+                return <Galery key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
+            default:
+                console.warn("Unknow view")
         }
     }
 
@@ -190,12 +143,27 @@ export default function MainView({ path, directoryListing }: { path: string, dir
 
         let newWidth = Math.floor((scrollRef.current.offsetWidth - gap * (columns - 1)) / columns)
 
+        const totalHeight = Math.max(1, Math.floor(directoryListing.length / columns)) * (height + gap)
+
         setStartIndex(Math.floor(scroll / (height + gap)) * columns)
-        setEndIndex(Math.floor((scrollRef.current.offsetHeight + scroll) / (height + gap) + 2) * columns)
+        setEndIndex(Math.floor((totalHeight + scroll) / (height + gap) + 2) * columns)
 
         setWidth(newWidth - 2)
 
-        setTotalHeight((Math.floor(directoryListing.length / columns)) * (height + gap))
+        // console.log({
+        //     "directoryListing.length": directoryListing.length,
+        //     columns: columns,
+        //     height: height,
+        //     gap: gap,
+        //     "scrollRef.current.offsetHeight": scrollRef.current.offsetHeight,
+        //     "scroll": scroll,
+        // })
+
+        // console.log(totalHeight)
+        // console.log(Math.floor(scroll / (height + gap)) * columns)
+        // console.log(Math.floor((scrollRef.current.offsetHeight + scroll) / (height + gap) + 2) * columns)
+
+        setTotalHeight(totalHeight)
     }, [scroll, scrollRef, size, columns, gridInfo, height])
 
     useEffect(() => {
@@ -227,80 +195,9 @@ export default function MainView({ path, directoryListing }: { path: string, dir
         }
     }, [scrollRef])
 
-    const handleShare = () => {
-        fetch("/api/create-share", {
-            method: "post", body:
-                JSON.stringify({
-                    'password': sharePassword,
-                    'url': shareUrl,
-                    'expires_at': shareExpriesAtDate || "",
-                    'editable': shareEditable,
-                    'path': path,
-                })
-        }).then(response => {
-            if (response.ok) {
-                closeDeleteDialogRef.current?.click()
-                toast("Share created")
-            } else {
-                closeDeleteDialogRef.current?.click()
-                response.json().then((data) => {
-                    toast(data.error, { style: { color: '#ed4337' } })
-                })
-            }
-        })
-    }
-
     const getShareDialogContent = () => {
-        return (
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Share folder '{path?.split("/")[path?.split("/").length - 1] || "/"}'</DialogTitle>
-                    <DialogDescription>
-                        Share '<label className='text-white font-semibold'>{path || '/'}</label>'.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                    <label className="text-sm ">Enter URL of share <label className="font-semibold text-muted">(8 characters)</label></label>
-                    <Input
-                        className="invalid:bg-red-400/10 "
-                        value={shareUrl}
-                        onChange={(e) => { setShareUrl(e.target.value) }}
-                        maxLength={8}
-                        minLength={8}
-                    />
-                </div>
-                <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                    <label className="text-sm ">Enter password <label className="font-semibold text-muted">(Optional)</label></label>
-                    <div className="relative">
-                        <Input
-                            ref={sharePasswordRef}
-                            value={sharePassword}
-                            onChange={(e) => { setSharePassword(e.target.value) }}
-                            type="password" />
-                        <Eye
-                            className="absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 hover:scale-105"
-                            onMouseDown={(e) => { sharePasswordRef.current ? sharePasswordRef.current.type = "" : '' }}
-                            onMouseUp={(e) => { sharePasswordRef.current ? sharePasswordRef.current.type = "password" : '' }}
-                        />
-                    </div>
-                </div>
-                <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                    <label className="text-sm w-[164px]">Editable</label>
-                    <Checkbox onCheckedChange={(checked) => { setShareEditable(checked.valueOf() as boolean) }}></Checkbox>
-                </div>
-                <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                    <label className="text-sm w-[164px]">Expiration date</label>
-                    <DatePicker date={shareExpriesAtDate} setDate={setShareExpriesAtDate}></DatePicker>
-                </div>
-                <DialogFooter>
-                    <DialogClose ref={closeDeleteDialogRef} />
-                    <Button variant="outline" onClick={() => closeDeleteDialogRef.current?.click()}>Cancel</Button>
-                    <Button disabled={false} onClick={handleShare} >Share</Button>
-                </DialogFooter>
-            </DialogContent>
-        )
+        return <ShareDialog path={path} type="directory" />
     }
-
 
     const getDialogContent = () => {
         if (actualDialog == "share") {
@@ -322,7 +219,7 @@ export default function MainView({ path, directoryListing }: { path: string, dir
                         ref={scrollRef}
                         onScrollCapture={(e) => { setScroll((e.target as HTMLDivElement).scrollTop) }}
                     >
-                        <div style={{ height: `${totalHeight}px` }}></div>
+                        <div id="asfdasdf" style={{ height: `${totalHeight}px` }}></div>
                         {
                             directoryListing.slice(startIndex, endIndex).map((file, index) => (
                                 <div
@@ -343,18 +240,24 @@ export default function MainView({ path, directoryListing }: { path: string, dir
                     </ScrollArea>
                 </ContextMenuTrigger >
                 <ContextMenuContent>
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem onClick={() => { }}>
-                            <FilePlus className="mr-2 h-4 w-4" />
-                            <span>New file</span>
-                        </ContextMenuItem>
-                    </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem onClick={() => { }} >
-                            <FolderPlus className="mr-2 h-4 w-4" />
-                            <span>New folder</span>
-                        </ContextMenuItem>
-                    </div>
+                    {
+                        editable && (
+                            <>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={() => { }}>
+                                        <FilePlus className="mr-2 h-4 w-4" />
+                                        <span>TODO - New file</span>
+                                    </ContextMenuItem>
+                                </div>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={() => { }} >
+                                        <FolderPlus className="mr-2 h-4 w-4" />
+                                        <span>TODO - New folder</span>
+                                    </ContextMenuItem>
+                                </div>
+                            </>
+                        )
+                    }
                     <div className='hover:bg-muted transition-colors rounded'>
                         <DialogTrigger className='w-full'>
                             <ContextMenuItem>
@@ -363,16 +266,28 @@ export default function MainView({ path, directoryListing }: { path: string, dir
                             </ContextMenuItem>
                         </DialogTrigger>
                     </div>
+                    {
+                        editable && (
+                            <>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem>
+                                        <img src="/icons/file_type_vscode.svg" className="mr-2 h-4 w-4" />
+                                        <span>TODO - Open with VSCode</span>
+                                    </ContextMenuItem>
+                                </div>
+                            </>
+                        )
+                    }
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
-                            <img src="/icons/file_type_vscode.svg" className="mr-2 h-4 w-4" />
-                            <span>Open with VSCode</span>
+                            <Download className="mr-2 h-4 w-4" />
+                            <span>TODO - Download</span>
                         </ContextMenuItem>
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
                             <TableProperties className="mr-2 h-4 w-4" />
-                            <span>Details</span>
+                            <span>TODO - Details</span>
                         </ContextMenuItem>
                     </div>
                 </ContextMenuContent>
