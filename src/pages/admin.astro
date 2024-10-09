@@ -41,7 +41,7 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
                                 <td class="border border-solid border-white">
                                     <div>
                                         {/* @ts-ignore */}
-                                        <input class="p-1 w-52 bg-transparent" name={`${user.id}|${column}`} value={user[column]}/>
+                                        <input class="p-1 w-52 bg-transparent" name={`user|${user.id}|${column}`} value={user[column]}/>
                                     </div>
                                 </td>
                             ))}
@@ -63,7 +63,7 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
                                 <td class="border border-solid border-white">
                                     <div>
                                         {/* @ts-ignore */}
-                                        <input class="p-1 w-52 bg-transparent" name={`${share.id}|${column}`} value={share[column]}/>
+                                        <input class="p-1 w-52 bg-transparent" name={`shares|${share.id}|${column}`} value={share[column]}/>
                                     </div>
                                 </td>
                             ))}
