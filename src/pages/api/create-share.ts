@@ -29,13 +29,14 @@ export async function POST(context: APIContext): Promise<Response> {
     let shareId = generateId(16)
     try {
 
-        db.prepare("INSERT INTO shares (id, path, local_path, password, editable, expires_at) VALUES(?, ?, ?, ?, ?, ?)").run(
+        db.prepare("INSERT INTO shares (id, path, local_path, password, editable, expires_at, type) VALUES(?, ?, ?, ?, ?, ?, ?)").run(
             shareId,
             data.url,
             path.join(context.locals.user.scope, data.path),
             data.password || undefined,
             data.editable ? 1 : 0,
-            data.expires_at ? new Date(data.expires_at).getTime() : undefined
+            data.expires_at ? new Date(data.expires_at).getTime() : undefined,
+            data.type
         );
 
         userShares.push(shareId)
