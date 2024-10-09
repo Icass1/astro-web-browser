@@ -27,6 +27,7 @@ export interface DatabaseShare {
     times_downloaded: number;
     editable: boolean;
     expires_at: number;
+    type: 'directory' | 'file';
 }
 
 export interface DatabaseConfig {
