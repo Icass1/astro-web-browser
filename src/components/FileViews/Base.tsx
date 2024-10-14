@@ -321,13 +321,13 @@ export default function BaseFile(
                     <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <ContextMenuItem>
                             <img src="/icons/file_type_vscode.svg" className="mr-2 h-4 w-4" />
-                            <span>Open with VSCode</span>
+                            <span>TODO - Open with VSCode</span>
                         </ContextMenuItem>
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem >
                             <TableProperties className="mr-2 h-4 w-4" />
-                            <span>Details</span>
+                            <span>TODO - Details</span>
                         </ContextMenuItem>
                     </div>
 
