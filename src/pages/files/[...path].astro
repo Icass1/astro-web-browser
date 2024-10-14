@@ -53,10 +53,9 @@ try {
         }
     }
 } catch (err) {
-    error  = err
+    error = err;
     console.error("Error reading directory:", error);
 }
-
 ---
 
 <Layout
@@ -64,22 +63,74 @@ try {
         ? Astro.params.path.split("/")[Astro.params.path.split("/").length - 1]
         : "FileBrowser"}
 >
-    <div class="h-full min-w-0w-full m-4 pb-4 grid grid-rows-[100px_1fr]">
+    <div class="h-full min-w-0 max-w-full m-4 pb-4 grid grid-rows-[100px_1fr]">
         <Header />
         <div class="min-h-0 max-h-full">
 
-            {error != undefined ?
-                <div>{error}</div>
-                :
-                isDirectory ? (
-                    <MainView
-                        directoryListing={directoryListing}
-                        path={Astro.params.path as string}
-                        client:only="react"
-                        editable={true}
-                    />
-                ) : 
-                    fileContent != undefined && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined ? 
+            {error != undefined && 
+                <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                        <label>Unable to get directory contents</label>
+                        <label class="font-normal text-sm">{error}</label>
+                </div>
+            }
+            {error == undefined && isDirectory && !directoryListing &&  
+                <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                    <label>Unable to get directory contents</label>
+                    <label class="font-normal text-sm">{error}</label>
+                </div>
+            }
+            {error == undefined && isDirectory && directoryListing &&  
+                <MainView
+                    directoryListing={directoryListing}
+                    path={Astro.params.path as string}
+                    client:only="react"
+                    editable={true}
+                />
+            }
+
+            {error == undefined && !isDirectory  && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined && 
+                <FileContentView
+                    path={Astro.params.path || "/"}
+                    fileContent={fileContent}
+                    isText={isTextFile as boolean}
+                    fileExt={fileType.ext}
+                    fileType={fileType.mime}
+                    userId={Astro.locals.user.id}
+                    client:visible
+                />
+            }
+
+            {error == undefined && !isDirectory && (isTextFile != undefined || fileType?.ext != undefined || fileType?.mime != undefined) && 
+                <div>Error</div>
+                <div>{JSON.stringify(isTextFile)}</div>
+                <div>{JSON.stringify(fileType)}</div>
+            }
+
+<!-- 
+            {
+                error != undefined ? (
+                    <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                        <label>Unable to get directory contents</label>
+                        <label class="font-normal text-sm">{error}</label>
+                    </div>
+                ) : isDirectory ? (
+                    !directoryListing ? (
+                        <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                            <label>Unable to get directory contents</label>
+                            <label class="font-normal text-sm">{error}</label>
+                        </div>
+                    ) : (
+                        <MainView
+                            directoryListing={directoryListing}
+                            path={Astro.params.path as string}
+                            client:only="react"
+                            editable={true}
+                        />
+                    )
+                ) : fileContent != undefined &&
+                  isTextFile != undefined &&
+                  fileType?.ext != undefined &&
+                  fileType?.mime != undefined ? (
                     <FileContentView
                         path={Astro.params.path || "/"}
                         fileContent={fileContent}
@@ -89,9 +140,10 @@ try {
                         userId={Astro.locals.user.id}
                         client:visible
                     />
-                    :
+                ) : (
                     <div>Error</div>
-            }
+                )
+            } -->
         </div>
     </div>
 </Layout>

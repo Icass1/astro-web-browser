@@ -36,7 +36,7 @@ import ShareDialog from "./ShareDialog";
 
 
 
-export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: FileStats[] | undefined, editable: boolean }) {
+export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: FileStats[], editable: boolean }) {
 
     const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
@@ -87,9 +87,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         }
     };
 
-    if (!directoryListing) {
-        return <div className="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit">Directory not found</div>
-    }
+
 
     interface GridInfo {
         minWidth: number,

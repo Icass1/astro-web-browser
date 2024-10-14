@@ -42,7 +42,11 @@ export async function getDirectory(directoryPath: string) {
             let fileType
 
             if (stats.isFile()) {
-                fileType = await fileTypeFromFile(filePath) || { mime: "none" }
+                try {
+                    fileType = await fileTypeFromFile(filePath) || { mime: "none" }
+                } catch {
+                    fileType = "none"
+                }
             } else {
                 fileType = { mime: "dir" }
             }

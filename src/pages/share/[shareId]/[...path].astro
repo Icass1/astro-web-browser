@@ -52,6 +52,7 @@ let fileContent;
 let isTextFile;
 let stat;
 let fileType;
+let error
 
 try {
     stat = await fs.stat(directoryPath);
@@ -68,7 +69,8 @@ try {
             fileContent = undefined;
         }
     }
-} catch (error) {
+} catch (err) {
+    error = err
     console.error("Error reading directory:", error);
 }
 
@@ -109,7 +111,12 @@ const QRBuffer = (await qrcode.toBuffer(`http://192.168.1.129:4321/share/${share
                 ))}
             </div>
         </div>
-        {
+        {error != undefined || !directoryListing  ?
+            <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                <label>Unable to get directory contents</label>
+                <label class='font-normal text-sm'>{error}</label>
+            </div>
+            :
             isDirectory ? (
                 <MainView
                     directoryListing={directoryListing}
