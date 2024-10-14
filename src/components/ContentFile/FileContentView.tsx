@@ -1,5 +1,6 @@
 import { Uint8ArrayToStr } from "@/lib/uint8ArrayToStr";
 import TextFileView from "./TextFile";
+import Collabora from "./Collabora";
 
 export default function FileContentView(
     {
@@ -8,13 +9,15 @@ export default function FileContentView(
         isText,
         fileExt,
         fileType,
+        userId
     }:
         {
-            path: string | undefined,
-            fileContent: Buffer | undefined,
-            isText: boolean | undefined,
-            fileExt: string | undefined,
-            fileType: string | undefined,
+            path: string,
+            fileContent: Buffer,
+            isText: boolean,
+            fileExt: string,
+            fileType: string,
+            userId: string,
         }) {
 
 
@@ -37,12 +40,23 @@ export default function FileContentView(
             return (
                 <video className="max-h-full max-w-full" controls src={"/file/" + path}></video>
             )
+        } else if (
+            [
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ].includes(fileType)) {
+            return (
+                <Collabora userId={userId} filePath={path} />
+            )
+
         } else {
             return (
                 <>
                     <label>File format not supported</label>
                     <label>fileType '{fileType}'</label>
                     <label>isText '{JSON.stringify(isText)}'</label>
+                    <label>{path}</label>
                 </>
             )
         }
