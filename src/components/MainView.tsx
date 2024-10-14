@@ -96,14 +96,14 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         height: (width: number) => number
     }
 
-    const [gridInfo, setGridInfo] = useState<GridInfo>({ minWidth: 0, height: (width: number) => (1) })
+    const [gridInfo, setGridInfo] = useState<GridInfo>({ minWidth: 0, height: () => (1) })
 
     useEffect(() => {
         switch (view) {
             case "details":
-                return setGridInfo({ minWidth: 100000, height: (width: number) => (32) })
+                return setGridInfo({ minWidth: 100000, height: () => (32) })
             case "big":
-                return setGridInfo({ minWidth: 400, height: (width: number) => (62) })
+                return setGridInfo({ minWidth: 400, height: () => (62) })
             case "galery":
                 return setGridInfo({ minWidth: 300, height: (width: number) => (width + 68) })
         }

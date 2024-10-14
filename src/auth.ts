@@ -1,6 +1,6 @@
 import { Lucia } from "lucia";
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
-import sqlite from "better-sqlite3";
+// import sqlite from "better-sqlite3";
 import type { DatabaseUser } from "./types";
 import { db } from "./lib/db";
 
