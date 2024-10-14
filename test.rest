@@ -1,1 +1,0 @@
-https://api.music.rockhosting.org/api/lists

@@ -21,7 +21,6 @@ if (!Astro.locals.user) {
 }
 
 // Define the directory you want to list
-// const directoryPath = path.join("/home/icass", Astro.params.path || ""); // replace 'your-directory' with the path
 const directoryPath = path.join(
     Astro.locals.user.scope,
     Astro.params.path || "",
@@ -54,6 +53,7 @@ try {
 } catch (error) {
     console.error("Error reading directory:", error);
 }
+
 ---
 
 <Layout
@@ -61,7 +61,7 @@ try {
         ? Astro.params.path.split("/")[Astro.params.path.split("/").length - 1]
         : "FileBrowser"}
 >
-    <div class="h-full min-w-0 max-w-full m-4 pb-4 grid grid-rows-[100px_1fr]">
+    <div class="h-full min-w-0w-full m-4 pb-4 grid grid-rows-[100px_1fr]">
         <Header />
         <div class="min-h-0 max-h-full">
             {
@@ -72,17 +72,19 @@ try {
                         client:only="react"
                         editable={true}
                     />
-                ) : (
+                ) : 
+                    fileContent != undefined && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined ? 
                     <FileContentView
-                        path={Astro.params.path}
+                        path={Astro.params.path || "/"}
                         fileContent={fileContent}
                         isText={isTextFile as boolean}
-                        fileExt={fileType?.ext}
-                        fileType={fileType?.mime}
+                        fileExt={fileType.ext}
+                        fileType={fileType.mime}
                         userId={Astro.locals.user.id}
                         client:visible
                     />
-                )
+                    :
+                    <div>Error</div>
             }
         </div>
     </div>

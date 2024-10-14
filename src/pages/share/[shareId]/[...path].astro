@@ -117,18 +117,20 @@ const QRBuffer = (await qrcode.toBuffer(`http://192.168.1.129:4321/share/${share
                     editable={share.editable == true ? true : false}
                     client:only="react"
                 />
-            ) : (
+            ) : 
+                fileContent != undefined && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined ? 
                 <FileContentView
-                    path={Astro.params.path}
+                    path={Astro.params.path || "/"}
                     fileContent={fileContent}
                     isText={isTextFile as boolean}
-                    fileExt={fileType?.ext}
-                    fileType={fileType?.mime}
-                    userId={Astro.locals.user}
+                    fileExt={fileType.ext}
+                    fileType={fileType.mime}
+                    userId={Astro?.locals?.user?.id || "guest"}
                     client:visible
                 />
-            )
-        }
+                :
+                <div>Error</div>
+            }
         </div>
     </div>
 </Layout>

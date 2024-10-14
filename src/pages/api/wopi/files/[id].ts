@@ -12,7 +12,7 @@ export async function GET(context: APIContext): Promise<Response> {
     }
     const accessToken = new URL(context.request.url).searchParams.get('access_token');
     const userId = accessToken
-    const userDB = (db.prepare(`SELECT scope, username FROM user WHERE id='${userId}'`).get() as DatabaseUser)
+    const userDB = (db.prepare(`SELECT scope, username, admin FROM user WHERE id='${userId}'`).get() as DatabaseUser)
     const scope = userDB.scope
     const filePath = path.join(scope, id?.replace(/_._._/g, "/"))
 
@@ -28,7 +28,8 @@ export async function GET(context: APIContext): Promise<Response> {
         Version: '1',
         SupportsUpdate: true,
         UserCanWrite: true,
-        LastModifiedTime: new Date().toISOString()
+        LastModifiedTime: new Date().toISOString(),
+        IsAdminUser: userDB.admin
     };
 
     return new Response(JSON.stringify(fileData), {

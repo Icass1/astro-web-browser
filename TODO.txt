@@ -70,6 +70,7 @@ Left panel
     Recently visited directories
     Pinned directories
     Shares
+        Click to se share info
 
 Shares
     Custom path
@@ -90,6 +91,9 @@ Admin panel
         Edit permissions
         Change password
         DONE - See shares
+    Shares
+    Enable/Disable Signup
+    Default scope
 
 Database
     Users
