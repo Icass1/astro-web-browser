@@ -121,8 +121,8 @@ export default function ShareDialog({ path, type }: { path: string | undefined, 
                         type="password" />
                     <Eye
                         className="absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 hover:scale-105"
-                        onMouseDown={(e) => { sharePasswordRef.current ? sharePasswordRef.current.type = "" : '' }}
-                        onMouseUp={(e) => { sharePasswordRef.current ? sharePasswordRef.current.type = "password" : '' }}
+                        onMouseDown={() => { sharePasswordRef.current ? sharePasswordRef.current.type = "" : '' }}
+                        onMouseUp={() => { sharePasswordRef.current ? sharePasswordRef.current.type = "password" : '' }}
                     />
                 </div>
             </div>

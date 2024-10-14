@@ -1,6 +1,5 @@
 import type { APIContext } from "astro";
 
-import fs from 'fs/promises';
 import path from 'path';
 import { db } from "@/lib/db";
 import { generateId } from "lucia";
