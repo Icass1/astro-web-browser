@@ -35,6 +35,8 @@ let isTextFile;
 let stat;
 let fileType;
 
+let error;
+
 try {
     stat = await fs.stat(directoryPath);
 
@@ -50,7 +52,8 @@ try {
             fileContent = undefined;
         }
     }
-} catch (error) {
+} catch (err) {
+    error  = err
     console.error("Error reading directory:", error);
 }
 
@@ -64,7 +67,10 @@ try {
     <div class="h-full min-w-0w-full m-4 pb-4 grid grid-rows-[100px_1fr]">
         <Header />
         <div class="min-h-0 max-h-full">
-            {
+
+            {error != undefined ?
+                <div>{error}</div>
+                :
                 isDirectory ? (
                     <MainView
                         directoryListing={directoryListing}
