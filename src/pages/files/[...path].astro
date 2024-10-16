@@ -40,11 +40,10 @@ let fileType;
 
 let error;
 
+const config = (db.prepare("SELECT * FROM config").get() as DatabaseConfig)
 
-const collaboraURL = (db.prepare("SELECT collabora_url FROM config").get() as DatabaseConfig).collabora_url
-
-
-
+const collaboraURL = config.collabora_url
+const WOPIHost = config.wopi_host
 
 try {
     stat = await fs.stat(directoryPath);
@@ -65,6 +64,9 @@ try {
     error = err;
     console.error("Error reading directory:", error);
 }
+
+const absolutePath = path.join(Astro.locals.user.scope, Astro.params.path || "/")
+
 ---
 
 <Layout
@@ -99,13 +101,17 @@ try {
     
             {error == undefined && !isDirectory  && isTextFile != undefined && 
                 <FileContentView
-                    path={"/api/file/" + Astro.params.path || "/"}
+                    relativePath={"/api/file/" + Astro.params.path || "/"}
+                    absolutePath={absolutePath}
+                    share={false}
                     fileContent={fileContent}
                     isText={isTextFile as boolean}
                     fileExt={fileType?.ext}
                     fileType={fileType?.mime}
                     userId={Astro.locals?.user?.id || "guest"}
+                    shareId={""}
                     collaboraURL={collaboraURL}
+                    WOPIHost={WOPIHost}
                     client:visible
                 />
             }

@@ -7,12 +7,29 @@
 //     return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 // }
 
-export default function Collabora({ userId, filePath, collaboraURL }: { userId: string, filePath: string, collaboraURL: string }) {
+export default function Collabora(
+    {
+        userId,
+        filePath,
+        collaboraURL,
+        share,
+        shareId,
+        WOPIHost
+    }: {
+        userId: string,
+        filePath: string,
+        collaboraURL: string,
+        share: boolean,
+        shareId: string,
+        WOPIHost: string
+    }) {
 
     const fileId = filePath.replace(/\//g, '_._._')
 
-    const wopiSrc = `http://host.docker.internal:4321/api/wopi/files/${fileId}`;
-    const accessToken = userId;
+    const wopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
+    const accessToken = JSON.stringify({ share: share, id: share ? shareId : userId });
+
+    console.log(wopiSrc)
 
     const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`
 
@@ -25,7 +42,7 @@ export default function Collabora({ userId, filePath, collaboraURL }: { userId: 
     }
 
     return (
-        <div className="bg-red-400 h-full w-full">
+        <div className="bg-neutral-800 h-full w-full">
             <iframe src={editorUrl} width="100%" height="100%"></iframe>
         </div>
 

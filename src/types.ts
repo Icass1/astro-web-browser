@@ -32,7 +32,8 @@ export interface DatabaseShare {
 
 export interface DatabaseConfig {
     signup: number,
-    collabora_url: string
+    collabora_url: string,
+    wopi_host: string
 }
 
 export interface SignupDB {

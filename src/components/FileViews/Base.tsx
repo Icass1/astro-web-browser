@@ -59,6 +59,8 @@ export default function BaseFile(
     const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
+    const anchorRef = useRef<HTMLAnchorElement>(null)
+
     const onDrop = async (files: FileList) => {
         for (let index = 0; index < files.length; index++) {
             if (files.item(index)) {
@@ -280,12 +282,21 @@ export default function BaseFile(
                         onDragStart={handleDragStart}
                         className={'transition-transform ' + (isDragging ? "scale-[1.01]" : '')}
                     >
-                        <a
+                        <div
+                            className={cn("border rounded py-2 px-3 cursor-pointer hover:bg-muted select-none", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
+                            onDoubleClick={() => { anchorRef.current?.click() }}
+                        >
+                            {children}
+
+                            <a ref={anchorRef} href={href} className="hidden"></a>
+                        </div>
+
+                        {/* <a
                             className={cn("border rounded-lg py-2 px-3 cursor-pointer hover:bg-muted", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
                             href={href}
                         >
                             {children}
-                        </a >
+                        </a > */}
                     </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>

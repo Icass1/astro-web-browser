@@ -84,6 +84,10 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
                 <input name="config|collabora_url" placeholder='https://example.com' class='p-1 rounded' value={config.collabora_url}>
             </div>
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+                <div>WOPI Host</div>
+                <input name="config|1|wopi_host" placeholder='https://example.com' class='p-1 rounded' value={config.wopi_host}>
+            </div>
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <button>Save</button>
             </div>
         </div>

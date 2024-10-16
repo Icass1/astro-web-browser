@@ -4,53 +4,62 @@ import Collabora from "./Collabora";
 
 export default function FileContentView(
     {
-        path,
+        relativePath,
+        absolutePath,
         fileContent,
         isText,
         fileExt,
         fileType,
         userId,
-        collaboraURL
+        collaboraURL,
+        share,
+        shareId,
+        WOPIHost,
     }:
         {
-            path: string,
+            relativePath: string,
+            absolutePath: string,
             fileContent: Buffer | undefined,
             isText: boolean,
             fileExt: string | undefined,
             fileType: string | undefined,
             userId: string,
-            collaboraURL: string
+            collaboraURL: string,
+            share: boolean,
+            shareId: string,
+            WOPIHost: string
         }) {
 
-
     const renderMainView = () => {
-
         if (isText) {
+            // return <Collabora userId={userId} filePath={path} collaboraURL={collaboraURL} />
+
             return <TextFileView fileContent={Uint8ArrayToStr(fileContent as Buffer)} />
         } else if (fileType?.startsWith("image")) {
             return (
                 <div className="h-full w-full overflow-auto">
                     {/* <img className="left-1/2 relative top-1/2 -translate-x-1/2 -translate-y-1/2" src={"/api/file/" + path} /> */}
-                    <img className="left-1/2 relative -translate-x-1/2" src={path} />
+                    <img className="left-1/2 relative -translate-x-1/2" src={relativePath} />
                 </div>
             )
-        } else if (fileType == "application/pdf") {
+        } else if (fileType == "DISABLEDapplication/pdf") {
             return (
-                <iframe className="h-full w-full" src={path}></iframe>
+                <iframe className="h-full w-full" src={relativePath}></iframe>
             )
         } else if (fileType == "video/mp4") {
             return (
-                <video className="max-h-full max-w-full" controls src={path}></video>
+                <video className="max-h-full max-w-full" controls src={relativePath}></video>
             )
         } else if (
-            fileType && 
+            fileType &&
             [
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/pdf'
             ].includes(fileType)) {
             return (
-                <Collabora userId={userId} filePath={path} collaboraURL={collaboraURL} />
+                <Collabora userId={userId} filePath={absolutePath} collaboraURL={collaboraURL} share={share} shareId={shareId} WOPIHost={WOPIHost} />
             )
 
         } else {
@@ -59,14 +68,14 @@ export default function FileContentView(
                     <label>File format not supported</label>
                     <label>fileType '{fileType}'</label>
                     <label>isText '{JSON.stringify(isText)}'</label>
-                    <label>{path}</label>
+                    <label>{relativePath}</label>
                 </>
             )
         }
     }
 
     return (
-        <div className="flex flex-col gap-10 h-full overflow-hidden px-1 pb-2">
+        <div className="flex flex-col gap-10 h-full overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-neutral-800">
             {renderMainView()}
         </div>
     )

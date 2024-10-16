@@ -75,9 +75,12 @@ try {
     console.error("Error reading directory:", error);
 }
 
-const collaboraURL = (db.prepare("SELECT collabora_url FROM config").get() as DatabaseConfig).collabora_url
+const config = (db.prepare("SELECT * FROM config").get() as DatabaseConfig)
 
-const QRBuffer = (await qrcode.toBuffer(`http://192.168.1.129:4321/share/${share.id}`, {margin: 1, width: 200})).toString('base64')
+const collaboraURL = config.collabora_url
+const WOPIHost = config.wopi_host
+
+const QRBuffer = (await qrcode.toBuffer(`https://files2.rockhosting.org/share/${share.id}`, {margin: 1, width: 200})).toString('base64')
 
 
 // Check if user owns the share, if not, it adds one to times_accessed.
@@ -93,6 +96,8 @@ if (sharesString) {
 } else {
     db.exec(`UPDATE share SET times_accessed = ${share.times_accessed + 1} WHERE id = '${share.id}'`)
 }
+
+const absolutePath = path.join(share.local_path, Astro.params.path || "/")
 
 ---
 
@@ -152,13 +157,17 @@ if (sharesString) {
 
         {error == undefined && !isDirectory  && isTextFile != undefined && 
             <FileContentView
-                path={"/api/share/" + share.id + "/" + Astro.params.path || "/"}
+                relativePath={"/api/share/" + share.id + "/" + Astro.params.path || "/"}
+                absolutePath={absolutePath}
+                share={true}
                 fileContent={fileContent}
                 isText={isTextFile as boolean}
                 fileExt={fileType?.ext}
                 fileType={fileType?.mime}
                 userId={Astro.locals?.user?.id || "guest"}
+                shareId={share.id}
                 collaboraURL={collaboraURL}
+                WOPIHost={WOPIHost}
                 client:visible
             />
         }

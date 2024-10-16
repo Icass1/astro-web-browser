@@ -5,20 +5,9 @@ import path from 'path';
 import { fileTypeFromBuffer } from 'file-type'
 
 import { db } from "@/lib/db";
+import type { DatabaseShare } from "@/types";
 
 export async function GET(context: APIContext): Promise<Response> {
-
-    // if (!context.locals.user) {
-    //     return new Response(
-    //         JSON.stringify({
-    //             error: "User not logged in"
-    //         }),
-    //         {
-    //             status: 401
-    //         }
-    //     );
-    // }
-
     try {
 
         const share = db
@@ -27,11 +16,7 @@ export async function GET(context: APIContext): Promise<Response> {
             )
             .get() as DatabaseShare;
 
-        console.log(context.params.path.split("/").splice(1).join("/"))
-
-        // return new Response("OK")
-
-        if (!context.params.path) return new Response(
+        if (!context.params.path || !share) return new Response(
             JSON.stringify({
                 error: "File not found"
             }),

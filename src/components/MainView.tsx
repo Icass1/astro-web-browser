@@ -45,6 +45,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const size = useWindowSize()
 
     const [actualDialog, setActualDialog] = useState<"share">("share")
+    const [selectedFiles, setSelectedFiles] = useState<string[]>([])
 
     const onDrop = async (files: FileList) => {
         for (let fileToUpload of files) {
@@ -86,8 +87,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
             onDrop(event.dataTransfer.files);
         }
     };
-
-
 
     interface GridInfo {
         minWidth: number,
@@ -148,19 +147,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
 
         setWidth(newWidth - 2)
 
-        // console.log({
-        //     "directoryListing.length": directoryListing.length,
-        //     columns: columns,
-        //     height: height,
-        //     gap: gap,
-        //     "scrollRef.current.offsetHeight": scrollRef.current.offsetHeight,
-        //     "scroll": scroll,
-        // })
-
-        // console.log(totalHeight)
-        // console.log(Math.floor(scroll / (height + gap)) * columns)
-        // console.log(Math.floor((scrollRef.current.offsetHeight + scroll) / (height + gap) + 2) * columns)
-
         setTotalHeight(totalHeight)
     }, [scroll, scrollRef, size, columns, gridInfo, height])
 
@@ -203,7 +189,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         }
     }
 
-
     return (
         <Dialog>
             <ContextMenu>
@@ -217,19 +202,18 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                         ref={scrollRef}
                         onScrollCapture={(e) => { setScroll((e.target as HTMLDivElement).scrollTop) }}
                     >
-                        <div id="asfdasdf" style={{ height: `${totalHeight}px` }}></div>
+                        <div style={{ height: `${totalHeight}px` }}></div>
                         {
                             directoryListing.slice(startIndex, endIndex).map((file, index) => (
                                 <div
                                     key={file.name}
-                                    className="absolute"
+                                    className={cn("absolute", selectedFiles.includes(file.name) && "bg-neutral-600 rounded")}
                                     style={{
                                         left: `${(((index + startIndex) % columns)) * (width + gap)}px`,
                                         top: `${Math.floor((index + startIndex) / columns) * (height + gap) - scroll}px`,
                                         width: `${width}px`
                                     }}
-                                    onScroll={() => { console.log("onScroll") }}
-                                    onScrollCapture={() => { console.log("onScrollCapture") }}
+                                    onClick={() => { if (!selectedFiles.includes(file.name)) setSelectedFiles([...selectedFiles, file.name])}}
                                 >
                                     {getFileView(file)}
                                 </div>
