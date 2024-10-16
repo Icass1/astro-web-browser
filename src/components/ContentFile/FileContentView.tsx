@@ -13,7 +13,7 @@ export default function FileContentView(
     }:
         {
             path: string,
-            fileContent: Buffer,
+            fileContent: Buffer | undefined,
             isText: boolean,
             fileExt: string,
             fileType: string,
