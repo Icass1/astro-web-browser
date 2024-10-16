@@ -16,6 +16,9 @@ import { fileTypeFromBuffer } from "file-type";
 import path from "path";
 import fs from "fs/promises";
 
+import { db } from "@/lib/db";
+import type { DatabaseConfig } from '@/types'
+
 if (!Astro.locals.user) {
     return Astro.redirect("/login");
 }
@@ -36,6 +39,12 @@ let stat;
 let fileType;
 
 let error;
+
+
+const collaboraURL = (db.prepare("SELECT collabora_url FROM config").get() as DatabaseConfig).collabora_url
+
+
+
 
 try {
     stat = await fs.stat(directoryPath);
@@ -87,25 +96,28 @@ try {
                     editable={true}
                 />
             }
-
-            {error == undefined && !isDirectory  && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined && 
+    
+            {error == undefined && !isDirectory  && isTextFile != undefined && 
                 <FileContentView
-                    path={Astro.params.path || "/"}
+                    path={"/api/file/" + Astro.params.path || "/"}
                     fileContent={fileContent}
                     isText={isTextFile as boolean}
-                    fileExt={fileType.ext}
-                    fileType={fileType.mime}
-                    userId={Astro.locals.user.id}
+                    fileExt={fileType?.ext}
+                    fileType={fileType?.mime}
+                    userId={Astro.locals?.user?.id || "guest"}
+                    collaboraURL={collaboraURL}
                     client:visible
                 />
             }
-
-            {error == undefined && !isDirectory && (isTextFile != undefined || fileType?.ext != undefined || fileType?.mime != undefined) && 
+    
+            {error == undefined && !isDirectory && isTextFile == undefined && 
                 <div>Error</div>
-                <div>{JSON.stringify(isTextFile)}</div>
-                <div>{JSON.stringify(fileType)}</div>
+                <div>error == undefined -> {JSON.stringify(error == undefined)}</div>
+                <div>!isDirectory -> {JSON.stringify(!isDirectory)}</div>
+                <div>isTextFile != undefined -> {JSON.stringify(isTextFile != undefined)}</div>
+                <div>fileType?.ext != undefined -> {JSON.stringify(fileType?.ext != undefined)}</div>
+                <div>fileType?.mime != undefined -> {JSON.stringify(fileType?.mime != undefined)}</div>
             }
-
 <!-- 
             {
                 error != undefined ? (

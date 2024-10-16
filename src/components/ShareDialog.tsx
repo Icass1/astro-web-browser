@@ -107,8 +107,8 @@ export default function ShareDialog({ path, type }: { path: string | undefined, 
                     className="invalid:bg-red-400/10 "
                     value={shareUrl}
                     onChange={(e) => { setShareUrl(e.target.value) }}
-                    maxLength={8}
-                    minLength={8}
+                    maxLength={20}
+                    minLength={4}
                 />
             </div>
             <div className="grid grid-cols-[120px_1fr] gap-2 items-center">

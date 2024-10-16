@@ -14,7 +14,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
 
 // console.log("ALTER TABLE")
 // db.exec(`UPDATE user SET admin = 1 WHERE id = 'qzwnikdpu60pb3v'`)
-// db.exec(`ALTER TABLE user ADD COLUMN shares TEXT DEFAULT '[]' NOT NULL `)
+// db.exec(`ALTER TABLE share ADD COLUMN type TEXT NOT NULL`)
 // db.exec("DROP TABLE config")
 // db.exec("DELETE FROM config WHERE id = '1.0'")
 
@@ -28,7 +28,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS share (
     times_accessed INTEGER DEFAULT 0 NOT NULL,
     times_downloaded INTEGER DEFAULT 0 NOT NULL,
     editable BOOLEAN DEFAULT 0 NOT NULL,
-    expires_at INTEGER
+    expires_at INTEGER,
+    type TEXT NOT NULL
 )`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS session (
@@ -40,7 +41,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS session (
 
 db.exec(`CREATE TABLE IF NOT EXISTS config (
     id TEXT NOT NULL PRIMARY KEY,
-    signup BOOLEAN DEFAULT 1 NOT NULL
+    signup BOOLEAN DEFAULT 1 NOT NULL,
+    collabora_url TEXT DEFAULT ''
 )`);
 
 const config = db.prepare("SELECT * FROM config WHERE id='1'").get()

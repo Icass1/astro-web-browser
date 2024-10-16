@@ -76,8 +76,12 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
 
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <div>Enable signup</div>
-                <input id='enableSignupHidden' name="enable_signup" type="hidden" value="off" checked>
-                <input id='enableSignup' name="enable_signup" type="checkbox" value="on" checked={config.signup == 1}>
+                <input id='enableSignupHidden' name="config|enable_signup" type="hidden" value="off" checked>
+                <input id='enableSignup' name="config|enable_signup" type="checkbox" value="on" checked={config.signup == 1}>
+            </div>
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+                <div>Collabora URL</div>
+                <input name="config|collabora_url" placeholder='https://example.com' class='p-1 rounded' value={config.collabora_url}>
             </div>
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <button>Save</button>

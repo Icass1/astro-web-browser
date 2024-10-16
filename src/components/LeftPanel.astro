@@ -30,6 +30,7 @@ const shares =( db.prepare("SELECT * FROM share").all() as DatabaseShare[]).filt
 
 if (userShares.length != shares.length) {
     // User has a share that doesn't exist
+    console.warn("User has a share that doesn't exist")
 }
 
 ---

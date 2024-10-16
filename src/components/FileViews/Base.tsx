@@ -154,7 +154,7 @@ export default function BaseFile(
         toast("Downloading " + file.name)
 
         const downloadElement = document.createElement("a")
-        downloadElement.href = "/file/" + (path ? (path + "/") : '') + file.name
+        downloadElement.href = "/api/file/" + (path ? (path + "/") : '') + file.name
         // href={(path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name))}
 
         downloadElement.download = file.name

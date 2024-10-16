@@ -17,6 +17,7 @@ import MainView from "@/components/MainView";
 import FileContentView from "@/components/ContentFile/FileContentView";
 
 import { Button } from '@/components/ui/button';
+import type { DatabaseConfig, DatabaseUser } from '@/types'
 
 import * as qrcode from "qrcode"
 
@@ -27,7 +28,7 @@ import {
 
 const share = db
     .prepare(
-        `SELECT * FROM share WHERE id='${Astro.params.shareId as string}'`,
+        `SELECT * FROM share WHERE path='${Astro.params.shareId as string}'`,
     )
     .get() as DatabaseShare;
 
@@ -74,11 +75,26 @@ try {
     console.error("Error reading directory:", error);
 }
 
+const collaboraURL = (db.prepare("SELECT collabora_url FROM config").get() as DatabaseConfig).collabora_url
 
 const QRBuffer = (await qrcode.toBuffer(`http://192.168.1.129:4321/share/${share.id}`, {margin: 1, width: 200})).toString('base64')
+
+
+// Check if user owns the share, if not, it adds one to times_accessed.
+const sharesString = (db.prepare(`SELECT shares FROM user WHERE id = '${Astro.locals?.user?.id}'`).get() as DatabaseUser)?.shares
+if (sharesString) {
+    const shares = JSON.parse(sharesString)
+
+    if (shares.includes(share.id)) {
+    } else {
+        db.exec(`UPDATE share SET times_accessed = ${share.times_accessed + 1} WHERE id = '${share.id}'`)
+    }
+
+} else {
+    db.exec(`UPDATE share SET times_accessed = ${share.times_accessed + 1} WHERE id = '${share.id}'`)
+}
+
 ---
-
-
 
 <Layout
     title={Astro.params.path
@@ -102,43 +118,59 @@ const QRBuffer = (await qrcode.toBuffer(`http://192.168.1.129:4321/share/${share
             </div>
 
             <div class="flex flex-row items-center w-full overflow-x-hidden">
-                <a class="font-semibold hover:bg-muted px-2 rounded py-1" href={`/share/${share.id}`}>Home</a>
+                <a class="font-semibold hover:bg-muted px-2 rounded py-1" href={`/share/${share.path}`}>Home</a>
                 {Astro.params.path?.split("/").map((dir, index, path)=> (
                     <div class="w-7 h-7">
                         <ChevronRight className='w-7 h-7'/>     
                     </div>
-                <a class="font-semibold hover:bg-muted rounded px-2 py-1" href={`/share/${share.id}/` + path.slice(0, index+1).join("/")}>{dir}</a>
+                <a class="font-semibold hover:bg-muted rounded px-2 py-1" href={`/share/${share.path}/` + path.slice(0, index+1).join("/")}>{dir}</a>
                 ))}
             </div>
         </div>
-        {error != undefined || !directoryListing  ?
+
+
+        {error != undefined && 
+            <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
+                    <label>Unable to get directory contents</label>
+                    <label class="font-normal text-sm">{error}</label>
+            </div>
+        }
+        {error == undefined && isDirectory && !directoryListing &&  
             <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
                 <label>Unable to get directory contents</label>
-                <label class='font-normal text-sm'>{error}</label>
+                <label class="font-normal text-sm">{error}</label>
             </div>
-            :
-            isDirectory ? (
-                <MainView
-                    directoryListing={directoryListing}
-                    path={Astro.params.path as string}
-                    editable={share.editable == true ? true : false}
-                    client:only="react"
-                />
-            ) : 
-                fileContent != undefined && isTextFile != undefined && fileType?.ext != undefined && fileType?.mime != undefined ? 
-                <FileContentView
-                    path={Astro.params.path || "/"}
-                    fileContent={fileContent}
-                    isText={isTextFile as boolean}
-                    fileExt={fileType.ext}
-                    fileType={fileType.mime}
-                    userId={Astro?.locals?.user?.id || "guest"}
-                    client:visible
-                />
-                :
-                <div>Error</div>
-            }
-        </div>
+        }
+        {error == undefined && isDirectory && directoryListing &&  
+            <MainView
+                directoryListing={directoryListing}
+                path={Astro.params.path as string}
+                client:only="react"
+                editable={true}
+            />
+        }
+
+        {error == undefined && !isDirectory  && isTextFile != undefined && 
+            <FileContentView
+                path={"/api/share/" + share.id + "/" + Astro.params.path || "/"}
+                fileContent={fileContent}
+                isText={isTextFile as boolean}
+                fileExt={fileType?.ext}
+                fileType={fileType?.mime}
+                userId={Astro.locals?.user?.id || "guest"}
+                collaboraURL={collaboraURL}
+                client:visible
+            />
+        }
+
+        {error == undefined && !isDirectory && isTextFile == undefined && 
+            <div>Error</div>
+            <div>error == undefined -> {JSON.stringify(error == undefined)}</div>
+            <div>!isDirectory -> {JSON.stringify(!isDirectory)}</div>
+            <div>isTextFile != undefined -> {JSON.stringify(isTextFile != undefined)}</div>
+            <div>fileType?.ext != undefined -> {JSON.stringify(fileType?.ext != undefined)}</div>
+            <div>fileType?.mime != undefined -> {JSON.stringify(fileType?.mime != undefined)}</div>
+        }
     </div>
 </Layout>
 

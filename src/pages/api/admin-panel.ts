@@ -21,8 +21,6 @@ export async function POST(context: APIContext): Promise<Response> {
 
 	}
 
-	console.log("admin-panel", formData.entries())
-
 	for (let k of formData.entries()) {
 		const [table, id, column] = k[0].split("|")
 
@@ -40,8 +38,12 @@ export async function POST(context: APIContext): Promise<Response> {
 					}
 				);
 			}
+		} else if (id == "collabora_url") {
+			db.exec(`UPDATE config SET collabora_url = '${k[1]}' WHERE id = '1'`)
 		} else if (id == "enable_signup") {
 			db.exec(`UPDATE config SET signup = ${k[1] == 'on' ? '1' : '0'} WHERE id = '1'`)
+		} else {
+			console.warn("Unknow id config", id)
 		}
 	}
 	return new Response();

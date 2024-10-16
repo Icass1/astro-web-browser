@@ -28,7 +28,7 @@ export async function POST(context: APIContext): Promise<Response> {
     let shareId = generateId(16)
     try {
 
-        db.prepare("INSERT INTO shares (id, path, local_path, password, editable, expires_at, type) VALUES(?, ?, ?, ?, ?, ?, ?)").run(
+        db.prepare("INSERT INTO share (id, path, local_path, password, editable, expires_at, type) VALUES(?, ?, ?, ?, ?, ?, ?)").run(
             shareId,
             data.url,
             path.join(context.locals.user.scope, data.path),
@@ -52,10 +52,11 @@ export async function POST(context: APIContext): Promise<Response> {
                 status: 200
             }
         );
-    } catch {
+    } catch (err) {
+        console.error("Error reading directory:", err);
         return new Response(
             JSON.stringify({
-                error: "Unable to create share"
+                error: "Unable to create share" + err
             }),
             {
                 status: 500

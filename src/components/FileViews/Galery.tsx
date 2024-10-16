@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Galery(
     { file, path, setOverDirectory, href, editable }: { file: FileStats, path: string | undefined, setOverDirectory: Dispatch<SetStateAction<boolean>>, href: string, editable: boolean }
 ) {
-
     const [loaded, setLoaded] = useState<boolean>(false)
 
     const filePreview = () => {
@@ -18,7 +17,7 @@ export default function Galery(
             return <img
                 onLoad={() => { setLoaded(true) }}
                 className="top-1/2 relative -translate-y-1/2 select-none"
-                src={"/file/" + path + "/" + file.name}
+                src={"/api/file/" + path + "/" + file.name}
             />
         } else if (file.mime.startsWith("video")) {
             return <img
