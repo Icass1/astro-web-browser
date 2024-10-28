@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  collabora:
+    image: code-server
+    container_name: CodeServer
+    ports:
+      - "8364:8081"
+    volumes:
+      - /:/mnt
+    restart: always
