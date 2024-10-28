@@ -59,6 +59,10 @@ Main container
         New file
         New folder
         DONE - Share directory
+        New
+            New excel file
+            New word file
+            New powerpoint file
     Selection area
         Context menu
             Delete
