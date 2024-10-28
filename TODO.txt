@@ -19,9 +19,10 @@ File container
         Add to pinned folder
         Details
             Big Preview
-            File name
-            Size
-            Date modified
+            DONE - File name
+            DONE - Size
+            DONE - Date modified
+            DONE - Path
             If image -> image Size
             Share info
                 Downloads

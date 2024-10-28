@@ -5,6 +5,7 @@ export interface FileStats {
     isDirectory: boolean,
     iconPath: string,
     shared: boolean,
+    shareInfo: DatabaseShare | undefined
     mime: string
 }
 
@@ -37,5 +38,5 @@ export interface DatabaseConfig {
 }
 
 export interface SignupDB {
-	signup: number
+    signup: number
 }

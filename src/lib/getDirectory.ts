@@ -51,6 +51,8 @@ export async function getDirectory(directoryPath: string) {
                 fileType = { mime: "dir" }
             }
 
+
+
             let share = db.prepare(`SELECT * FROM share WHERE local_path='${filePath.replace(/'/g, "''")}'`).get() as DatabaseShare | undefined
             if (share?.expires_at && new Date(share?.expires_at) < new Date()) {
                 share = undefined
@@ -65,6 +67,7 @@ export async function getDirectory(directoryPath: string) {
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: share == undefined ? false : true,
+                shareInfo: share,
                 mime: fileType.mime,
             };
         })

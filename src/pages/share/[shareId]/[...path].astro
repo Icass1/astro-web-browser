@@ -151,7 +151,7 @@ const absolutePath = path.join(share.local_path, Astro.params.path || "/")
                 directoryListing={directoryListing}
                 path={Astro.params.path as string}
                 client:only="react"
-                editable={true}
+                editable={share.editable}
             />
         }
 

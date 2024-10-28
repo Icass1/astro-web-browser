@@ -23,7 +23,7 @@ const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
 
 const userShares = JSON.parse((db.prepare(`SELECT shares FROM user WHERE id='${(Astro.locals.user?.id as string)}'`).get() as DatabaseUser).shares) as string[]
 const shares =( db.prepare("SELECT * FROM share").all() as DatabaseShare[]).filter(share => {
-    if (userShares.includes(share.id)) {
+    if (userShares.includes(share.id) && (!share.expires_at || new Date(share.expires_at) > new Date())) {
         return true
     }
 })
@@ -88,7 +88,7 @@ if (userShares.length != shares.length) {
                 {share.type == "directory" ? 
                     <img src={getFolderIcon(share.local_path.split("/")[share.local_path.split("/").length - 1])} class="w-5 h-5 mr-2" />
                     :
-                    <img src={getFileIcon(share.local_path.split("/")[share.local_path.split("/").length - 1])} class="w-5 h-5 mr-2" />
+                    <img src={getFileIcon(share.local_path.split("/")[share.local_path.split("/").length - 1])} class="w-5 h-5 mr-2"/>
                 }
                 {share.local_path.split("/")[share.local_path.split("/").length - 1]}
             </div>

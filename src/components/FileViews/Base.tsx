@@ -35,6 +35,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import ShareDialog from "../ShareDialog";
+import DetailsDialog from "../DetailsDialog";
 
 export default function BaseFile(
     {
@@ -59,7 +60,7 @@ export default function BaseFile(
     const [isDragging, setIsDragging] = useState(false);
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
 
-    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share">("rename")
+    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share" | "details">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
     const anchorRef = useRef<HTMLAnchorElement>(null)
@@ -263,11 +264,18 @@ export default function BaseFile(
 
     }
 
+    const getDetailsDialog = () => {
+        return <DetailsDialog path={(path ? (path + "/") : "") + file.name} file={file} type={file.isDirectory ? 'directory' : 'file'} />
+
+    }
+
     const getDialogContent = () => {
         if (actualDialog == "delete") {
             return getDeleteDialogContent()
         } else if (actualDialog == "share") {
             return getShareDialogContent()
+        } else if (actualDialog == "details") {
+            return getDetailsDialog()
         } else if (actualDialog == "rename") {
             return getRenameDialogContent()
         }
@@ -318,7 +326,7 @@ export default function BaseFile(
                         </ContextMenuItem>
                     </div>
 
-                    <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
+                    {/* <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <ContextMenuItem className="p-0">
                             <DialogTrigger className='w-full'>
                                 <div className='transition-colors rounded'>
@@ -330,7 +338,17 @@ export default function BaseFile(
                             </DialogTrigger>
 
                         </ContextMenuItem>
-                    </div>
+                    </div> */}
+
+
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                        <div className='hover:bg-muted transition-colors rounded'>
+                            <ContextMenuItem onClick={() => { setActualDialog("share") }}>
+                                <Share2 className="mr-2 h-4 w-4" />
+                                <span>{file.shared ? 'Stop share' : 'Share'}</span>
+                            </ContextMenuItem>
+                        </div>
+                    </DialogTrigger>
 
                     <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <ContextMenuItem>
@@ -338,12 +356,21 @@ export default function BaseFile(
                             <span>TODO - Open with VSCode</span>
                         </ContextMenuItem>
                     </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
+
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                        <div className='hover:bg-muted transition-colors rounded'>
+                            <ContextMenuItem onClick={() => { setActualDialog("details") }}>
+                                <TableProperties className="mr-2 h-4 w-4" />
+                                <span>TODO - Details</span>
+                            </ContextMenuItem>
+                        </div>
+                    </DialogTrigger>
+                    {/* <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem >
                             <TableProperties className="mr-2 h-4 w-4" />
                             <span>TODO - Details</span>
                         </ContextMenuItem>
-                    </div>
+                    </div> */}
 
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem >
