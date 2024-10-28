@@ -8,7 +8,9 @@ services:
       - domain=localhost|4321,collabora.rockhosting.org,files2.rockhosting.org # Replace with your domain (e.g., "office.yourdomain.com")
       - username=admin       # Admin username for Collabora
       - password=secret      # Admin password for Collabora
+      - server_name=collabora.rockhosting.org
       - extra_params=--o:ssl.enable=false # Disable SSL if you handle it outside
+      - aliasgroup1=https://collabora.rockhosting.org
     ports:
       - "9980:9980"
     restart: always
