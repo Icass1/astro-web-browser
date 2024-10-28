@@ -9,12 +9,13 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
     password_hash TEXT NOT NULL,
     scope TEXT DEFAULT "/" NOT NULL,
     admin BOOLEAN DEFAULT 0 NOT NULL,
-    shares TEXT DEFAULT "[]" NOT NULL
+    shares TEXT DEFAULT "[]" NOT NULL,
+    pinned_files TEXT DEFAULT "[]" NOT NULL
 )`);
 
 // console.log("ALTER TABLE")
 // db.exec(`UPDATE user SET admin = 1 WHERE id = 'qzwnikdpu60pb3v'`)
-// db.exec(`ALTER TABLE config ADD COLUMN wopi_host TEXT DEFAULT '' NOT NULL`)
+// db.exec(`ALTER TABLE user ADD COLUMN pinned_files TEXT DEFAULT "[]" NOT NULL`)
 // db.exec("DROP TABLE config")
 // db.exec("DELETE FROM config WHERE id = '1.0'")
 

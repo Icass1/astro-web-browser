@@ -218,8 +218,44 @@ export default function BaseFile(
                 })
             }
         })
+    }
 
+    const handlePinFile = () => {
+        fetch("/api/pin-file", {
+            method: "POST",
+            body: JSON.stringify({
+                'path': (path ? (path + "/") : "") + file.name
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("Directory pinned")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error pinning file", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+    }
 
+    const handleUnpinFile = () => {
+        fetch("/api/unpin-file", {
+            method: "POST",
+            body: JSON.stringify({
+                'path': (path ? (path + "/") : "") + file.name
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("Directory unpinned")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error removing pin file", { style: { color: '#ed4337' } })
+                })
+            }
+        })
     }
 
     const getDeleteDialogContent = () => {
@@ -301,13 +337,6 @@ export default function BaseFile(
 
                             <a ref={anchorRef} href={href} className="hidden"></a>
                         </div>
-
-                        {/* <a
-                            className={cn("border rounded-lg py-2 px-3 cursor-pointer hover:bg-muted", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
-                            href={href}
-                        >
-                            {children}
-                        </a > */}
                     </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -325,21 +354,6 @@ export default function BaseFile(
                             <span>Download</span>
                         </ContextMenuItem>
                     </div>
-
-                    {/* <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
-                        <ContextMenuItem className="p-0">
-                            <DialogTrigger className='w-full'>
-                                <div className='transition-colors rounded'>
-                                    <ContextMenuItem onClick={() => { setActualDialog("share") }}>
-                                        <Share2 className="mr-2 h-4 w-4" />
-                                        <span>{file.shared ? 'Stop share' : 'Share'}</span>
-                                    </ContextMenuItem>
-                                </div>
-                            </DialogTrigger>
-
-                        </ContextMenuItem>
-                    </div> */}
-
 
                     <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
                         <div className='hover:bg-muted transition-colors rounded'>
@@ -361,29 +375,30 @@ export default function BaseFile(
                         <div className='hover:bg-muted transition-colors rounded'>
                             <ContextMenuItem onClick={() => { setActualDialog("details") }}>
                                 <TableProperties className="mr-2 h-4 w-4" />
-                                <span>TODO - Details</span>
+                                <span>Details</span>
                             </ContextMenuItem>
                         </div>
                     </DialogTrigger>
-                    {/* <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem >
-                            <TableProperties className="mr-2 h-4 w-4" />
-                            <span>TODO - Details</span>
-                        </ContextMenuItem>
-                    </div> */}
 
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem >
-                            <Pin className="mr-2 h-4 w-4" />
-                            <span>TODO - Pin</span>
-                        </ContextMenuItem>
-                    </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem >
-                            <PinOff className="mr-2 h-4 w-4" />
-                            <span>TODO - Unpin</span>
-                        </ContextMenuItem>
-                    </div>
+
+                    {
+                        file.pinned ?
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={handleUnpinFile} >
+                                    <PinOff className="mr-2 h-4 w-4" />
+                                    <span>Unpin</span>
+                                </ContextMenuItem>
+                            </div>
+                            :
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={handlePinFile}>
+                                    <Pin className="mr-2 h-4 w-4" />
+                                    <span>Pin</span>
+                                </ContextMenuItem>
+                            </div>
+
+                    }
+
 
                     <ContextMenuSeparator className={cn(!editable && 'hidden')} />
 

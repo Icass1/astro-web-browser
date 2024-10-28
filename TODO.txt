@@ -16,7 +16,8 @@ File container
             Check if path is shared and remove share
         DONE - Rename
         DONE - Download
-        Add to pinned folder
+        DONE - Pin
+        DONE - Unpin
         Details
             Big Preview
             DONE - File name
@@ -69,9 +70,9 @@ Main container
 
 Left panel
     Recently visited directories
-    Pinned directories
+    DONE - Pinned directories
     Shares
-        Click to se share info
+        Click to Details
 
 Shares
     Custom path
@@ -93,7 +94,8 @@ Admin panel
         Change password
         DONE - See shares
     Shares
-    Enable/Disable Signup
+        Check if shares have owner
+    DONE - Enable/Disable Signup
     Default scope
 
 Database
@@ -110,7 +112,7 @@ Database
         DONE - Path (URL)
         DONE - Local path
         DONE - Password
-        DONE - Times accessed
+        DONE - Times accessed 
         DONE - Times downloaded
         DONE - Editable
         DONE - Expiration date

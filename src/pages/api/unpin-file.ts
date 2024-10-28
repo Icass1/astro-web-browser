@@ -21,32 +21,28 @@ export async function POST(context: APIContext): Promise<Response> {
 
     const data = await context.request.json()
     try {
-        const pinnedFiles = JSON.parse((db.prepare(`SELECT pinned_files FROM user WHERE id='${context.locals.user.id}'`).get() as DatabaseUser).pinned_files)
+        let pinnedFiles = JSON.parse((db.prepare(`SELECT pinned_files FROM user WHERE id='${context.locals.user.id}'`).get() as DatabaseUser).pinned_files) as string[]
         const filePath = path.join(context.locals.user.scope, data.path)
 
         if (pinnedFiles.includes(filePath)) {
+            pinnedFiles = pinnedFiles.filter(file => file != filePath)
+            db.exec(`UPDATE user SET pinned_files = '${JSON.stringify(pinnedFiles)}' WHERE id = '${context.locals.user.id}'`)
             return new Response(
                 JSON.stringify({
-                    error: "File already pinned"
+                    error: "OK"
                 }),
                 {
-                    status: 500
+                    status: 200
                 }
             );
-
         }
-
-        pinnedFiles.push(filePath)
-
-        db.exec(`UPDATE user SET pinned_files = '${JSON.stringify(pinnedFiles)}' WHERE id = '${context.locals.user.id}'`)
-
 
         return new Response(
             JSON.stringify({
-                error: "OK"
+                error: "File isn't pinned"
             }),
             {
-                status: 200
+                status: 500
             }
         );
     } catch (error) {
