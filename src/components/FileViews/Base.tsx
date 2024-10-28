@@ -5,6 +5,9 @@ import {
     Trash,
     Download,
     TableProperties,
+    Pin,
+    PinIcon,
+    PinOff,
 } from "lucide-react"
 import { useRef, useState, type Dispatch, type DragEvent, type ReactElement, type SetStateAction } from 'react';
 import { cn } from "@/lib/utils";
@@ -339,6 +342,19 @@ export default function BaseFile(
                         <ContextMenuItem >
                             <TableProperties className="mr-2 h-4 w-4" />
                             <span>TODO - Details</span>
+                        </ContextMenuItem>
+                    </div>
+
+                    <div className='hover:bg-muted transition-colors rounded'>
+                        <ContextMenuItem >
+                            <Pin className="mr-2 h-4 w-4" />
+                            <span>TODO - Pin</span>
+                        </ContextMenuItem>
+                    </div>
+                    <div className='hover:bg-muted transition-colors rounded'>
+                        <ContextMenuItem >
+                            <PinOff className="mr-2 h-4 w-4" />
+                            <span>TODO - Unpin</span>
                         </ContextMenuItem>
                     </div>
 
