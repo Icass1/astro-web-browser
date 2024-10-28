@@ -23,7 +23,6 @@ const diskInfo = await getDiskInfoStorage(Astro.locals.user?.scope as string)
 
 const userShares = JSON.parse((db.prepare(`SELECT shares FROM user WHERE id='${(Astro.locals.user?.id as string)}'`).get() as DatabaseUser).shares) as string[]
 const shares =( db.prepare("SELECT * FROM share").all() as DatabaseShare[]).filter(share => {
-    // console.log(share, userShares.includes(share.id) && (!share.expires_at || new Date(share.expires_at) > new Date()))
     if (userShares.includes(share.id) && (!share.expires_at || new Date(share.expires_at) > new Date())) {
         return true
     }
@@ -33,8 +32,13 @@ let pinnedFiles = JSON.parse((db.prepare(`SELECT pinned_files FROM user WHERE id
 pinnedFiles = pinnedFiles.map((pinnedFile: string) => {
 
     if (Astro.locals.user?.scope) {
-        return {path: "/files/" + pinnedFile.replace(Astro.locals.user.scope, ""), isDirectory: fs.lstatSync(pinnedFile).isDirectory()}
+        if (fs.existsSync(pinnedFile)) {
+            return {path: "/files/" + pinnedFile.replace(Astro.locals.user.scope, ""), isDirectory: fs.lstatSync(pinnedFile).isDirectory(), exists: true}
+        } else {
+            return {path: "/files/" + pinnedFile.replace(Astro.locals.user.scope, ""), isDirectory: false, exists: false}
+        }
     } else {
+        console.warn("This should never happen")
         return ""
     }
 })
@@ -86,7 +90,14 @@ if (userShares.length != shares.length) {
     </div>
     <div class="p-2">
         <h3 class="font-semibold mb-2">Pinned Files</h3>
-        {pinnedFiles.map((directory: {path: string, isDirectory: boolean}) => (
+        {pinnedFiles.map((directory: {path: string, isDirectory: boolean, exists: boolean}) => (
+
+            directory.exists == false ? 
+            <div class={cn(buttonVariants({variant: "ghost"}), "w-full justify-start text-muted hover:text-muted")}> 
+                <div class="w-5 h-5 mr-2"></div>
+                {directory.path.replace("files", "").split("/")[directory.path.split("/").length-1] || "Home"}
+            </div>
+            :
             <a class={cn(buttonVariants({variant: "ghost"}), "hover:bg-muted w-full justify-start")} href={directory.path}>
                 {directory.isDirectory ?
                     <img src={getFolderIcon(directory.path.replace("files", "").split("/")[directory.path.split("/").length-1] || "Home")} class="w-5 h-5 mr-2" />
