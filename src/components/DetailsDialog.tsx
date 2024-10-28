@@ -16,6 +16,8 @@ export default function DetailsDialog({ path, file, type }: { path: string | und
 
     console.log(location.hostname)
 
+    const shareExpirationDate = file.shareInfo?.expires_at ? new Date(file.shareInfo?.expires_at) : ''
+
     return (
         <DialogContent>
             <DialogHeader>
@@ -50,6 +52,12 @@ export default function DetailsDialog({ path, file, type }: { path: string | und
                             <label>{file.shareInfo?.times_accessed}</label>
                             <label className='text-right'>Times downloaded:</label>
                             <label>{file.shareInfo?.times_downloaded}</label>
+                            <label className='text-right'>Expiration date:</label>
+                            {shareExpirationDate ?
+                                <label>{`${shareExpirationDate.getDate()}/${shareExpirationDate.getMonth() + 1}/${shareExpirationDate.getFullYear()}`}</label>
+                                :
+                                <label>Never</label>
+                            }
                         </div>
                     </div>
                     : ""}

@@ -25,9 +25,9 @@ File container
             DONE - Path
             If image -> image Size
             Share info
-                Downloads
-                Visits
-                Expriation date
+                DONE - Downloads
+                DONE - Visits
+                DONE - Expriation date
         If image -> Resize
         If folder -> Open in VScode
         If text file -> Open in text editor
