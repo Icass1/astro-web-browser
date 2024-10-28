@@ -5,7 +5,7 @@ services:
     image: collabora/code
     container_name: collabora
     environment:
-      - domain=localhost|4321 # Replace with your domain (e.g., "office.yourdomain.com")
+      - domain=localhost|4321,collabora.rockhosting.org,files2.rockhosting.org # Replace with your domain (e.g., "office.yourdomain.com")
       - username=admin       # Admin username for Collabora
       - password=secret      # Admin password for Collabora
       - extra_params=--o:ssl.enable=false # Disable SSL if you handle it outside
