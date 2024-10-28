@@ -4,7 +4,7 @@ import type { APIContext } from "astro";
 
 export async function POST(context: APIContext): Promise<Response> {
     if (!context.locals.session) {
-        return new Response(null, {
+        return new Response("Error", {
             status: 401
         });
     }
@@ -14,12 +14,12 @@ export async function POST(context: APIContext): Promise<Response> {
     const sessionCookie = lucia.createBlankSessionCookie();
     context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-    return new Response();
+    return new Response("OK");
 }
 
 export async function GET(context: APIContext): Promise<Response> {
     if (!context.locals.session) {
-        return new Response(null, {
+        return new Response("error", {
             status: 401
         });
     }
@@ -29,5 +29,5 @@ export async function GET(context: APIContext): Promise<Response> {
     const sessionCookie = lucia.createBlankSessionCookie();
     context.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-    return new Response("Logged out");
+    return new Response("OK");
 }

@@ -1,11 +1,13 @@
 export interface FileStats {
-    name: string,
-    size: string,
-    modified: string,
-    isDirectory: boolean,
-    iconPath: string,
-    shared: boolean,
-    mime: string
+    name: string;
+    size: string;
+    modified: string;
+    isDirectory: boolean;
+    iconPath: string;
+    shared: boolean;
+    shareInfo: DatabaseShare | undefined;
+    mime: string;
+    pinned: boolean;
 }
 
 export interface DatabaseUser {
@@ -15,6 +17,7 @@ export interface DatabaseUser {
     scope: string;
     admin: boolean;
     shares: string;
+    pinned_files: string;
 }
 
 
@@ -31,11 +34,11 @@ export interface DatabaseShare {
 }
 
 export interface DatabaseConfig {
-    signup: number,
-    collabora_url: string,
-    wopi_host: string
+    signup: number;
+    collabora_url: string;
+    wopi_host: string;
 }
 
 export interface SignupDB {
-	signup: number
+    signup: number;
 }

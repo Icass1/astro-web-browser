@@ -5,6 +5,9 @@ import {
     Trash,
     Download,
     TableProperties,
+    Pin,
+    PinIcon,
+    PinOff,
 } from "lucide-react"
 import { useRef, useState, type Dispatch, type DragEvent, type ReactElement, type SetStateAction } from 'react';
 import { cn } from "@/lib/utils";
@@ -32,6 +35,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import ShareDialog from "../ShareDialog";
+import DetailsDialog from "../DetailsDialog";
 
 export default function BaseFile(
     {
@@ -56,7 +60,7 @@ export default function BaseFile(
     const [isDragging, setIsDragging] = useState(false);
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
 
-    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share">("rename")
+    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share" | "details">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
     const anchorRef = useRef<HTMLAnchorElement>(null)
@@ -214,8 +218,44 @@ export default function BaseFile(
                 })
             }
         })
+    }
 
+    const handlePinFile = () => {
+        fetch("/api/pin-file", {
+            method: "POST",
+            body: JSON.stringify({
+                'path': (path ? (path + "/") : "") + file.name
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("Directory pinned")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error pinning file", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+    }
 
+    const handleUnpinFile = () => {
+        fetch("/api/unpin-file", {
+            method: "POST",
+            body: JSON.stringify({
+                'path': (path ? (path + "/") : "") + file.name
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("Directory unpinned")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error removing pin file", { style: { color: '#ed4337' } })
+                })
+            }
+        })
     }
 
     const getDeleteDialogContent = () => {
@@ -260,11 +300,18 @@ export default function BaseFile(
 
     }
 
+    const getDetailsDialog = () => {
+        return <DetailsDialog path={(path ? (path + "/") : "") + file.name} file={file} type={file.isDirectory ? 'directory' : 'file'} />
+
+    }
+
     const getDialogContent = () => {
         if (actualDialog == "delete") {
             return getDeleteDialogContent()
         } else if (actualDialog == "share") {
             return getShareDialogContent()
+        } else if (actualDialog == "details") {
+            return getDetailsDialog()
         } else if (actualDialog == "rename") {
             return getRenameDialogContent()
         }
@@ -290,13 +337,6 @@ export default function BaseFile(
 
                             <a ref={anchorRef} href={href} className="hidden"></a>
                         </div>
-
-                        {/* <a
-                            className={cn("border rounded-lg py-2 px-3 cursor-pointer hover:bg-muted", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
-                            href={href}
-                        >
-                            {children}
-                        </a > */}
                     </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -315,19 +355,14 @@ export default function BaseFile(
                         </ContextMenuItem>
                     </div>
 
-                    <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
-                        <ContextMenuItem className="p-0">
-                            <DialogTrigger className='w-full'>
-                                <div className='transition-colors rounded'>
-                                    <ContextMenuItem onClick={() => { setActualDialog("share") }}>
-                                        <Share2 className="mr-2 h-4 w-4" />
-                                        <span>{file.shared ? 'Stop share' : 'Share'}</span>
-                                    </ContextMenuItem>
-                                </div>
-                            </DialogTrigger>
-
-                        </ContextMenuItem>
-                    </div>
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                        <div className='hover:bg-muted transition-colors rounded'>
+                            <ContextMenuItem onClick={() => { setActualDialog("share") }}>
+                                <Share2 className="mr-2 h-4 w-4" />
+                                <span>{file.shared ? 'Stop share' : 'Share'}</span>
+                            </ContextMenuItem>
+                        </div>
+                    </DialogTrigger>
 
                     <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
                         <ContextMenuItem>
@@ -335,12 +370,35 @@ export default function BaseFile(
                             <span>TODO - Open with VSCode</span>
                         </ContextMenuItem>
                     </div>
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem >
-                            <TableProperties className="mr-2 h-4 w-4" />
-                            <span>TODO - Details</span>
-                        </ContextMenuItem>
-                    </div>
+
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                        <div className='hover:bg-muted transition-colors rounded'>
+                            <ContextMenuItem onClick={() => { setActualDialog("details") }}>
+                                <TableProperties className="mr-2 h-4 w-4" />
+                                <span>Details</span>
+                            </ContextMenuItem>
+                        </div>
+                    </DialogTrigger>
+
+
+                    {
+                        file.pinned ?
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={handleUnpinFile} >
+                                    <PinOff className="mr-2 h-4 w-4" />
+                                    <span>Unpin</span>
+                                </ContextMenuItem>
+                            </div>
+                            :
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={handlePinFile}>
+                                    <Pin className="mr-2 h-4 w-4" />
+                                    <span>Pin</span>
+                                </ContextMenuItem>
+                            </div>
+
+                    }
+
 
                     <ContextMenuSeparator className={cn(!editable && 'hidden')} />
 

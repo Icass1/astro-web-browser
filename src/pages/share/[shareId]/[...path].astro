@@ -60,7 +60,7 @@ try {
 
     isDirectory = stat.isDirectory();
     if (isDirectory) {
-        directoryListing = await getDirectory(directoryPath);
+        directoryListing = await getDirectory(directoryPath, Astro.locals.user?.id);
     } else {
         fileContent = await fs.readFile(directoryPath);
         isTextFile = isText(directoryPath, fileContent, () => {}) as unknown;
@@ -151,7 +151,7 @@ const absolutePath = path.join(share.local_path, Astro.params.path || "/")
                 directoryListing={directoryListing}
                 path={Astro.params.path as string}
                 client:only="react"
-                editable={true}
+                editable={share.editable}
             />
         }
 

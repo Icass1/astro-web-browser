@@ -16,17 +16,19 @@ File container
             Check if path is shared and remove share
         DONE - Rename
         DONE - Download
-        Add to pinned folder
+        DONE - Pin
+        DONE - Unpin
         Details
             Big Preview
-            File name
-            Size
-            Date modified
+            DONE - File name
+            DONE - Size
+            DONE - Date modified
+            DONE - Path
             If image -> image Size
             Share info
-                Downloads
-                Visits
-                Expriation date
+                DONE - Downloads
+                DONE - Visits
+                DONE - Expriation date
         If image -> Resize
         If folder -> Open in VScode
         If text file -> Open in text editor
@@ -68,9 +70,9 @@ Main container
 
 Left panel
     Recently visited directories
-    Pinned directories
+    DONE - Pinned directories
     Shares
-        Click to se share info
+        Click to Details
 
 Shares
     Custom path
@@ -92,7 +94,8 @@ Admin panel
         Change password
         DONE - See shares
     Shares
-    Enable/Disable Signup
+        Check if shares have owner
+    DONE - Enable/Disable Signup
     Default scope
 
 Database
@@ -109,7 +112,7 @@ Database
         DONE - Path (URL)
         DONE - Local path
         DONE - Password
-        DONE - Times accessed
+        DONE - Times accessed 
         DONE - Times downloaded
         DONE - Editable
         DONE - Expiration date

@@ -1,12 +1,10 @@
-import type { DatabaseShare, FileStats } from "@/types";
+import type { DatabaseShare, DatabaseUser, FileStats } from "@/types";
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 // @ts-ignore
 import { fileTypeFromFile } from 'file-type'
 import { db } from "@/lib/db";
-
-
 
 function getFileSize(size: number) {
 
@@ -27,11 +25,23 @@ function getFileSize(size: number) {
 }
 
 
-export async function getDirectory(directoryPath: string) {
+export async function getDirectory(directoryPath: string, userId: string | undefined) {
 
     let directoryListing: FileStats[] | undefined = undefined;
 
     const files: string[] = (await fs.readdir(directoryPath));
+
+    let userShares: string[] = []
+    let pinnedFiles: string[] = []
+    if (userId) {
+        userShares = JSON.parse((db.prepare(`SELECT shares FROM user WHERE id='${(userId as string)}'`).get() as DatabaseUser).shares) as string[]
+        pinnedFiles = JSON.parse((db.prepare(`SELECT pinned_files FROM user WHERE id='${(userId as string)}'`).get() as DatabaseUser).pinned_files) as string[]
+    } else {
+        userShares = []
+        pinnedFiles = []
+    }
+
+    console.log(pinnedFiles)
 
     // Iterate over the files and get stats for each
     directoryListing = await Promise.all(
@@ -51,8 +61,11 @@ export async function getDirectory(directoryPath: string) {
                 fileType = { mime: "dir" }
             }
 
+            const pinned = pinnedFiles.includes(filePath)
+
+
             let share = db.prepare(`SELECT * FROM share WHERE local_path='${filePath.replace(/'/g, "''")}'`).get() as DatabaseShare | undefined
-            if (share?.expires_at && new Date(share?.expires_at) < new Date()) {
+            if ((share?.expires_at && new Date(share?.expires_at) < new Date()) || (share?.id && !userShares.includes(share?.id))) {
                 share = undefined
             }
 
@@ -61,11 +74,13 @@ export async function getDirectory(directoryPath: string) {
                 name: file,
                 size: getFileSize(stats.size), // File size in bytes
                 // modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
-                modified: `${stats.mtime.getDate()}/${stats.mtime.getMonth()+1}/${stats.mtime.getFullYear()} ${stats.mtime.getHours()}:${stats.mtime.getMinutes()}`, // Last modified date
+                modified: `${stats.mtime.getDate()}/${stats.mtime.getMonth() + 1}/${stats.mtime.getFullYear()} ${stats.mtime.getHours()}:${stats.mtime.getMinutes()}`, // Last modified date
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: share == undefined ? false : true,
+                shareInfo: share,
                 mime: fileType.mime,
+                pinned: pinned,
             };
         })
     );
