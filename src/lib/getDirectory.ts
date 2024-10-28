@@ -41,8 +41,6 @@ export async function getDirectory(directoryPath: string, userId: string | undef
         pinnedFiles = []
     }
 
-    console.log(pinnedFiles)
-
     // Iterate over the files and get stats for each
     directoryListing = await Promise.all(
         files.map(async (file): Promise<FileStats> => {

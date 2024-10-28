@@ -29,7 +29,7 @@ export async function POST(context: APIContext): Promise<Response> {
     try {
 
         if (data.isDirectory) {
-            await fs.rm(path.join(context.locals.user.scope, data.path), {recursive: true})
+            await fs.rm(path.join(context.locals.user.scope, data.path), { recursive: true })
         } else {
             await fs.rm(path.join(context.locals.user.scope, data.path))
         }
@@ -53,7 +53,17 @@ export async function POST(context: APIContext): Promise<Response> {
                     status: 500
                 }
             );
+        } else if (error.code == "EACCES") {
+            return new Response(
+                JSON.stringify({
+                    error: "Permission denied"
+                }),
+                {
+                    status: 500
+                }
+            );
         } else {
+            console.error(err)
             return new Response(
                 JSON.stringify({
                     error: "Error deleting file"
