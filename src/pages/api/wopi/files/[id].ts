@@ -18,8 +18,6 @@ export async function GET(context: APIContext): Promise<Response> {
 
     const fileName = filePath.split("/").at(-1)
 
-    console.log(params)
-
     let userDB: DatabaseUser | undefined
 
     if (params?.share == false && params?.id) {

@@ -36,7 +36,6 @@ export async function POST(context: APIContext): Promise<Response> {
     }
 
     const params = JSON.parse(access_token)
-    console.log(params)
 
     let url = id.replace(/_._._/g, "/")
 
