@@ -268,6 +268,12 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
+                            <Download className="mr-2 h-4 w-4" />
+                            <span>TODO - Pin</span>
+                        </ContextMenuItem>
+                    </div>
+                    <div className='hover:bg-muted transition-colors rounded'>
+                        <ContextMenuItem>
                             <TableProperties className="mr-2 h-4 w-4" />
                             <span>TODO - Details</span>
                         </ContextMenuItem>
