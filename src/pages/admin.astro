@@ -26,19 +26,19 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
     
     <form action="/api/admin-panel" method="post">
         <div class="p-4 flex flex-col gap-4">
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded">
+            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded max-w-full overflow-x-scroll">
                 <h1 class="font-semibold text-lg">Users</h1>
                 <table >
                     <tr>
                         { Object.keys(users[0]).map(column => (
-                            <th class="border border-solid border-white">{column}</th>
+                            <th class="border border-solid border-foreground">{column}</th>
                         ))}
                     </tr>
 
                     { users.map(user => (
                         <tr> 
                             { Object.keys(user).map(column => (
-                                <td class="border border-solid border-white">
+                                <td class="border border-solid border-foreground">
                                     <div>
                                         {/* @ts-ignore */}
                                         <input class="p-1 w-52 bg-transparent" name={`user|${user.id}|${column}`} value={user[column]}/>
@@ -53,14 +53,14 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
                 <table >
                     <tr>
                         { Object.keys(shares[0] || []).map(column => (
-                            <th class="border border-solid border-white">{column}</th>
+                            <th class="border border-solid border-foreground">{column}</th>
                         ))}
                     </tr>
 
                     { shares.map(share => (
                         <tr> 
                             { Object.keys(share).map(column => (
-                                <td class="border border-solid border-white">
+                                <td class="border border-solid border-foreground">
                                     <div>
                                         {/* @ts-ignore */}
                                         <input class="p-1 w-52 bg-transparent" name={`share|${share.id}|${column}`} value={share[column]}/>
@@ -81,11 +81,11 @@ const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
             </div>
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <div>Collabora URL</div>
-                <input name="config|collabora_url" placeholder='https://example.com' class='p-1 rounded' value={config.collabora_url}>
+                <input name="config|collabora_url" placeholder='https://example.com' class='p-1 rounded bg-muted/50' value={config.collabora_url}>
             </div>
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <div>WOPI Host</div>
-                <input name="config|1|wopi_host" placeholder='https://example.com' class='p-1 rounded' value={config.wopi_host}>
+                <input name="config|1|wopi_host" placeholder='https://example.com' class='p-1 rounded bg-muted/50' value={config.wopi_host}>
             </div>
             <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
                 <button>Save</button>
