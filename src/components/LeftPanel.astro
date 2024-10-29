@@ -12,6 +12,7 @@ import {getDiskInfoStorage} from '@/lib/getDiskInfo'
 import type { DatabaseUser, DatabaseShare} from '@/types'
 
 import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
+import { LogoutButton } from "./Buttons";
 
 const recentDirectories = ["/files", "/files/Documents", "/files/Pictures"]
 
@@ -55,7 +56,7 @@ if (userShares.length != shares.length) {
 <div class="px-1">
     <ModeToggle className='m-2' client:visible></ModeToggle>
 
-    <h1 class="p-2 font-bold text-lg">Welcome, {Astro.locals.user?.username}</h1>
+    <h1 class="p-2 font-bold text-lg">Welcome, <a class="hover:underline cursor-pointer" href='/user'>{Astro.locals.user?.username}</a></h1>
 
     <div class='w-full p-2'>
         <Progress value={diskInfo.used/diskInfo.totalSize*100} className='w-full h-2'/>
@@ -74,9 +75,7 @@ if (userShares.length != shares.length) {
     }
 
     <div class="w-full px-2 mt-2">
-        <div class={cn(buttonVariants({variant: "outline"}), "hover:bg-destructive w-full text-center cursor-pointer")}>
-            Logout
-        </div>
+        <LogoutButton client:visible/>
     </div>
 
     <div class="p-2 flex flex-col items-start">
@@ -121,4 +120,5 @@ if (userShares.length != shares.length) {
             </div>
         ))}
     </div>
+    <label class="text-sm font-semibold text-foreground/60 pl-1 w-full block">{Astro.generator}</label>
 </div>
