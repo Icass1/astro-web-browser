@@ -16,6 +16,7 @@ import {
     Download,
     FilePlus,
     FolderPlus,
+    Pin,
     Share2,
     TableProperties
 } from "lucide-react";
@@ -24,6 +25,11 @@ import {
     ContextMenu,
     ContextMenuContent,
     ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuShortcut,
+    ContextMenuSub,
+    ContextMenuSubContent,
+    ContextMenuSubTrigger,
     ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 
@@ -33,6 +39,7 @@ import {
 } from "@/components/ui/dialog"
 
 import ShareDialog from "./ShareDialog";
+import BaseFile from "./FileViews/Base";
 
 
 
@@ -45,7 +52,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const size = useWindowSize()
 
     const [actualDialog, setActualDialog] = useState<"share">("share")
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([])
+    const [selectedFiles, setSelectedFiles] = useState<FileStats[]>([])
 
     const onDrop = async (files: FileList) => {
         for (let fileToUpload of files) {
@@ -202,18 +209,21 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                         ref={scrollRef}
                         onScrollCapture={(e) => { setScroll((e.target as HTMLDivElement).scrollTop) }}
                     >
-                        <div style={{ height: `${totalHeight}px` }}></div>
+                        <div
+                            style={{ height: `${totalHeight + 200}px` }}
+                            onClick={(e) => { setSelectedFiles([]) }}
+                        />
                         {
                             directoryListing.slice(startIndex, endIndex).map((file, index) => (
                                 <div
                                     key={file.name}
-                                    className={cn("absolute", selectedFiles.includes(file.name) && "bg-neutral-600 rounded")}
+                                    className={cn("absolute", selectedFiles.includes(file) && "bg-neutral-600 rounded")}
                                     style={{
                                         left: `${(((index + startIndex) % columns)) * (width + gap)}px`,
                                         top: `${Math.floor((index + startIndex) / columns) * (height + gap) - scroll}px`,
                                         width: `${width}px`
                                     }}
-                                    onClick={() => { if (!selectedFiles.includes(file.name)) setSelectedFiles([...selectedFiles, file.name])}}
+                                    onClick={() => { if (!selectedFiles.includes(file)) setSelectedFiles([...selectedFiles, file]) }}
                                 >
                                     {getFileView(file)}
                                 </div>
@@ -225,12 +235,46 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                     {
                         editable && (
                             <>
-                                <div className='hover:bg-muted transition-colors rounded'>
-                                    <ContextMenuItem onClick={() => { }}>
-                                        <FilePlus className="mr-2 h-4 w-4" />
-                                        <span>TODO - New file</span>
-                                    </ContextMenuItem>
-                                </div>
+                                <ContextMenuSub>
+                                    <div className='hover:bg-muted transition-colors rounded'>
+                                        <ContextMenuSubTrigger>
+                                            <FilePlus className="mr-2 h-4 w-4" />
+                                            <span>TODO - New file</span>
+                                        </ContextMenuSubTrigger>
+                                    </div>
+                                    <ContextMenuSubContent className="w-48">
+                                        <div className='hover:bg-muted transition-colors rounded'>
+                                            <ContextMenuItem onClick={() => { }}>
+                                                <img src="/icons/file_type_excel.svg" className="mr-2 h-4 w-4" />
+                                                <span>Excel</span>
+                                            </ContextMenuItem>
+                                        </div>
+                                        <div className='hover:bg-muted transition-colors rounded'>
+                                            <ContextMenuItem onClick={() => { }}>
+                                                <img src="/icons/file_type_word.svg" className="mr-2 h-4 w-4" />
+                                                <span>Word</span>
+                                            </ContextMenuItem>
+                                        </div>
+                                        <div className='hover:bg-muted transition-colors rounded'>
+                                            <ContextMenuItem onClick={() => { }}>
+                                                <img src="/icons/file_type_powerpoint.svg" className="mr-2 h-4 w-4" />
+                                                <span>PowerPoint</span>
+                                            </ContextMenuItem>
+                                        </div>
+                                        <div className='hover:bg-muted transition-colors rounded'>
+                                            <ContextMenuItem onClick={() => { }}>
+                                                <img src="/icons/file_type_text.svg" className="mr-2 h-4 w-4" />
+                                                <span>Text</span>
+                                            </ContextMenuItem>
+                                        </div>
+                                        <div className='hover:bg-muted transition-colors rounded'>
+                                            <ContextMenuItem onClick={() => { }}>
+                                                <img src="/icons/file_type_python.svg" className="mr-2 h-4 w-4" />
+                                                <span>Python</span>
+                                            </ContextMenuItem>
+                                        </div>
+                                    </ContextMenuSubContent>
+                                </ContextMenuSub>
                                 <div className='hover:bg-muted transition-colors rounded'>
                                     <ContextMenuItem onClick={() => { }} >
                                         <FolderPlus className="mr-2 h-4 w-4" />
@@ -268,7 +312,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                     </div>
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
-                            <Download className="mr-2 h-4 w-4" />
+                            <Pin className="mr-2 h-4 w-4" />
                             <span>TODO - Pin</span>
                         </ContextMenuItem>
                     </div>
