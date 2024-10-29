@@ -230,3 +230,56 @@ export function ChangeView({ className = '' }: { className?: string }) {
         </Button>
     )
 }
+
+
+export function CloseSession({ sessionID, className = '' }: { sessionID: string, className?: string }) {
+
+    const handleClick = () => {
+
+        fetch("/api/invalidate-session", {
+            method: 'POST',
+            body: JSON.stringify({
+                session_id: sessionID,
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("Session closed")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error closing session", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+    }
+
+    return (
+        <Button variant={"outline"} className={cn("left-[calc(20%_+_0.5rem)] -translate-x-1/2 block relative mt-2 hover:bg-muted", className)} onClick={handleClick}>
+            Close
+        </Button>
+    )
+}
+
+export function LogoutButton() {
+    const handleClick = () => {
+        fetch("/api/logout").then(response => {
+            if (response.ok) {
+                // @ts-ignore
+                navigation.navigate("/login")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error logging out", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+
+    }
+    return (
+        <Button onClick={handleClick} className="hover:bg-destructive w-full text-center cursor-pointer" variant={"outline"}>
+            Logout
+        </ Button>
+    )
+}
