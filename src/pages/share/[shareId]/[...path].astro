@@ -97,7 +97,8 @@ if (sharesString) {
     db.exec(`UPDATE share SET times_accessed = ${share.times_accessed + 1} WHERE id = '${share.id}'`)
 }
 
-const absolutePath = path.join(share.local_path, Astro.params.path || "/")
+const absolutePath = path.join(share.local_path, (Astro.params.path ? "/" + Astro.params.path : ''))
+
 
 ---
 
@@ -157,7 +158,7 @@ const absolutePath = path.join(share.local_path, Astro.params.path || "/")
 
         {error == undefined && !isDirectory  && isTextFile != undefined && 
             <FileContentView
-                relativePath={"/api/share/" + share.id + "/" + Astro.params.path || "/"}
+                relativePath={"/api/share/" + share.id + (Astro.params.path ? "/" + Astro.params.path : '') }
                 absolutePath={absolutePath}
                 share={true}
                 fileContent={fileContent}
