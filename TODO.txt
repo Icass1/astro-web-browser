@@ -56,10 +56,11 @@ Main container
         If shared -> Stop sharing button
         Upload file/folder
         Download directory
-        New file
         New folder
         DONE - Share directory
-        New
+        Compress folder
+            ZIP
+        New file
             New excel file
             New word file
             New powerpoint file
@@ -120,4 +121,4 @@ Database
         DONE - Times downloaded
         DONE - Editable
         DONE - Expiration date
-        Type (file | directory)
+        DONE - Type (file | directory)
