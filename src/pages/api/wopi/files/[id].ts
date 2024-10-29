@@ -1,6 +1,6 @@
 import type { APIContext } from "astro";
 import { db } from "@/lib/db";
-import type { DatabaseUser } from "@/types";
+import type { DatabaseShare, DatabaseUser } from "@/types";
 
 export async function GET(context: APIContext): Promise<Response> {
 
@@ -19,9 +19,12 @@ export async function GET(context: APIContext): Promise<Response> {
     const fileName = filePath.split("/").at(-1)
 
     let userDB: DatabaseUser | undefined
+    let share
 
     if (params?.share == false && params?.id) {
         userDB = db.prepare(`SELECT username, admin FROM user WHERE id = '${params.id}'`).get() as DatabaseUser
+    } else if (params.share) {
+        share = db.prepare(`SELECT editable, expires_at FROM share WHERE id = '${params.id}'`).get() as DatabaseShare
     }
 
     // Fetch file details based on the ID (this could be from a database or filesystem)
@@ -33,7 +36,7 @@ export async function GET(context: APIContext): Promise<Response> {
         UserFriendlyName: userDB?.username || "guest",
         Version: '1',
         SupportsUpdate: true,
-        UserCanWrite: true,
+        UserCanWrite: params.share ? (share?.editable) : true,
         LastModifiedTime: new Date().toISOString(),
         IsAdminUser: userDB?.admin || false
     };
