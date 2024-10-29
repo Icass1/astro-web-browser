@@ -35,13 +35,101 @@ import {
 
 import {
     Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 
 import ShareDialog from "./ShareDialog";
 import BaseFile from "./FileViews/Base";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { toast } from "sonner";
 
+type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
 
+function FileNameDialog({ fileType, path }: { fileType: fileTypes, path: string }) {
+
+    if (!fileType) {
+        <DialogContent>
+            This should never happend, fileType is undefined
+        </DialogContent>
+    }
+
+    const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
+    const [fileName, setFileName] = useState<string>()
+
+    let extension: string = ""
+    switch (fileType) {
+        case "Excel":
+            extension = ".xlsx"
+            break
+        case "Powerpoint":
+            extension = ".pptx"
+            break
+        case "Word":
+            extension = ".docx"
+            break
+        case "Python":
+            extension = ".py"
+            break
+        case "Text":
+            extension = ".txt"
+            break
+    }
+
+    const handleNewFile = () => {
+        console.log(path)
+        console.log(fileName + extension)
+
+        fetch("/api/new-file", {
+            method: "POST",
+            body: JSON.stringify({
+                path: path,
+                file_name: fileName + extension,
+                extension: extension,
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("File created")
+                closeDeleteDialogRef.current?.click()
+                // @ts-ignore
+                navigation.reload()
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error creating file", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+    }
+
+    return (
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Create new {fileType} file</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+            </DialogHeader>
+            <label>Enter file name</label>
+            <div className="relative">
+                <Input value={fileName} onChange={(e) => { setFileName(e.target.value) }}></Input>
+                <label className="absolute right-2 top-2 text-foreground/70">{extension}</label>
+            </div>
+
+            <DialogFooter>
+                <DialogClose ref={closeDeleteDialogRef} />
+                <Button variant="outline" onClick={() => closeDeleteDialogRef.current?.click()}>Cancel</Button>
+                <Button disabled={false} onClick={handleNewFile} >Create</Button>
+            </DialogFooter>
+        </DialogContent>
+    )
+}
 
 export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: FileStats[], editable: boolean }) {
 
@@ -51,8 +139,10 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const view = useStore($viewIndex)
     const size = useWindowSize()
 
-    const [actualDialog, setActualDialog] = useState<"share">("share")
+    const [actualDialog, setActualDialog] = useState<"share" | "filename">("share")
     const [selectedFiles, setSelectedFiles] = useState<FileStats[]>([])
+
+    const [newFileType, setNewFileType] = useState<fileTypes>()
 
     const onDrop = async (files: FileList) => {
         for (let fileToUpload of files) {
@@ -231,6 +321,8 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const getDialogContent = () => {
         if (actualDialog == "share") {
             return getShareDialogContent()
+        } else if (actualDialog == "filename") {
+            return <FileNameDialog path={path} fileType={newFileType} />
         }
     }
 
@@ -277,40 +369,45 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                                     <div className='hover:bg-muted transition-colors rounded'>
                                         <ContextMenuSubTrigger>
                                             <FilePlus className="mr-2 h-4 w-4" />
-                                            <span>TODO - New file</span>
+                                            <span>New file</span>
                                         </ContextMenuSubTrigger>
                                     </div>
                                     <ContextMenuSubContent className="w-48">
-                                        <div className='hover:bg-muted transition-colors rounded'>
-                                            <ContextMenuItem onClick={() => { }}>
-                                                <img src="/icons/file_type_excel.svg" className="mr-2 h-4 w-4" />
-                                                <span>Excel</span>
-                                            </ContextMenuItem>
-                                        </div>
-                                        <div className='hover:bg-muted transition-colors rounded'>
-                                            <ContextMenuItem onClick={() => { }}>
-                                                <img src="/icons/file_type_word.svg" className="mr-2 h-4 w-4" />
-                                                <span>Word</span>
-                                            </ContextMenuItem>
-                                        </div>
-                                        <div className='hover:bg-muted transition-colors rounded'>
-                                            <ContextMenuItem onClick={() => { }}>
-                                                <img src="/icons/file_type_powerpoint.svg" className="mr-2 h-4 w-4" />
-                                                <span>PowerPoint</span>
-                                            </ContextMenuItem>
-                                        </div>
-                                        <div className='hover:bg-muted transition-colors rounded'>
-                                            <ContextMenuItem onClick={() => { }}>
-                                                <img src="/icons/file_type_text.svg" className="mr-2 h-4 w-4" />
-                                                <span>Text</span>
-                                            </ContextMenuItem>
-                                        </div>
-                                        <div className='hover:bg-muted transition-colors rounded'>
-                                            <ContextMenuItem onClick={() => { }}>
-                                                <img src="/icons/file_type_python.svg" className="mr-2 h-4 w-4" />
-                                                <span>Python</span>
-                                            </ContextMenuItem>
-                                        </div>
+                                        <DialogTrigger className='w-full' onClick={() => { setActualDialog("filename") }}>
+
+                                            <div className='hover:bg-muted transition-colors rounded'>
+                                                <ContextMenuItem onClick={() => { setNewFileType("Excel") }}>
+                                                    <img src="/icons/file_type_excel.svg" className="mr-2 h-4 w-4" />
+                                                    <span>Excel</span>
+                                                </ContextMenuItem>
+                                            </div>
+                                            <div className='hover:bg-muted transition-colors rounded'>
+                                                <ContextMenuItem onClick={() => { setNewFileType("Word") }}>
+                                                    <img src="/icons/file_type_word.svg" className="mr-2 h-4 w-4" />
+                                                    <span>Word</span>
+                                                </ContextMenuItem>
+                                            </div>
+                                            <div className='hover:bg-muted transition-colors rounded'>
+                                                <ContextMenuItem onClick={() => { setNewFileType("Powerpoint") }}>
+                                                    <img src="/icons/file_type_powerpoint.svg" className="mr-2 h-4 w-4" />
+                                                    <span>PowerPoint</span>
+                                                </ContextMenuItem>
+                                            </div>
+                                            <div className='hover:bg-muted transition-colors rounded'>
+                                                <ContextMenuItem onClick={() => { setNewFileType("Text") }}>
+                                                    <img src="/icons/file_type_text.svg" className="mr-2 h-4 w-4" />
+                                                    <span>Text</span>
+                                                </ContextMenuItem>
+                                            </div>
+                                            <div className='hover:bg-muted transition-colors rounded'>
+                                                <ContextMenuItem onClick={() => { setNewFileType("Python") }}>
+                                                    <img src="/icons/file_type_python.svg" className="mr-2 h-4 w-4" />
+                                                    <span>Python</span>
+                                                </ContextMenuItem>
+                                            </div>
+                                        </DialogTrigger>
+
+
                                     </ContextMenuSubContent>
                                 </ContextMenuSub>
                                 <div className='hover:bg-muted transition-colors rounded'>
@@ -323,7 +420,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                         )
                     }
                     <div className='hover:bg-muted transition-colors rounded'>
-                        <DialogTrigger className='w-full'>
+                        <DialogTrigger className='w-full' onClick={() => { setActualDialog("share") }}>
                             <ContextMenuItem>
                                 <Share2 className="mr-2 h-4 w-4" />
                                 <span>Share</span>

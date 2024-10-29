@@ -12,7 +12,8 @@ File container
     DONE - Date modified - Size
     DONE - Size
     Context Menu
-        DONE - Delete
+        Delete
+            DONE - Delete file
             Check if path is shared and remove share
         DONE - Rename
         DONE - Download
@@ -60,10 +61,10 @@ Main container
         DONE - Share directory
         Compress folder
             ZIP
-        New file
-            New excel file
-            New word file
-            New powerpoint file
+        DONE - New file
+            DONE - New excel file
+            DONE - New word file
+            DONE - New powerpoint file
     Selection area
         Context menu
             Delete

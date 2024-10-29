@@ -131,14 +131,8 @@ export default function BaseFile(
                     toast("Error moving file", { style: { color: '#ed4337' } })
 
                     console.log("")
-                    // response.json().then(data => {
-                    //     toast(data.error, { style: { color: '#ed4337' } })
-                    // }).catch(error => {
-                    //     toast("Error deleting file", { style: { color: '#ed4337' } })
-                    // })
                 }
             })
-
         }
 
         if (event.dataTransfer.files.length > 0) {
@@ -156,6 +150,10 @@ export default function BaseFile(
     }
 
     const handleDownload = () => {
+        if (file.isDirectory) {
+            toast("Unable to download directory", { style: { color: '#ed4337' } })
+            return
+        }
 
         toast("Downloading " + file.name)
 
@@ -334,15 +332,14 @@ export default function BaseFile(
                             onDoubleClick={() => { anchorRef.current?.click() }}
                         >
                             {children}
-
                             <a ref={anchorRef} href={href} className="hidden"></a>
                         </div>
                     </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
                     <div className={cn('hover:bg-muted transition-colors rounded', !editable && 'hidden')}>
-                        <DialogTrigger className='w-full'>
-                            <ContextMenuItem onClick={() => { setActualDialog("rename") }}>
+                        <DialogTrigger className='w-full' onClick={() => { setActualDialog("rename") }}>
+                            <ContextMenuItem >
                                 <Edit className="mr-2 h-4 w-4" />
                                 <span>Rename</span>
                             </ContextMenuItem>
@@ -355,9 +352,9 @@ export default function BaseFile(
                         </ContextMenuItem>
                     </div>
 
-                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')} onClick={() => { setActualDialog("share") }}>
                         <div className='hover:bg-muted transition-colors rounded'>
-                            <ContextMenuItem onClick={() => { setActualDialog("share") }}>
+                            <ContextMenuItem >
                                 <Share2 className="mr-2 h-4 w-4" />
                                 <span>{file.shared ? 'Stop share' : 'Share'}</span>
                             </ContextMenuItem>
@@ -371,16 +368,14 @@ export default function BaseFile(
                         </ContextMenuItem>
                     </div>
 
-                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')} onClick={() => { setActualDialog("details") }}>
                         <div className='hover:bg-muted transition-colors rounded'>
-                            <ContextMenuItem onClick={() => { setActualDialog("details") }}>
+                            <ContextMenuItem >
                                 <TableProperties className="mr-2 h-4 w-4" />
                                 <span>Details</span>
                             </ContextMenuItem>
                         </div>
                     </DialogTrigger>
-
-
                     {
                         file.pinned ?
                             <div className='hover:bg-muted transition-colors rounded'>
@@ -399,12 +394,11 @@ export default function BaseFile(
 
                     }
 
-
                     <ContextMenuSeparator className={cn(!editable && 'hidden')} />
 
-                    <DialogTrigger className={cn('w-full', !editable && 'hidden')}>
+                    <DialogTrigger className={cn('w-full', !editable && 'hidden')} onClick={() => { setActualDialog("delete") }}>
                         <div className='hover:bg-destructive transition-colors rounded'>
-                            <ContextMenuItem onClick={() => { setActualDialog("delete") }}>
+                            <ContextMenuItem>
                                 <Trash className="mr-2 h-4 w-4" />
                                 <span>Delete</span>
                             </ContextMenuItem>
