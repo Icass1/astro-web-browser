@@ -83,25 +83,31 @@ export async function getDirectory(directoryPath: string, userId: string | undef
         })
     );
 
-    let directoriesOut = directoryListing.filter(el => el.isDirectory).sort(function (a, b) {
-        if (a.name < b.name) {
-            return -1;
-        }
-        if (a.name > b.name) {
-            return 1;
-        }
-        return 0;
-    });
+    // let directoriesOut = directoryListing.filter(el => el.isDirectory).sort(function (a, b) {
+    //     if (a.name < b.name) {
+    //         return -1;
+    //     }
+    //     if (a.name > b.name) {
+    //         return 1;
+    //     }
+    //     return 0;
+    // });
 
-    let filesOut = directoryListing.filter(el => !el.isDirectory).sort(function (a, b) {
-        if (a.name < b.name) {
-            return -1;
-        }
-        if (a.name > b.name) {
-            return 1;
-        }
-        return 0;
-    });
+    let directoriesOut = directoryListing.filter(el => el.isDirectory)
+    directoriesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+
+    let filesOut = directoryListing.filter(el => !el.isDirectory)
+    filesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+    
+    // filesOut.sort(function (a, b) {
+    //     if (a.name < b.name) {
+    //         return -1;
+    //     }
+    //     if (a.name > b.name) {
+    //         return 1;
+    //     }
+    //     return 0;
+    // });
 
     return [...directoriesOut, ...filesOut]
 }
