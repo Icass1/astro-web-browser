@@ -1,7 +1,7 @@
 import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
-import { useEffect, useRef, useState, type DragEvent } from 'react';
+import { useEffect, useRef, useState, type DragEvent, type ReactElement } from 'react';
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -118,13 +118,51 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         const shareId = location.pathname.split("/")[2]
         const href = location.pathname.startsWith("/files") ? (path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name)) : (path ? (`/share/${shareId}/` + path + "/" + file.name) : (`/share/${shareId}/` + file.name))
 
+
+        function BaseFileTemplate(
+            {
+                children,
+                className
+            }: {
+                children: ReactElement[] | ReactElement,
+                className?: string | undefined,
+            }
+        ) {
+
+            return (
+                <BaseFile
+                    className={className}
+                    file={file}
+                    path={path}
+                    setOverDirectory={setOverDirectory}
+                    href={href}
+                    editable={editable}
+                >
+                    {children}
+                </BaseFile>
+            )
+
+        }
+
         switch (view) {
             case "details":
-                return <DetailsView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
+                return (
+                    <BaseFileTemplate className="grid grid-cols-[24px_2fr_250px_30px] gap-3 items-center border-0 py-1" >
+                        <DetailsView key={file.name} file={file} />
+                    </BaseFileTemplate>
+                )
             case "big":
-                return <BigView key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
+                return (
+                    <BaseFileTemplate className="flex flex-row gap-3 items-center" >
+                        <BigView key={file.name} file={file} />
+                    </BaseFileTemplate>
+                )
             case "galery":
-                return <Galery key={file.name} setOverDirectory={setOverDirectory} path={path} file={file} href={href} editable={editable} />
+                return (
+                    <BaseFileTemplate className="shadow relative p-0 flex flex-col gap-2" >
+                        <Galery key={file.name} path={path} file={file} />
+                    </BaseFileTemplate>
+                )
             default:
                 console.warn("Unknow view")
         }

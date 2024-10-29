@@ -51,7 +51,7 @@ export default function BaseFile(
         file: FileStats,
         path: string | undefined,
         setOverDirectory: Dispatch<SetStateAction<boolean>>,
-        children: ReactElement[],
+        children: ReactElement[] | ReactElement,
         href: string,
         editable: boolean
     }
