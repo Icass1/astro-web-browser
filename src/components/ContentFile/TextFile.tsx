@@ -11,11 +11,11 @@ export default function TextFileView({ fileContent }: { fileContent: string }) {
     return (
         <div className="w-full h-full relative grid grid-cols-[40px_1fr] gap-x-2">
             <div ref={lineNumberRef} className="flex flex-col h-full overflow-y-hidden">
-                {[...content.split("\n"), " " , " ", " "].map((line, index) => (
-                    <label className="text-primary/70 text-right border-r-2 border-solid border-muted  pr-2 select-none">{index}</label>
+                {[...content.split("\n"), " ", " ", " "].map((line, index) => (
+                    <label key={index} className="text-primary/70 text-right border-r-2 border-solid border-muted  pr-2 select-none">{index}</label>
                 ))}
             </div>
-            <textarea value={content} onInput={(e) => { setContent((e.target as HTMLTextAreaElement).value)}} className="w-full bg-muted/60 h-full resize-none relative outline-none" onScroll={(e) => { if (lineNumberRef.current) lineNumberRef.current.scrollTop = (e.target as HTMLTextAreaElement).scrollTop }}/>
+            <textarea value={content} onInput={(e) => { setContent((e.target as HTMLTextAreaElement).value) }} className="w-full bg-muted/60 h-full resize-none relative outline-none" onScroll={(e) => { if (lineNumberRef.current) lineNumberRef.current.scrollTop = (e.target as HTMLTextAreaElement).scrollTop }} />
         </div>
     )
 

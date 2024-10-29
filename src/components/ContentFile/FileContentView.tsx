@@ -42,7 +42,7 @@ export default function FileContentView(
                     <img className="left-1/2 relative -translate-x-1/2" src={relativePath} />
                 </div>
             )
-        } else if (fileType == "DISABLEDapplication/pdf") {
+        } else if (false && fileType == "application/pdf") {
             return (
                 <iframe className="h-full w-full" src={relativePath}></iframe>
             )

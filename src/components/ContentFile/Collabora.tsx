@@ -29,8 +29,6 @@ export default function Collabora(
     const wopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
     const accessToken = JSON.stringify({ share: share, id: share ? shareId : userId });
 
-    console.log(wopiSrc)
-
     const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`
 
     if (collaboraURL == '') {
