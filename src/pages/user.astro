@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+if (!Astro.locals.user) {
+    return Astro.redirect("/login");
+}
+
+import { lucia } from "@/auth";
+
+import { CloseSession } from "@/components/Buttons";
+
+const sessions = await lucia.getUserSessions(Astro.locals.user.id);
+
+const sessionId = Astro.cookies.get(lucia.sessionCookieName)?.value ?? null;
+---
+
+<Layout title={Astro.locals.user.username + " - User"}>
+    <div class="p-4 flex flex-col gap-4">
+        <div class="flex flex-col gap-y-5 shadow-md p-2">
+            <div class="font-semibold text-3xl">
+                {Astro.locals.user.username}
+            </div>
+        </div>
+        <div class="flex flex-col gap-y-5 shadow-md p-2">
+            <div class="font-semibold text-lg">Change password</div>
+        </div>
+        <div class="flex flex-col gap-y-5 shadow-md p-2">
+            <div class="font-semibold text-lg">Active sessions</div>
+            {
+                sessions.map((session, index) => (
+                    <div class="w-fit flex flex-row gap-2 relative">
+                        <div>
+                            <label class="text-xl font-semibold w-10 text-center block top-1/2 -translate-y-1/2 relative h-fit">{index + 1}</label>
+                        </div>
+                        <div class="bg-muted w-[2px] rounded"></div>
+                        <div>
+                            {session.id == sessionId && (
+                                <label class="font-semibold text-lg pl-4">
+                                    Actual one
+                                </label>
+                            )}
+
+                            <div class="grid grid-cols-[1fr_5fr] gap-x-4">
+                                <label class="text-right">id</label>
+                                <label>{session.id}</label>
+                                <label class="text-right">expiresAt</label>
+                                <label>{session.expiresAt}</label>
+                                <label class="text-right">fresh</label>
+                                <label>
+                                    {session.fresh ? "true" : "false"}
+                                </label>
+                            </div>
+
+                            <CloseSession
+                                sessionID={session.id}
+                                className={
+                                    session.id == sessionId
+                                        ? " hover:bg-destructive"
+                                        : ""
+                                }
+                                client:visible
+                            />
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</Layout>
