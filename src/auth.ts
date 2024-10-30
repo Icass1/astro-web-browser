@@ -22,7 +22,7 @@ export const lucia = new Lucia(adapter, {
             username: attributes.username,
             id: attributes.id,
             scope: attributes.scope,
-            admin: attributes.admin
+            admin: attributes.admin == 1 ? true : false
         };
     }
 });

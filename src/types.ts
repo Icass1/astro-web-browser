@@ -15,7 +15,7 @@ export interface DatabaseUser {
     username: string;
     password_hash: string;
     scope: string;
-    admin: boolean;
+    admin: number;
     shares: string;
     pinned_files: string;
 }
