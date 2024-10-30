@@ -10,8 +10,6 @@ RUN pnpm install
 
 COPY . .
 
-ENV ASTRO_DATABASE_FILE=/usr/src/app/database.db
-
 RUN pnpm run build
 
 EXPOSE 8081
