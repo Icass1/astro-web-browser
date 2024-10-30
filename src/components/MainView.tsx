@@ -2,8 +2,6 @@ import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
 import { useEffect, useRef, useState, type DragEvent, type ReactElement } from 'react';
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import Galery from "./FileViews/Galery";
 
@@ -137,6 +135,8 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const [overDirectory, setOverDirectory] = useState(false);
 
     const view = useStore($viewIndex)
+    // This hook is needed because it re-renders this component when the window resizes.
+    // @ts-ignore
     const size = useWindowSize()
 
     const [actualDialog, setActualDialog] = useState<"share" | "filename">("share")
@@ -258,61 +258,25 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         }
     }
 
-    const gap = 10;
-
     const scrollRef = useRef<HTMLDivElement>(null)
-    const [scroll, setScroll] = useState(0)
-    const [width, setWidth] = useState(0)
-    const [startIndex, setStartIndex] = useState(0)
-    const [endIndex, setEndIndex] = useState(0)
-    const [totalHeight, setTotalHeight] = useState(0)
-    const [columns, setColumns] = useState(0)
 
-    const [height, setHeight] = useState(0)
+    const [columns, setColumns] = useState<number>()
+    const [height, setHeight] = useState<number>()
+    const [width, setWidth] = useState<number>()
+
+    const gap = 10
 
     useEffect(() => {
-        if (!scrollRef.current) { return }
+        if (!scrollRef.current?.clientWidth) return
 
-        let newWidth = Math.floor((scrollRef.current.offsetWidth - gap * (columns - 1)) / columns)
+        let columns = Math.max(Math.round(scrollRef.current.clientWidth / gridInfo.minWidth), 1)
+        let width = Math.floor((scrollRef.current.clientWidth - gap * (columns + 1)) / columns)
+        let height = gridInfo.height(width)
 
-        const totalHeight = Math.max(1, Math.floor(directoryListing.length / columns)) * (height + gap)
-
-        setStartIndex(Math.floor(scroll / (height + gap)) * columns)
-        setEndIndex(Math.floor((totalHeight + scroll) / (height + gap) + 2) * columns)
-
-        setWidth(newWidth - 2)
-
-        setTotalHeight(totalHeight)
-    }, [scroll, scrollRef, size, columns, gridInfo, height])
-
-    useEffect(() => {
-        if (!scrollRef.current) { return }
-        setColumns(Math.max(Math.round(scrollRef.current.offsetWidth / gridInfo.minWidth), 1))
-    }, [scrollRef, size, gridInfo])
-
-    useEffect(() => {
-        setHeight(gridInfo.height(width))
-    }, [width])
-
-    useEffect(() => {
-        if (!scrollRef.current) { return }
-
-        const element = scrollRef.current
-        const elementScroll = element.querySelector("div")
-
-        const handleWheel = (e: WheelEvent) => {
-            if (elementScroll) {
-                elementScroll.scrollTop += e.deltaY / 2
-            }
-            e.preventDefault();
-        }
-
-        element.addEventListener("wheel", handleWheel)
-
-        return () => {
-            element.removeEventListener("wheel", handleWheel)
-        }
-    }, [scrollRef])
+        setColumns(columns)
+        setWidth(width)
+        setHeight(height)
+    }, [scrollRef, size, view, gridInfo])
 
     const getShareDialogContent = () => {
         return <ShareDialog path={path} type="directory" />
@@ -330,36 +294,39 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         <Dialog>
             <ContextMenu>
                 <ContextMenuTrigger className="relative w-full h-full">
-                    <ScrollArea
-                        className={cn("relative h-full border border-solid rounded-lg w-full", isDragging && !overDirectory ? ' border-blue-300' : 'border-background',)}
-                        onDragEnter={handleDragEnter}
-                        onDragLeave={handleDragLeave}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                        ref={scrollRef}
-                        onScrollCapture={(e) => { setScroll((e.target as HTMLDivElement).scrollTop) }}
-                    >
+
+                    <div className="relative w-full h-full pb-4">
                         <div
-                            style={{ height: `${totalHeight + 200}px` }}
-                            onClick={(e) => { setSelectedFiles([]) }}
-                        />
-                        {
-                            directoryListing.slice(startIndex, endIndex).map((file, index) => (
-                                <div
-                                    key={file.name}
-                                    className={cn("absolute", selectedFiles.includes(file) && "bg-neutral-600 rounded")}
-                                    style={{
-                                        left: `${(((index + startIndex) % columns)) * (width + gap)}px`,
-                                        top: `${Math.floor((index + startIndex) / columns) * (height + gap) - scroll}px`,
-                                        width: `${width}px`
-                                    }}
-                                    onClick={() => { if (!selectedFiles.includes(file)) setSelectedFiles([...selectedFiles, file]) }}
-                                >
-                                    {getFileView(file)}
-                                </div>
-                            ))
-                        }
-                    </ScrollArea>
+                            className="h-full w-full relative overflow-auto custom-slider"
+                            ref={scrollRef}
+                        >
+
+                            {columns == undefined || height == undefined || width == undefined ?
+                                <div>Loading</div>
+                                :
+                                <>
+                                    <div className="" style={{ minHeight: `${Math.ceil(directoryListing.length / columns) * height + (Math.ceil(directoryListing.length / columns) + 1) * gap}px` }}></div>
+                                    {directoryListing.map((file, index) => {
+                                        return (
+                                            <div
+                                                key={index}
+                                                className="absolute w-full"
+                                                style={{
+                                                    left: `${gap + (((index) % columns)) * (width + gap)}px`,
+                                                    top: `${gap + Math.floor((index) / columns) * (height + gap)}px`,
+                                                    width: `${width}px`,
+                                                }}
+                                            >
+                                                {getFileView(file)}
+                                            </div>
+                                        )
+                                    })}
+                                </>
+                            }
+
+
+                        </div>
+                    </div>
                 </ContextMenuTrigger >
                 <ContextMenuContent>
                     {

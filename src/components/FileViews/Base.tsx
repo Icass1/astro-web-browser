@@ -141,6 +141,7 @@ export default function BaseFile(
     };
 
     const handleDragStart = async (event: DragEvent<HTMLDivElement>) => {
+        console.log("drag start")
         event.dataTransfer.setData("file-path", JSON.stringify({ path: path, fileName: file.name, isDirectory: file.isDirectory }))
         const img = new Image()
         img.src = file.iconPath
@@ -325,10 +326,10 @@ export default function BaseFile(
                         onDragOver={file.isDirectory ? handleDragOver : undefined}
                         onDrop={file.isDirectory ? handleDrop : undefined}
                         onDragStart={handleDragStart}
-                        className={'transition-transform ' + (isDragging ? "scale-[1.01]" : '')}
+                        draggable
                     >
                         <div
-                            className={cn("border rounded py-2 px-3 cursor-pointer hover:bg-muted select-none", isDragging ? 'border-blue-500 bg-muted/50' : '', className)}
+                            className={cn("border rounded py-2 px-3 cursor-pointer hover:bg-muted select-none", isDragging ? "outline-blue-400 outline-dashed outline-1" : '', className)}
                             onDoubleClick={() => { anchorRef.current?.click() }}
                         >
                             {children}
