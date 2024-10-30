@@ -1,6 +1,6 @@
 import sqlite from "better-sqlite3";
 
-export const db = sqlite("database.db");
+export const db = sqlite("database/database.db");
 
 // console.log("CREATE TABLE IF NOT EXISTS user")
 db.exec(`CREATE TABLE IF NOT EXISTS user (
