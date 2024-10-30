@@ -1,121 +1,186 @@
 ---
+import { CreateUser } from "@/components/Buttons";
 import Layout from "@/layouts/Layout.astro";
 import { db } from "@/lib/db";
-import type { DatabaseUser,  DatabaseConfig, DatabaseShare} from '@/types'
+import type { DatabaseUser, DatabaseConfig, DatabaseShare } from "@/types";
 
-if (!Astro.locals.user?.admin) {    
+if (!Astro.locals.user?.admin) {
     return new Response(
         JSON.stringify({
-            error: ""
+            error: "",
         }),
         {
-            status: 404
-        }
+            status: 404,
+        },
     );
 }
 
-const users = db.prepare("SELECT * FROM user").all() as DatabaseUser[]
-const shares = db.prepare("SELECT * FROM share").all() as DatabaseShare[]
-const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig
-
-
+const users = db.prepare("SELECT * FROM user").all() as DatabaseUser[];
+const shares = db.prepare("SELECT * FROM share").all() as DatabaseShare[];
+const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig;
 ---
+
 <Layout title="Admin">
-    
     <h1 class="text-4xl font-bold pt-4 pl-6">Admin</h1>
-    
+
     <form action="/api/admin-panel" method="post">
         <div class="p-4 flex flex-col gap-4">
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded max-w-full overflow-x-scroll">
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background flex flex-col gap-2 rounded max-w-full overflow-x-scroll"
+            >
                 <h1 class="font-semibold text-lg">Users</h1>
-                <table >
+                <table>
                     <tr>
-                        { Object.keys(users[0]).map(column => (
-                            <th class="border border-solid border-foreground">{column}</th>
-                        ))}
+                        {
+                            Object.keys(users[0]).map((column) => (
+                                <th class="border border-solid border-foreground">
+                                    {column}
+                                </th>
+                            ))
+                        }
                     </tr>
 
-                    { users.map(user => (
-                        <tr> 
-                            { Object.keys(user).map(column => (
-                                <td class="border border-solid border-foreground">
-                                    <div>
-                                        {/* @ts-ignore */}
-                                        <input class="p-1 w-52 bg-transparent" name={`user|${user.id}|${column}`} value={user[column]}/>
-                                    </div>
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                    {
+                        users.map((user) => (
+                            <tr>
+                                {Object.keys(user).map((column) => (
+                                    <td class="border border-solid border-foreground">
+                                        <div>
+                                            {/* @ts-ignore */}
+                                            <input
+                                                class="p-1 w-52 bg-transparent"
+                                                name={`user|${user.id}|${column}`}
+                                                value={user[column]}
+                                            />
+                                        </div>
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
+                    }
                 </table>
-
+                <div class="w-48">
+                    <CreateUser client:only="react" />
+                </div>
+            </div>
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background rounded max-w-full overflow-x-scroll"
+            >
                 <h1 class="font-semibold text-lg">Shares</h1>
-                <table >
+                <table>
                     <tr>
-                        { Object.keys(shares[0] || []).map(column => (
-                            <th class="border border-solid border-foreground">{column}</th>
-                        ))}
+                        {
+                            Object.keys(shares[0] || []).map((column) => (
+                                <th class="border border-solid border-foreground">
+                                    {column}
+                                </th>
+                            ))
+                        }
                     </tr>
 
-                    { shares.map(share => (
-                        <tr> 
-                            { Object.keys(share).map(column => (
-                                <td class="border border-solid border-foreground">
-                                    <div>
-                                        {/* @ts-ignore */}
-                                        <input class="p-1 w-52 bg-transparent" name={`share|${share.id}|${column}`} value={share[column]}/>
-                                    </div>
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                    {
+                        shares.map((share) => (
+                            <tr>
+                                {Object.keys(share).map((column) => (
+                                    <td class="border border-solid border-foreground">
+                                        <div>
+                                            {/* @ts-ignore */}
+                                            <input
+                                                class="p-1 w-52 bg-transparent"
+                                                name={`share|${share.id}|${column}`}
+                                                value={share[column]}
+                                            />
+                                        </div>
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
+                    }
                 </table>
-
-
             </div>
 
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4"
+            >
                 <div>Enable signup</div>
-                <input id='enableSignupHidden' name="config|enable_signup" type="hidden" value="off" checked>
-                <input id='enableSignup' name="config|enable_signup" type="checkbox" value="on" checked={config.signup == 1}>
+                <input
+                    id="enableSignupHidden"
+                    name="config|enable_signup"
+                    type="hidden"
+                    value="off"
+                    checked
+                />
+                <input
+                    id="enableSignup"
+                    name="config|enable_signup"
+                    type="checkbox"
+                    value="on"
+                    checked={config.signup == 1}
+                />
             </div>
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4"
+            >
                 <div>Collabora URL</div>
-                <input name="config|collabora_url" placeholder='https://example.com' class='p-1 rounded bg-muted/50' value={config.collabora_url}>
+                <input
+                    name="config|collabora_url"
+                    placeholder="https://example.com"
+                    class="p-1 rounded bg-muted/50"
+                    value={config.collabora_url}
+                />
             </div>
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4"
+            >
                 <div>WOPI Host</div>
-                <input name="config|1|wopi_host" placeholder='https://example.com' class='p-1 rounded bg-muted/50' value={config.wopi_host}>
+                <input
+                    name="config|1|wopi_host"
+                    placeholder="https://example.com"
+                    class="p-1 rounded bg-muted/50"
+                    value={config.wopi_host}
+                />
             </div>
-            <div class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4">
+            <div
+                class="w-fit overflow-auto shadow-md p-2 bg-background rounded flex flex-row gap-4"
+            >
                 <button>Save</button>
             </div>
         </div>
     </form>
-	<script>
+    <script>
         import { toast } from "sonner";
 
         document.forms[0].addEventListener("submit", async (e) => {
-
             e.preventDefault();
 
-    
-            if ((document.getElementById("enableSignup") as HTMLInputElement).checked) {
-                (document.getElementById('enableSignupHidden') as HTMLInputElement).disabled = true;
+            if (
+                (document.getElementById("enableSignup") as HTMLInputElement)
+                    .checked
+            ) {
+                (
+                    document.getElementById(
+                        "enableSignupHidden",
+                    ) as HTMLInputElement
+                ).disabled = true;
             }
             const formElement = e.target as HTMLFormElement;
             const response = await fetch(formElement.action, {
                 method: formElement.method,
-                body: new FormData(formElement)
+                body: new FormData(formElement),
             });
-            (document.getElementById('enableSignupHidden') as HTMLInputElement).disabled = false;
+            (
+                document.getElementById(
+                    "enableSignupHidden",
+                ) as HTMLInputElement
+            ).disabled = false;
 
             if (response.ok) {
-                toast("Data saved")
+                toast("Data saved");
             } else {
-                toast((await response.json()).error, { style: { color: '#ed4337' } })
+                toast((await response.json()).error, {
+                    style: { color: "#ed4337" },
+                });
             }
         });
     </script>
-
 </Layout>

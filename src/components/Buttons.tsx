@@ -1,9 +1,10 @@
 import { UploadIcon, FolderPlus } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button, buttonVariants } from "./ui/button"
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -11,6 +12,8 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+
 import { useRef, useState, type BaseSyntheticEvent } from "react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
@@ -281,5 +284,82 @@ export function LogoutButton() {
         <Button onClick={handleClick} className="hover:bg-destructive w-full text-center cursor-pointer" variant={"outline"}>
             Logout
         </ Button>
+    )
+}
+
+export function CreateUser() {
+
+    const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
+
+    const [username, setUsername] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [repeatPassword, setRepeatPassword] = useState<string>("")
+    const [scope, setScope] = useState<string>("")
+    const [admin, setAdmin] = useState<boolean>(false)
+
+    const handleNewUser = () => {
+
+        if (password != repeatPassword) {
+            
+            toast("Passwords don't match", { style: { color: '#ed4337' } })
+            return
+        }
+
+        fetch("/api/create-user", {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                repeatPassword: repeatPassword,
+                scope: scope,
+                admin: admin
+            })
+        }).then(response => {
+            if (response.ok) {
+                toast("User created")
+            } else {
+                response.json().then(data => {
+                    toast(data.error, { style: { color: '#ed4337' } })
+                }).catch(() => {
+                    toast("Error creating user", { style: { color: '#ed4337' } })
+                })
+            }
+        })
+
+    }
+
+    return (
+        <Dialog>
+            <DialogTrigger>
+                <label className={cn(buttonVariants({ variant: "outline" }), "hover:bg-muted cursor-pointer")}>New user</label>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>New user</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-[1fr_2fr] gap-x-3 gap-y-3 items-center">
+                    <label className="text-right" >User Name</label>
+                    <Input autoComplete='one-time-code' value={username} onChange={(e) => { setUsername(e.target.value) }}></Input>
+
+                    <label className="text-right" >Password</label>
+                    <Input type="password" autoComplete='one-time-code' value={password} onChange={(e) => { setPassword(e.target.value) }}></Input>
+
+                    <label className="text-right" >Repeat password</label>
+                    <Input type="password" autoComplete='one-time-code' value={repeatPassword} onChange={(e) => { setRepeatPassword(e.target.value) }}></Input>
+
+                    <label className="text-right" >Scope</label>
+                    <Input value={scope} onChange={(e) => { setScope(e.target.value) }}></Input>
+
+                    <label className="text-right">Admin</label>
+                    <Switch checked={admin} onCheckedChange={(checked) => { setAdmin(checked) }}></Switch>
+
+                </div>
+                <DialogFooter>
+                    <DialogClose ref={closeDeleteDialogRef} />
+                    <Button variant="outline" onClick={() => closeDeleteDialogRef.current?.click()}>Cancel</Button>
+                    <Button disabled={false} onClick={handleNewUser}>Add user</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog >
     )
 }
