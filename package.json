@@ -26,6 +26,7 @@
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.1",
     "@types/better-sqlite3": "^7.6.11",
     "@types/fluent-ffmpeg": "^2.1.26",
     "@types/formidable": "^3.4.5",
