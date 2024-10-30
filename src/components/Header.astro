@@ -18,7 +18,7 @@ import { ChevronRight } from 'lucide-react'
             ))}
         </div>
 
-        <ChangeView client:visible />
+        <ChangeView client:only="react" />
         <Upload path={Astro.params.path || "/"} client:visible/>
         <NewFolder client:visible path={Astro.params.path || "/"}/>
     </div>
