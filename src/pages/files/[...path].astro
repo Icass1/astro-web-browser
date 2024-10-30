@@ -124,44 +124,6 @@ const absolutePath = path.join(Astro.locals.user.scope, Astro.params.path || "/"
                 <div>fileType?.ext != undefined -> {JSON.stringify(fileType?.ext != undefined)}</div>
                 <div>fileType?.mime != undefined -> {JSON.stringify(fileType?.mime != undefined)}</div>
             }
-<!-- 
-            {
-                error != undefined ? (
-                    <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
-                        <label>Unable to get directory contents</label>
-                        <label class="font-normal text-sm">{error}</label>
-                    </div>
-                ) : isDirectory ? (
-                    !directoryListing ? (
-                        <div class="text-accent font-bold text-4xl ml-auto mr-auto mt-32 w-fit flex flex-col gap-1">
-                            <label>Unable to get directory contents</label>
-                            <label class="font-normal text-sm">{error}</label>
-                        </div>
-                    ) : (
-                        <MainView
-                            directoryListing={directoryListing}
-                            path={Astro.params.path as string}
-                            client:only="react"
-                            editable={true}
-                        />
-                    )
-                ) : fileContent != undefined &&
-                  isTextFile != undefined &&
-                  fileType?.ext != undefined &&
-                  fileType?.mime != undefined ? (
-                    <FileContentView
-                        path={Astro.params.path || "/"}
-                        fileContent={fileContent}
-                        isText={isTextFile as boolean}
-                        fileExt={fileType.ext}
-                        fileType={fileType.mime}
-                        userId={Astro.locals.user.id}
-                        client:visible
-                    />
-                ) : (
-                    <div>Error</div>
-                )
-            } -->
         </div>
     </div>
 </Layout>
