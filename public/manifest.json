@@ -1,0 +1,25 @@
+{
+    "theme_color": "black",
+    "background_color": "black",
+    "display": "standalone",
+    "categories": [
+        "filebrowser"
+    ],
+    "start_url": "https://music.rockhosting.org",
+    "orientation": "portrait",
+    "name": "FileBrowser",
+    "short_name": "FileBrowser",
+    "description": "The best file browser in the world",
+    "icons": [
+        {
+            "src": "https://files2.rockhosting.org/favicon_16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "https://files2.rockhosting.org/favicon_256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ]
+}
