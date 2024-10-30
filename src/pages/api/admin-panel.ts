@@ -6,19 +6,28 @@ import type { APIContext } from "astro";
 export async function POST(context: APIContext): Promise<Response> {
 	const formData = await context.request.formData();
 
+	console.log(context.locals.user)
+
+	if (!context.locals.user) {
+		return new Response(
+			JSON.stringify({
+				error: "User not logged in"
+			}),
+			{
+				status: 401
+			}
+		);
+	}
+
 	if (context.locals.user?.admin !== true) {
-
-		if (!context.locals.user) {
-			return new Response(
-				JSON.stringify({
-					error: "User is not admin"
-				}),
-				{
-					status: 403
-				}
-			);
-		}
-
+		return new Response(
+			JSON.stringify({
+				error: "User is not admin"
+			}),
+			{
+				status: 403
+			}
+		);
 	}
 
 	for (let k of formData.entries()) {
