@@ -329,7 +329,7 @@ export default function BaseFile(
                         draggable
                     >
                         <div
-                            className={cn("border rounded py-2 px-3 cursor-pointer hover:bg-muted select-none", isDragging ? "outline-blue-400 outline-dashed outline-1" : '', className)}
+                            className={cn("border rounded py-2 px-3 cursor-pointer hover:bg-muted select-none overflow-hidden", isDragging ? "outline-blue-400 outline-dashed outline-1" : '', className)}
                             onDoubleClick={() => { anchorRef.current?.click() }}
                         >
                             {children}

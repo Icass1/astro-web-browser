@@ -42,7 +42,7 @@ export default function Galery(
 
             <div className="absolute h-auto w-full aspect-square">
                 {!loaded &&
-                    <Skeleton className="h-full w-full relative"></Skeleton>
+                    <Skeleton className="h-full w-full relative rounded"></Skeleton>
                 }
             </div>
 
