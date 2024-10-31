@@ -218,7 +218,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                 className?: string | undefined,
             }
         ) {
-
             return (
                 <BaseFile
                     className={className}
@@ -231,7 +230,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                     {children}
                 </BaseFile>
             )
-
         }
 
         switch (view) {
@@ -263,11 +261,15 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const [columns, setColumns] = useState<number>()
     const [height, setHeight] = useState<number>()
     const [width, setWidth] = useState<number>()
+    const [scrollTop, setScrollTop] = useState<number>(0)
+    const [lowerIndex, setLowerIndex] = useState<number>(0)
+    const [upperIndex, setUpperIndex] = useState<number | undefined>(5)
 
     const gap = 10
 
     useEffect(() => {
         if (!scrollRef.current?.clientWidth) return
+        console.log("userEffect1")
 
         let columns = Math.max(Math.round(scrollRef.current.clientWidth / gridInfo.minWidth), 1)
         let width = Math.floor((scrollRef.current.clientWidth - gap * (columns + 1)) / columns)
@@ -290,23 +292,48 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         }
     }
 
+    // const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    //     setLowerIndex(e.target.scrollTop / (height + gap))
+    //     console.log()
+
+    // }
+
     return (
         <Dialog>
             <ContextMenu>
                 <ContextMenuTrigger className="relative w-full h-full">
-
                     <div className="relative w-full h-full pb-4">
                         <div
                             className="h-full w-full relative overflow-auto custom-slider"
                             ref={scrollRef}
+                            onScroll={(e) => { setScrollTop((e.target as HTMLDivElement).scrollTop) }}
                         >
-
                             {columns == undefined || height == undefined || width == undefined ?
                                 <div>Loading</div>
                                 :
                                 <>
                                     <div className="" style={{ minHeight: `${Math.ceil(directoryListing.length / columns) * height + (Math.ceil(directoryListing.length / columns) + 1) * gap}px` }}></div>
+
                                     {directoryListing.map((file, index) => {
+                                        // console.log(file.name, index)
+
+                                        if (scrollTop > gap + Math.floor((index) / columns) * (height + gap) + height) {
+                                            return
+                                        }
+
+                                        if (scrollRef.current?.clientHeight && scrollTop + scrollRef.current.clientHeight < gap + Math.floor((index) / columns) * (height + gap)) {
+                                            return
+                                        }
+
+
+                                        // if (index < lowerIndex) {
+                                        //     return
+                                        // }
+
+                                        // if (upperIndex && index > upperIndex) {
+                                        //     return
+                                        // }
+
                                         return (
                                             <div
                                                 key={index}
