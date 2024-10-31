@@ -5,6 +5,12 @@ User auth
 
 Text editor
 
+Git integration
+    Status
+    Pull
+    Fetch
+    Push
+
 File container
     DONE - If is shared -> show icon 
     Preview
@@ -38,6 +44,15 @@ File container
         Cut
         DONE - Share File
         If shared -> Stop sharing button
+        Backup
+            Copy file to backups directory with id as file name
+            Save backup in database
+            Handle rename
+            Handle move
+            Handle delete
+            See backups
+            Restore backup
+            
     Double click
         If directory -> move to that directory
         If image or video -> Open player
@@ -105,7 +120,7 @@ Admin panel
     Default scope
 
 Database
-    Users
+    User
         DONE - ID
         DONE - User name
         DONE - Password
@@ -113,7 +128,7 @@ Database
         DONE - Scope
         DONE - Admin
         DONE - Shares | List of IDs
-    Shares
+    Share
         DONE - ID
         DONE - Path (URL)
         DONE - Local path
@@ -123,3 +138,15 @@ Database
         DONE - Editable
         DONE - Expiration date
         DONE - Type (file | directory)
+    Config
+   
+    Backup
+        Actual file path
+        File path at backup creation
+        Description
+        Date
+        Backup path
+        User
+        
+        
+        
