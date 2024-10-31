@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 
 
-export default function Galery(
+export default function Gallery(
     { file, path }: { file: FileStats, path: string | undefined }
 ) {
     const [loaded, setLoaded] = useState<boolean>(false)

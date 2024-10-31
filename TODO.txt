@@ -6,6 +6,7 @@ User auth
 Text editor
 
 Git integration
+    https://github.com/isomorphic-git/isomorphic-git
     Status
     Pull
     Fetch

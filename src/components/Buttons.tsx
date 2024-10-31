@@ -204,13 +204,13 @@ export function ChangeView({ className = '' }: { className?: string }) {
                 $viewIndex.set("details")
                 return
             case "details":
-                $viewIndex.set("galery")
+                $viewIndex.set("gallery")
                 return
-            case "galery":
+            case "gallery":
                 $viewIndex.set("big")
                 return
             default:
-                $viewIndex.set("galery")
+                $viewIndex.set("gallery")
                 return
         }
     }
@@ -222,7 +222,7 @@ export function ChangeView({ className = '' }: { className?: string }) {
                 return <Table className="w-5 h-5" />
             case "details":
                 return <List className="w-5 h-5" />
-            case "galery":
+            case "gallery":
                 return <Images className="w-5 h-5" />
         }
     }

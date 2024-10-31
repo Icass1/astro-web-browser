@@ -3,7 +3,7 @@ import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
 import { useEffect, useRef, useState, type DragEvent, type ReactElement } from 'react';
 
-import Galery from "./FileViews/Galery";
+import Gallery from "./FileViews/Gallery";
 
 import { $viewIndex } from "./viewIndex"
 import { useStore } from '@nanostores/react';
@@ -198,7 +198,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                 return setGridInfo({ minWidth: 100000, height: () => (32) })
             case "big":
                 return setGridInfo({ minWidth: 400, height: () => (62) })
-            case "galery":
+            case "gallery":
                 return setGridInfo({ minWidth: 300, height: (width: number) => (width + 68) })
         }
     }, [view])
@@ -245,10 +245,10 @@ export default function MainView({ path, directoryListing, editable }: { path: s
                         <BigView key={file.name} file={file} />
                     </BaseFileTemplate>
                 )
-            case "galery":
+            case "gallery":
                 return (
                     <BaseFileTemplate className="shadow relative p-0 flex flex-col gap-2" >
-                        <Galery key={file.name} path={path} file={file} />
+                        <Gallery key={file.name} path={path} file={file} />
                     </BaseFileTemplate>
                 )
             default:
