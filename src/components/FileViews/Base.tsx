@@ -8,6 +8,10 @@ import {
     Pin,
     PinIcon,
     PinOff,
+    FolderSymlink,
+    FolderSyncIcon,
+    RotateCcwIcon,
+    ListIcon,
 } from "lucide-react"
 import { useRef, useState, type Dispatch, type DragEvent, type ReactElement, type SetStateAction } from 'react';
 import { cn } from "@/lib/utils";
@@ -20,6 +24,9 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
     ContextMenuSeparator,
+    ContextMenuSub,
+    ContextMenuSubTrigger,
+    ContextMenuSubContent,
 } from "@/components/ui/context-menu"
 
 import {
@@ -34,8 +41,10 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
-import ShareDialog from "../ShareDialog";
-import DetailsDialog from "../DetailsDialog";
+import ShareDialog from "../dialogs/ShareDialog";
+import DetailsDialog from "../dialogs/DetailsDialog";
+import NewBackupDialog from "../dialogs/NewBackupDialog";
+import SeeBackupsDialog from "../dialogs/SeeBackupsDialog";
 
 export default function BaseFile(
     {
@@ -60,7 +69,7 @@ export default function BaseFile(
     const [isDragging, setIsDragging] = useState(false);
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
 
-    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share" | "details">("rename")
+    const [actualDialog, setActualDialog] = useState<"rename" | "delete" | "share" | "details" | "newBackup" | "seeBackups">("rename")
     const [newNameInputDialog, setNewNameInputDialog] = useState<string>(file.name)
 
     const anchorRef = useRef<HTMLAnchorElement>(null)
@@ -104,7 +113,7 @@ export default function BaseFile(
 
         if (transferData) {
             const data = JSON.parse(transferData)
-            const src = (path ? (path + "/") : "") + data.fileName
+            const src = (data.path ? (data.path + "/") : "") + data.fileName
             const dest = (path ? (path + "/") : "") + file.name + "/" + data.fileName
 
             if (src + "/" + data.fileName == dest) {
@@ -141,8 +150,9 @@ export default function BaseFile(
     };
 
     const handleDragStart = async (event: DragEvent<HTMLDivElement>) => {
-        console.log("drag start")
+        console.log("drag start", JSON.stringify({ path: path, fileName: file.name, isDirectory: file.isDirectory }))
         event.dataTransfer.setData("file-path", JSON.stringify({ path: path, fileName: file.name, isDirectory: file.isDirectory }))
+        event.dataTransfer.setData("text", `https://files2.rockhosting.org/files/${path}/${file.name}`)
         const img = new Image()
         img.src = file.iconPath
         img.width = 10
@@ -294,23 +304,17 @@ export default function BaseFile(
         )
     }
 
-    const getShareDialogContent = () => {
-        return <ShareDialog path={(path ? (path + "/") : "") + file.name} type={file.isDirectory ? 'directory' : 'file'} />
-
-    }
-
-    const getDetailsDialog = () => {
-        return <DetailsDialog path={(path ? (path + "/") : "") + file.name} file={file} type={file.isDirectory ? 'directory' : 'file'} />
-
-    }
-
     const getDialogContent = () => {
         if (actualDialog == "delete") {
             return getDeleteDialogContent()
         } else if (actualDialog == "share") {
-            return getShareDialogContent()
+            return <ShareDialog path={(path ? (path + "/") : "") + file.name} type={file.isDirectory ? 'directory' : 'file'} />
         } else if (actualDialog == "details") {
-            return getDetailsDialog()
+            return <DetailsDialog path={(path ? (path + "/") : "") + file.name} file={file} type={file.isDirectory ? 'directory' : 'file'} />
+        } else if (actualDialog == "newBackup") {
+            return <NewBackupDialog path={path} file={file} />
+        } else if (actualDialog == "seeBackups") {
+            return <SeeBackupsDialog path={path} file={file} />
         } else if (actualDialog == "rename") {
             return getRenameDialogContent()
         }
@@ -392,7 +396,40 @@ export default function BaseFile(
                                     <span>Pin</span>
                                 </ContextMenuItem>
                             </div>
+                    }
 
+                    {!file.isDirectory &&
+                        <ContextMenuSub>
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuSubTrigger>
+                                    <FolderSyncIcon className="mr-2 h-4 w-4" />
+                                    <span>Backup</span>
+                                </ContextMenuSubTrigger>
+                            </div>
+                            <ContextMenuSubContent className="w-48">
+                                <DialogTrigger className={cn('w-full', !editable && 'hidden')} >
+                                    <div className='hover:bg-muted transition-colors rounded' onClick={() => { setActualDialog("newBackup") }}>
+                                        <ContextMenuItem onClick={() => { }}>
+                                            <FolderSyncIcon className="mr-2 h-4 w-4" />
+                                            <span>TODO - New backup</span>
+                                        </ContextMenuItem>
+                                    </div>
+                                    <div className='hover:bg-muted transition-colors rounded'>
+                                        <ContextMenuItem onClick={() => { }}>
+                                            <RotateCcwIcon className="mr-2 h-4 w-4" />
+                                            <span>TODO - Restore last backup</span>
+                                        </ContextMenuItem>
+                                    </div>
+                                    <div className='hover:bg-muted transition-colors rounded' onClick={() => { setActualDialog("seeBackups") }}>
+                                        <ContextMenuItem onClick={() => { }}>
+                                            <ListIcon className="mr-2 h-4 w-4" />
+                                            <span>TODO - See backups</span>
+                                        </ContextMenuItem>
+                                    </div>
+                                </DialogTrigger>
+
+                            </ContextMenuSubContent>
+                        </ContextMenuSub>
                     }
 
                     <ContextMenuSeparator className={cn(!editable && 'hidden')} />

@@ -13,13 +13,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS user (
     pinned_files TEXT DEFAULT "[]" NOT NULL
 )`);
 
-// console.log("ALTER TABLE")
-// db.exec(`UPDATE user SET admin = 1 WHERE id = 'qzwnikdpu60pb3v'`)
-// db.exec(`ALTER TABLE user ADD COLUMN pinned_files TEXT DEFAULT "[]" NOT NULL`)
-// db.exec("DROP TABLE config")
-// db.exec("DELETE FROM config WHERE id = '1.0'")
 
-// console.log("CREATE TABLE IF NOT EXISTS shartes")
 
 db.exec(`CREATE TABLE IF NOT EXISTS share (
     id TEXT NOT NULL PRIMARY KEY,
@@ -47,8 +41,26 @@ db.exec(`CREATE TABLE IF NOT EXISTS config (
     wopi_host TEXT DEFAULT '' NOT NULL
 )`);
 
+db.exec(`CREATE TABLE IF NOT EXISTS backup (
+    id TEXT NOT NULL PRIMARY KEY,
+    actual_file_path TEXT NOT NULL,
+    file_path_at_creation TEXT  NOT NULL,
+    description TEXT,
+    date INTEGER NOT NULL,
+    backup_path TEXT  NOT NULL,
+    user TEXT  NOT NULL
+)`);
+
 const config = db.prepare("SELECT * FROM config WHERE id='1'").get()
 if (!config) {
     console.log("Not config found")
     db.exec("INSERT INTO config (id) VALUES(1)")
 }
+
+// console.log("ALTER TABLE")
+// db.exec(`UPDATE user SET admin = 1 WHERE id = 'qzwnikdpu60pb3v'`)
+// db.exec(`ALTER TABLE user ADD COLUMN pinned_files TEXT DEFAULT "[]" NOT NULL`)
+// db.exec("DROP TABLE config")
+// db.exec("DELETE FROM config WHERE id = '1.0'")
+
+// console.log("CREATE TABLE IF NOT EXISTS shartes")

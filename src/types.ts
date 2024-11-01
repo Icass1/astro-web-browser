@@ -20,6 +20,15 @@ export interface DatabaseUser {
     pinned_files: string;
 }
 
+export interface DatabaseBackup {
+    id: string;
+    actual_file_path: string;
+    file_path_at_creation: string;
+    description: string;
+    date: number;
+    backup_path: string;
+    user: string;
+}
 
 export interface DatabaseShare {
     id: string;

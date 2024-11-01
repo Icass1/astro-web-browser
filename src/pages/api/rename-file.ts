@@ -1,3 +1,4 @@
+import { db } from "@/lib/db";
 import type { APIContext } from "astro";
 
 import * as fs from 'fs/promises';
@@ -20,7 +21,8 @@ export async function POST(context: APIContext): Promise<Response> {
     try {
         const src = path.join(context.locals.user.scope, data.oldPath)
         const dest = path.join(context.locals.user.scope, data.newPath)
-        console.log(src, dest)
+        
+        db.exec(`UPDATE backup SET actual_file_path = '${dest}' WHERE actual_file_path = '${src}'`)
 
         await fs.rename(src, dest)
 
