@@ -72,7 +72,7 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 name: file,
                 size: getFileSize(stats.size), // File size in bytes
                 // modified: stats.mtime.toString().replace("GMT+0200 (Central European Summer Time)", ""), // Last modified date
-                modified: `${stats.mtime.getDate()}/${stats.mtime.getMonth() + 1}/${stats.mtime.getFullYear()} ${stats.mtime.getHours()}:${stats.mtime.getMinutes()}`, // Last modified date
+                modified: `${stats.mtime.getDate()}/${stats.mtime.getMonth() + 1}/${stats.mtime.getFullYear().toString().padStart(2, "0")} ${stats.mtime.getHours()}:${stats.mtime.getMinutes().toString().padStart(2, "0")}`, // Last modified date
                 isDirectory: stats.isDirectory(),
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: share == undefined ? false : true,
@@ -98,7 +98,7 @@ export async function getDirectory(directoryPath: string, userId: string | undef
 
     let filesOut = directoryListing.filter(el => !el.isDirectory)
     filesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-    
+
     // filesOut.sort(function (a, b) {
     //     if (a.name < b.name) {
     //         return -1;
