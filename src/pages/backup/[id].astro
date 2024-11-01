@@ -1,0 +1,34 @@
+---
+import { db } from "@/lib/db";
+import type { DatabaseConfig } from "@/types";
+import "@/styles/globals.css";
+
+if (!Astro.locals.user?.admin) {
+    return new Response(
+        JSON.stringify({
+            error: "",
+        }),
+        {
+            status: 404,
+        },
+    );
+}
+
+const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig;
+
+const collaboraURL = config.collabora_url;
+const WOPIHost = config.wopi_host;
+
+const fileId = `${Astro.params.id}`.replace(/\//g, "_._._");
+
+const wopiSrc = `${WOPIHost}/api/wopi/backup/${fileId}`;
+const accessToken = encodeURIComponent(JSON.stringify({
+    share: false,
+    id: Astro.locals.user.id,
+}));
+
+const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`;
+---
+<title>Backup</title>
+
+<iframe src={editorUrl} width="100%" height="100%"></iframe>

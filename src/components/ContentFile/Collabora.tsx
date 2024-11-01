@@ -1,12 +1,4 @@
 
-// import crypto from 'crypto';
-
-// function generateWopiToken(fileId: number, userId: number) {
-//     const secret = 'your-secure-secret'; // Use a secure method to store this
-//     const payload = JSON.stringify({ fileId, userId, exp: Date.now() + 3600 * 1000 }); // Expiration in 1 hour
-//     return crypto.createHmac('sha256', secret).update(payload).digest('hex');
-// }
-
 export default function Collabora(
     {
         userId,
@@ -38,6 +30,8 @@ export default function Collabora(
             </div>
         )
     }
+
+    console.log({ fileId: fileId, wopiSrc: wopiSrc, accessToken: accessToken, editorUrl: editorUrl })
 
     return (
         <div className="bg-neutral-800 h-full w-full">

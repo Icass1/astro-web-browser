@@ -8,10 +8,11 @@ import {
     DialogClose,
 } from "@/components/ui/dialog"
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import type { DatabaseBackup, FileStats } from '@/types';
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function SeeBackupsDialog({ path, file }: { path: string | undefined, file: FileStats }) {
 
@@ -69,10 +70,15 @@ export default function SeeBackupsDialog({ path, file }: { path: string | undefi
                                             <label className="text-sm pl-3 text-foreground/80">{backup.file_path_at_creation}</label>
                                         </div>
                                     }
-                                    <div className="flex flex-row gap-2">
-                                        <Button variant="outline" className="hover:bg-destructive">Delete backup</Button>
-                                        <Button variant="outline" className="hover:bg-muted">Restore backup</Button>
-                                        <Button variant="outline" className="hover:bg-muted">Open file</Button>
+                                    <div className="flex flex-row justify-between">
+                                        <Button variant="outline" className="hover:bg-destructive px-2">Delete backup</Button>
+                                        <Button variant="outline" className="hover:bg-muted px-2">Restore backup</Button>
+                                        <a className={cn(buttonVariants({ variant: "outline" }), "hover:bg-muted px-2")} target="_blank" href={`/backup/${backup.id}`}>
+                                            Open file
+                                        </a>
+                                        <a className={cn(buttonVariants({ variant: "outline" }), "hover:bg-muted px-2")} target="_blank" href={`/backup/compare/${backup.id}`}>
+                                            Compare file
+                                        </a>
                                     </div>
                                 </div>
                             )

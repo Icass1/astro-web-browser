@@ -31,6 +31,7 @@ export default function NewBackupDialog({ path, file }: { path: string | undefin
         }).then(response => {
             if (response.ok) {
                 toast("Backup created")
+                closeDeleteDialogRef.current?.click()
             } else {
                 response.json().then(data => {
                     toast(data.error, { style: { color: '#ed4337' } })

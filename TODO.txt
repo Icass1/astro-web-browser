@@ -22,7 +22,8 @@ File container
         Delete
             DONE - Delete file
             Check if path is shared and remove share
-        DONE - Rename
+        Rename
+            Check if dest file exists and ask for replace it
         DONE - Download
         DONE - Pin
         DONE - Unpin
@@ -46,13 +47,20 @@ File container
         DONE - Share File
         If shared -> Stop sharing button
         Backup
-            Copy file to backups directory with id as file name
-            Save backup in database
-            Handle rename
-            Handle move
+            DONE - Copy file to backups directory with id as file name
+            DONE - Save backup in database
+            DONE - Handle rename
+            DONE - Handle move
             Handle delete
             See backups
-            Restore backup
+                DONE - Date
+                DONE - Backup made by
+                DONE - Description
+                DONE - Path when was created if different from actual
+                Restore backup
+                Delete backup
+                DONE - Open backup file
+                Compare backup file with actual file
             
     Double click
         If directory -> move to that directory
@@ -142,12 +150,12 @@ Database
     Config
    
     Backup
-        Actual file path
-        File path at backup creation
-        Description
-        Date
-        Backup path
-        User
+        DONE - Actual file path
+        DONE - File path at backup creation
+        DONE - Description
+        DONE - Date
+        DONE - Backup path
+        DONE - User
         
         
         

@@ -1,0 +1,62 @@
+---
+import { db } from "@/lib/db";
+import type { DatabaseBackup, DatabaseConfig } from "@/types";
+import "@/styles/globals.css";
+
+if (!Astro.locals.user) {
+    return new Response(
+        JSON.stringify({
+            error: "User is not logged in",
+        }),
+        {
+            status: 404,
+        },
+    );
+}
+
+const configDB = db.prepare("SELECT * FROM config").get() as DatabaseConfig;
+const backupDB = db
+    .prepare(`SELECT * FROM backup WHERE id='${Astro.params.id}'`)
+    .get() as DatabaseBackup;
+
+if (!backupDB) {
+    return new Response(
+        JSON.stringify({
+            error: "Backup not found",
+        }),
+        {
+            status: 404,
+        },
+    );
+}
+
+const collaboraURL = configDB.collabora_url;
+const WOPIHost = configDB.wopi_host;
+
+const wopiSrc = `${WOPIHost}/api/wopi/backup/${Astro.params.id}`;
+const accessToken = encodeURIComponent(
+    JSON.stringify({
+        share: false,
+        id: Astro.locals.user.id,
+    }),
+);
+
+const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`;
+
+const fileId = backupDB.actual_file_path.replace(/\//g, "_._._");
+const currentVersionWopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
+const currentVersionEditorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(currentVersionWopiSrc)}`;
+---
+
+<title>Backup compare</title>
+
+<div class="w-full h-full grid grid-cols-2 gap-1">
+    <!-- <div class="bg-red-400 min-w-0 max-w-full"> 
+
+    </div>
+    <div class="bg-blue-400">
+    </div> -->
+
+    <iframe src={editorUrl} width="100%" height="100%"></iframe>
+    <iframe src={currentVersionEditorUrl} width="100%" height="100%"></iframe>
+</div>
