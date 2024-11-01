@@ -42,7 +42,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-import ShareDialog from "./ShareDialog";
+import ShareDialog from "./dialogs/ShareDialog";
 import BaseFile from "./FileViews/Base";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -235,7 +235,7 @@ export default function MainView({ path, directoryListing, editable }: { path: s
         switch (view) {
             case "details":
                 return (
-                    <BaseFileTemplate className="grid grid-cols-[24px_2fr_250px_30px] gap-3 items-center border-0 py-1" >
+                    <BaseFileTemplate className="grid grid-cols-[24px_2fr_200px_30px] gap-3 items-center border-0 py-1" >
                         <DetailsView key={file.name} file={file} />
                     </BaseFileTemplate>
                 )
