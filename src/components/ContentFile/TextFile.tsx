@@ -2,7 +2,7 @@
 import { Fragment } from "react/jsx-runtime";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRef, useState } from "react";
-
+ 
 
 export default function TextFileView({ fileContent }: { fileContent: string }) {
     const lineNumberRef = useRef<HTMLDivElement>(null)

@@ -2,11 +2,16 @@
 import { db } from "@/lib/db";
 import type { DatabaseBackup, DatabaseConfig } from "@/types";
 import "@/styles/globals.css";
+import FileContentView from "@/components/ContentFile/FileContentView";
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import fs from "fs/promises";
+import { isText } from "istextorbinary";
 
-if (!Astro.locals.user) {
+import { fileTypeFromBuffer } from "file-type";
+if (!Astro.locals.user?.admin) {
     return new Response(
         JSON.stringify({
-            error: "User is not logged in",
+            error: "",
         }),
         {
             status: 404,
@@ -14,15 +19,27 @@ if (!Astro.locals.user) {
     );
 }
 
-const configDB = db.prepare("SELECT * FROM config").get() as DatabaseConfig;
+if (!Astro.params.id) {
+    return new Response(
+        JSON.stringify({
+            error: "",
+        }),
+        {
+            status: 404,
+        },
+    );
+}
+
 const backupDB = db
     .prepare(`SELECT * FROM backup WHERE id='${Astro.params.id}'`)
     .get() as DatabaseBackup;
 
+
+
 if (!backupDB) {
     return new Response(
         JSON.stringify({
-            error: "Backup not found",
+            error: "",
         }),
         {
             status: 404,
@@ -30,33 +47,88 @@ if (!backupDB) {
     );
 }
 
-const collaboraURL = configDB.collabora_url;
-const WOPIHost = configDB.wopi_host;
 
-const wopiSrc = `${WOPIHost}/api/wopi/backup/${Astro.params.id}`;
-const accessToken = encodeURIComponent(
-    JSON.stringify({
-        share: false,
-        id: Astro.locals.user.id,
-    }),
+const config = db.prepare("SELECT * FROM config").get() as DatabaseConfig;
+
+const collaboraURL = config.collabora_url;
+const WOPIHost = config.wopi_host;
+
+let backupFileContent: Buffer | undefined = await fs.readFile(
+    `backups/${Astro.params.id}`,
 );
+const backupIsTextFile = isText(
+    `backups/${Astro.params.id}`,
+    backupFileContent,
+    () => {},
+) as unknown;
+const backupFileType = await fileTypeFromBuffer(backupFileContent);
 
-const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`;
+if (!backupIsTextFile) {
+    backupFileContent = undefined;
+}
 
-const fileId = backupDB.actual_file_path.replace(/\//g, "_._._");
-const currentVersionWopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
-const currentVersionEditorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(currentVersionWopiSrc)}`;
+const absolutePath = backupDB.actual_file_path
+const relativePath = backupDB.actual_file_path.replace(Astro.locals.user.scope, "")
+
+let actualFileContent: Buffer | undefined = await fs.readFile(
+    `backups/${Astro.params.id}`,
+);
+const actualIsTextFile = isText(
+    `backups/${Astro.params.id}`,
+    actualFileContent,
+    () => {},
+) as unknown;
+const actualFileType = await fileTypeFromBuffer(actualFileContent);
+
+if (!actualIsTextFile) {
+    backupFileContent = undefined;
+}
+
+
 ---
 
-<title>Backup compare</title>
-
-<div class="w-full h-full grid grid-cols-2 gap-1">
-    <!-- <div class="bg-red-400 min-w-0 max-w-full"> 
-
-    </div>
-    <div class="bg-blue-400">
-    </div> -->
-
-    <iframe src={editorUrl} width="100%" height="100%"></iframe>
-    <iframe src={currentVersionEditorUrl} width="100%" height="100%"></iframe>
-</div>
+<!doctype html>
+<html lang="en" class="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="FileBrowser login" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Backup</title>
+        <ViewTransitions />
+    </head><body>
+        <main class="overflow-hidden h-full w-full">
+            <div class="w-full h-full grid grid-cols-2 gap-1">
+                <FileContentView
+                    relativePath={Astro.params.id}
+                    absolutePath={Astro.params.id}
+                    fileContent={backupFileContent}
+                    isText={backupIsTextFile as boolean}
+                    fileExt={backupFileType?.ext}
+                    fileType={backupFileType?.mime}
+                    userId={Astro.locals.user.id}
+                    collaboraURL={collaboraURL}
+                    type="backup"
+                    id={Astro.params.id}
+                    WOPIHost={WOPIHost}
+                    client:only="react"
+                />
+                <FileContentView
+                    relativePath={relativePath}
+                    absolutePath={absolutePath}
+                    fileContent={actualFileContent}
+                    isText={actualIsTextFile as boolean}
+                    fileExt={actualFileType?.ext}
+                    fileType={actualFileType?.mime}
+                    userId={Astro.locals.user.id}
+                    collaboraURL={collaboraURL}
+                    type="normal"
+                    id={Astro.params.id}
+                    WOPIHost={WOPIHost}
+                    client:only="react"
+                />
+            </div>
+        </main>
+    </body>
+</html>

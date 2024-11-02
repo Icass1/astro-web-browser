@@ -157,20 +157,22 @@ const absolutePath = path.join(share.local_path, (Astro.params.path ? "/" + Astr
         }
 
         {error == undefined && !isDirectory  && isTextFile != undefined && 
-            <FileContentView
-                relativePath={"/api/share/" + share.id + (Astro.params.path ? "/" + Astro.params.path : '') }
-                absolutePath={absolutePath}
-                share={true}
-                fileContent={fileContent}
-                isText={isTextFile as boolean}
-                fileExt={fileType?.ext}
-                fileType={fileType?.mime}
-                userId={Astro.locals?.user?.id || "guest"}
-                shareId={share.id}
-                collaboraURL={collaboraURL}
-                WOPIHost={WOPIHost}
-                client:visible
-            />
+            <div class='fixed top-0 bottom-0 left-0 right-0 h-full'>
+                <FileContentView
+                    relativePath={"/api/share/" + share.id + (Astro.params.path ? "/" + Astro.params.path : '') }
+                    absolutePath={absolutePath}
+                    type="share"
+                    fileContent={fileContent}
+                    isText={isTextFile as boolean}
+                    fileExt={fileType?.ext}
+                    fileType={fileType?.mime}
+                    userId={Astro.locals?.user?.id || "guest"}
+                    id={share.id}
+                    collaboraURL={collaboraURL}
+                    WOPIHost={WOPIHost}
+                    client:visible
+                />
+            </div>
         }
 
         {error == undefined && !isDirectory && isTextFile == undefined && 

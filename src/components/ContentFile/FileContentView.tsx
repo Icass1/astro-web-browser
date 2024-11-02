@@ -1,6 +1,7 @@
 import { Uint8ArrayToStr } from "@/lib/uint8ArrayToStr";
 import TextFileView from "./TextFile";
 import Collabora from "./Collabora";
+import "@/styles/globals.css";
 
 export default function FileContentView(
     {
@@ -12,8 +13,8 @@ export default function FileContentView(
         fileType,
         userId,
         collaboraURL,
-        share,
-        shareId,
+        type,
+        id,
         WOPIHost,
     }:
         {
@@ -25,8 +26,8 @@ export default function FileContentView(
             fileType: string | undefined,
             userId: string,
             collaboraURL: string,
-            share: boolean,
-            shareId: string,
+            type: "normal" | "share" | "backup",
+            id: string,
             WOPIHost: string
         }) {
 
@@ -59,7 +60,7 @@ export default function FileContentView(
                 'application/pdf'
             ].includes(fileType)) {
             return (
-                <Collabora userId={userId} filePath={absolutePath} collaboraURL={collaboraURL} share={share} shareId={shareId} WOPIHost={WOPIHost} />
+                <Collabora userId={userId} filePath={absolutePath} collaboraURL={collaboraURL} type={type} id={id} WOPIHost={WOPIHost} />
             )
 
         } else {
@@ -75,7 +76,22 @@ export default function FileContentView(
     }
 
     return (
-        <div className="flex flex-col gap-10 h-full overflow-hidden fixed top-0 left-0 right-0 bottom-0 bg-neutral-800">
+        <div className="bg-neutral-800 h-full w-full">
+            {renderMainView()}
+        </div>
+    )
+
+    if (type == "backup") {
+        return (
+            <div className="bg-neutral-800">
+                {renderMainView()}
+            </div>
+        )
+    }
+
+
+    return (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-neutral-800">
             {renderMainView()}
         </div>
     )

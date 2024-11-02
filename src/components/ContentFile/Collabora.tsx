@@ -4,22 +4,36 @@ export default function Collabora(
         userId,
         filePath,
         collaboraURL,
-        share,
-        shareId,
+        type,
+        id,
         WOPIHost
     }: {
         userId: string,
         filePath: string,
         collaboraURL: string,
-        share: boolean,
-        shareId: string,
+        type: "normal" | "share" | "backup",
+        id: string,
         WOPIHost: string
     }) {
 
     const fileId = filePath.replace(/\//g, '_._._')
 
-    const wopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
-    const accessToken = JSON.stringify({ share: share, id: share ? shareId : userId });
+    let wopiSrc
+    if (type == "backup") {
+        wopiSrc = `${WOPIHost}/api/wopi/backup/${id}`;
+    } else {
+        wopiSrc = `${WOPIHost}/api/wopi/files/${fileId}`;
+    }
+
+
+
+    let accessToken
+    if (type == "share") {
+        accessToken = JSON.stringify({ share: true, id: id });
+    } else {
+        accessToken = JSON.stringify({ share: false, id: userId });
+
+    }
 
     const editorUrl = `${collaboraURL}/browser/3456/cool.html?access_token=${accessToken}&WOPISrc=${encodeURIComponent(wopiSrc)}`
 
