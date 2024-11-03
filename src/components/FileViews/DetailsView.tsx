@@ -1,8 +1,6 @@
 import type { FileStats } from "@/types";
 import { Share2 } from "lucide-react";
-import { type Dispatch, type SetStateAction } from 'react';
 import '@/styles/globals.css'
-import BaseFile from "./Base";
 
 export default function DetailsView(
     { file }: { file: FileStats }

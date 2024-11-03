@@ -1,11 +1,6 @@
 import { db } from "@/lib/db";
 import type { DatabaseBackup, DatabaseUser } from "@/types";
 import type { APIContext } from "astro";
-import { promises as fs } from 'fs';
-import { generateId } from "lucia";
-
-// import fs from 'fs/promises';
-// import path from 'path';
 import * as path from 'path'
 
 interface ErrnoException extends Error {

@@ -1,13 +1,12 @@
 import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
-import { useEffect, useRef, useState, type DragEvent, type ReactElement } from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 
 import Gallery from "./FileViews/Gallery";
 
 import { $viewIndex } from "./viewIndex"
 import { useStore } from '@nanostores/react';
-import { uploadFile } from "@/lib/uploadFile";
 import useWindowSize from "@/hooks/useWindowSize";
 
 import {
@@ -23,8 +22,6 @@ import {
     ContextMenu,
     ContextMenuContent,
     ContextMenuItem,
-    ContextMenuSeparator,
-    ContextMenuShortcut,
     ContextMenuSub,
     ContextMenuSubContent,
     ContextMenuSubTrigger,
@@ -131,7 +128,7 @@ function FileNameDialog({ fileType, path }: { fileType: fileTypes, path: string 
 
 export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: FileStats[], editable: boolean }) {
 
-    const [isDragging, setIsDragging] = useState(false);
+    // const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
 
     const view = useStore($viewIndex)
@@ -140,50 +137,50 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const size = useWindowSize()
 
     const [actualDialog, setActualDialog] = useState<"share" | "filename">("share")
-    const [selectedFiles, setSelectedFiles] = useState<FileStats[]>([])
+    // const [selectedFiles, setSelectedFiles] = useState<FileStats[]>([])
 
     const [newFileType, setNewFileType] = useState<fileTypes>()
 
-    const onDrop = async (files: FileList) => {
-        for (let fileToUpload of files) {
-            uploadFile(path ? (path) : (''), fileToUpload)
-        }
-    }
+    // const onDrop = async (files: FileList) => {
+    //     for (let fileToUpload of files) {
+    //         uploadFile(path ? (path) : (''), fileToUpload)
+    //     }
+    // }
 
-    const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
+    // const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
+    //     event.preventDefault();
+    //     event.stopPropagation();
 
-        setIsDragging(true);
-    };
+    //     setIsDragging(true);
+    // };
 
-    const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
+    // const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+    //     event.preventDefault();
+    //     event.stopPropagation();
 
-        if (!event.currentTarget.contains(event.relatedTarget as Node)) {
-            setIsDragging(false);
-        }
-    };
+    //     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+    //         setIsDragging(false);
+    //     }
+    // };
 
-    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
-    };
+    // const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    // };
 
-    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
+    // const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    //     event.preventDefault();
+    //     event.stopPropagation();
 
-        setIsDragging(false);
-        if (overDirectory) {
-            return
-        }
+    //     setIsDragging(false);
+    //     if (overDirectory) {
+    //         return
+    //     }
 
-        if (event.dataTransfer.files.length > 0) {
-            onDrop(event.dataTransfer.files);
-        }
-    };
+    //     if (event.dataTransfer.files.length > 0) {
+    //         onDrop(event.dataTransfer.files);
+    //     }
+    // };
 
     interface GridInfo {
         minWidth: number,
@@ -262,8 +259,6 @@ export default function MainView({ path, directoryListing, editable }: { path: s
     const [height, setHeight] = useState<number>()
     const [width, setWidth] = useState<number>()
     const [scrollTop, setScrollTop] = useState<number>(0)
-    const [lowerIndex, setLowerIndex] = useState<number>(0)
-    const [upperIndex, setUpperIndex] = useState<number | undefined>(5)
 
     const gap = 10
 

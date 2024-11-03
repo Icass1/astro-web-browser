@@ -67,7 +67,12 @@ File container
         If image or video -> Open player
         If text file -> open text editor
         Else show Details
-    DONE - Drag to other directory or to Current path
+
+    Single click
+        Select file 
+            Add it to a list
+            Add custom context menu to selected files
+    Drag to other directory or to Current path
 
 Main container
     Current path
@@ -75,7 +80,7 @@ Main container
         Drop file or directory, move that file or directory to that location
     Download directory
     DONE - Files in current directory
-    DONE - Drop file to upload
+    Drop file to upload
     Drop folder to upload
     Context menu
         If shared -> Stop sharing button

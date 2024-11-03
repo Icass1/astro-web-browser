@@ -1,6 +1,5 @@
 import type { APIContext } from "astro";
 
-import * as fs from 'fs/promises';
 import * as path from 'path';
 
 import { db } from "@/lib/db";

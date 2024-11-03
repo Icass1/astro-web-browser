@@ -35,7 +35,6 @@ export async function POST(context: APIContext): Promise<Response> {
         return new Response("Not path provided", { status: 500 })
     }
 
-    const params = JSON.parse(access_token)
 
     let url = id.replace(/_._._/g, "/")
 

@@ -1,6 +1,6 @@
 import type { APIContext } from "astro";
 import { db } from "@/lib/db";
-import type { DatabaseBackup, DatabaseShare, DatabaseUser } from "@/types";
+import type { DatabaseBackup, DatabaseUser } from "@/types";
 
 export async function GET(context: APIContext): Promise<Response> {
     const { id } = context.params;

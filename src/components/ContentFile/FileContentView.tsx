@@ -81,20 +81,5 @@ export default function FileContentView(
             {renderMainView()}
         </div>
     )
-
-    if (type == "backup") {
-        return (
-            <div className="bg-neutral-800">
-                {renderMainView()}
-            </div>
-        )
-    }
-
-
-    return (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-neutral-800">
-            {renderMainView()}
-        </div>
-    )
 }
 
