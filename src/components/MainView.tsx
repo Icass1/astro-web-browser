@@ -59,7 +59,7 @@ function FileNameDialog({ fileType, path }: { fileType: fileTypes, path: string 
     }
 
     const closeDeleteDialogRef = useRef<HTMLButtonElement | null>(null);
-    const [fileName, setFileName] = useState<string>()
+    const [fileName, setFileName] = useState<string>("")
 
     let extension: string = ""
     switch (fileType) {

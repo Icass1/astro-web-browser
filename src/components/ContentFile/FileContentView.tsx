@@ -32,10 +32,11 @@ export default function FileContentView(
         }) {
 
     const renderMainView = () => {
+
         if (isText) {
             // return <Collabora userId={userId} filePath={path} collaboraURL={collaboraURL} />
 
-            return <TextFileView fileContent={Uint8ArrayToStr(fileContent as Buffer)} />
+            return <TextFileView relativePath={absolutePath} fileContent={Uint8ArrayToStr(fileContent as Buffer)} />
         } else if (fileType?.startsWith("image")) {
             return (
                 <div className="h-full w-full overflow-auto">

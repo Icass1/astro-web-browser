@@ -86,6 +86,9 @@ importers:
       '@types/react-navigation':
         specifier: ^3.4.0
         version: 3.4.0
+      ace-builds:
+        specifier: ^1.36.3
+        version: 1.36.3
       astro:
         specifier: ^4.14.5
         version: 4.14.5(@types/node@22.5.1)(rollup@4.21.1)(terser@5.31.6)(typescript@5.5.4)
@@ -1587,6 +1590,9 @@ packages:
 
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+
+  ace-builds@1.36.3:
+    resolution: {integrity: sha512-YcdwV2IIaJSfjkWAR1NEYN5IxBiXefTgwXsJ//UlaFrjXDX5hQpvPFvEePHz2ZBUfvO54RjHeRUQGX8MS5HaMQ==}
 
   acorn@8.12.1:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
@@ -5176,6 +5182,8 @@ snapshots:
       vscode-uri: 2.1.2
 
   '@vscode/l10n@0.0.18': {}
+
+  ace-builds@1.36.3: {}
 
   acorn@8.12.1: {}
 
