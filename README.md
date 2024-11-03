@@ -15,5 +15,17 @@ This platform is a self-hosted solution for file management and collaboration, b
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-name>
+   git clone https://github.com/Icass1/astro-web-browser.git
+   cd astro-web-browser
+
+2. **Install dependencies**:
+   ```bash
+   pnpm install
+
+3. **Run developer mode**:
+   ```bash
+   pnpm run dev
+3. **Build and run**:
+   ```bash
+   pnpm run build
+   node dist/server/entry.mjs
