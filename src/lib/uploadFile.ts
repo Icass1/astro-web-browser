@@ -59,6 +59,4 @@ export async function uploadFile(path: string, file: File) {
         // xhr.setRequestHeader("Content-Type", "application/octet-stream");
         xhr.send(formData);
     });
-
-
 }

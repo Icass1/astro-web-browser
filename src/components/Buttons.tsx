@@ -94,6 +94,9 @@ export function NewFolder({ path }: { path: string }) {
     )
 }
 
+// **********
+// Deprecated
+// **********
 export function Upload({ path }: { path: string }) {
 
     const handleUpload = () => {
@@ -130,7 +133,9 @@ export function Upload({ path }: { path: string }) {
     )
 }
 
-
+// **********
+// Deprecated
+// **********
 export function SetScope({ className = '', scope }: { className: string, scope: string }) {
     const closeRef = useRef<HTMLButtonElement | null>(null);
 

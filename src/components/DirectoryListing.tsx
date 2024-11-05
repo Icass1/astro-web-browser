@@ -16,7 +16,8 @@ import {
     FolderPlus,
     Pin,
     Share2,
-    TableProperties
+    TableProperties,
+    UploadIcon
 } from "lucide-react";
 
 import {
@@ -39,6 +40,7 @@ import BaseFile from "./FileViews/Base";
 import type { StatusResult } from "simple-git";
 import NewFileNameDialog from "./dialogs/NewFileNameDialog";
 import NewFolderDialog from "./dialogs/NewFolderDialog";
+import { uploadFile } from "@/lib/uploadFile";
 
 
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
@@ -218,6 +220,28 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
 
 
 
+    const handleUpload = () => {
+
+        const input = document.createElement("input")
+        input.type = "file"
+        input.multiple = true
+        input.click()
+
+        input.onchange = (e) => {
+            const a = e as unknown
+            const event = a as React.ChangeEvent<HTMLInputElement>
+            console.log(e)
+            if (!event?.target?.files) { return }
+            const files = event.target.files
+
+            for (let index = 0; index < files.length; index++) {
+                if (files.item(index)) {
+                    uploadFile(path, files.item(index) as File)
+                }
+            }
+        }
+    }
+
     return (
         <Dialog>
             <ContextMenu>
@@ -331,6 +355,12 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
                                             <span>New folder</span>
                                         </ContextMenuItem>
                                     </DialogTrigger>
+                                </div>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={handleUpload} >
+                                        <UploadIcon className="mr-2 h-4 w-4" />
+                                        <span>Upload file</span>
+                                    </ContextMenuItem>
                                 </div>
                             </>
                         )
