@@ -1,3 +1,5 @@
+import type { StatusResult } from "simple-git";
+
 export interface FileStats {
     name: string;
     size: string;
@@ -8,6 +10,7 @@ export interface FileStats {
     shareInfo: DatabaseShare | undefined;
     mime: string;
     pinned: boolean;
+    gitStatus: StatusResult | undefined
 }
 
 export interface DatabaseUser {
