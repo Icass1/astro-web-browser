@@ -24,6 +24,9 @@ import { useStore } from '@nanostores/react';
 
 import { Images, List, Table } from "lucide-react"
 
+// **********
+// Deprecated
+// **********
 export function NewFolder({ path }: { path: string }) {
     const handleNewFolder = (e: BaseSyntheticEvent) => {
         console.log("New Folder", e.target, folderName, path)
@@ -89,7 +92,6 @@ export function NewFolder({ path }: { path: string }) {
             </DialogContent>
         </Dialog>
     )
-
 }
 
 export function Upload({ path }: { path: string }) {

@@ -38,6 +38,7 @@ import ShareDialog from "./dialogs/ShareDialog";
 import BaseFile from "./FileViews/Base";
 import type { StatusResult } from "simple-git";
 import NewFileNameDialog from "./dialogs/NewFileNameDialog";
+import NewFolderDialog from "./dialogs/NewFolderDialog";
 
 
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
@@ -50,7 +51,7 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
 
 
 
-    const [actualDialog, setActualDialog] = useState<"share" | "filename">("share")
+    const [actualDialog, setActualDialog] = useState<"share" | "filename" | "newFolder">("share")
     // const [selectedFiles, setSelectedFiles] = useState<FileStats[]>([])
 
     const [newFileType, setNewFileType] = useState<fileTypes>()
@@ -203,6 +204,8 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
     const getDialogContent = () => {
         if (actualDialog == "share") {
             return getShareDialogContent()
+        } else if (actualDialog == "newFolder") {
+            return <NewFolderDialog path={path} />
         } else if (actualDialog == "filename") {
             return <NewFileNameDialog path={path} fileType={newFileType} />
         }
@@ -211,7 +214,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
     // const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
     //     setLowerIndex(e.target.scrollTop / (height + gap))
     //     console.log()
-
     // }
 
 
@@ -323,10 +325,12 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
                                     </ContextMenuSubContent>
                                 </ContextMenuSub>
                                 <div className='hover:bg-muted transition-colors rounded'>
-                                    <ContextMenuItem onClick={() => { }} >
-                                        <FolderPlus className="mr-2 h-4 w-4" />
-                                        <span>TODO - New folder</span>
-                                    </ContextMenuItem>
+                                    <DialogTrigger className='w-full' onClick={() => { setActualDialog("newFolder") }}>
+                                        <ContextMenuItem onClick={() => { }} >
+                                            <FolderPlus className="mr-2 h-4 w-4" />
+                                            <span>New folder</span>
+                                        </ContextMenuItem>
+                                    </DialogTrigger>
                                 </div>
                             </>
                         )
