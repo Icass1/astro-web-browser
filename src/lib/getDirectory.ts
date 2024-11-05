@@ -6,6 +6,8 @@ import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 import { fileTypeFromFile } from 'file-type'
 import { db } from "@/lib/db";
 
+import * as simpleGit from "simple-git"
+
 function getFileSize(size: number) {
 
     let units = ["KB", "MB", "GB", "TB"]
@@ -27,6 +29,20 @@ function getFileSize(size: number) {
 
 export async function getDirectory(directoryPath: string, userId: string | undefined) {
 
+    console.log(directoryPath)
+
+    const git = simpleGit.simpleGit(directoryPath)
+
+    let gitStatus
+
+    try {
+        gitStatus = await git.status()
+    } catch {
+        gitStatus = undefined
+
+    }
+
+
     let directoryListing: FileStats[] | undefined = undefined;
 
     const files: string[] = (await fs.readdir(directoryPath));
@@ -47,6 +63,14 @@ export async function getDirectory(directoryPath: string, userId: string | undef
             const filePath = path.join(directoryPath, file);
             const stats = await fs.stat(filePath);
 
+            let gitStatus
+
+            try {
+                gitStatus = await git.status(["--", file])
+            } catch {
+                gitStatus = undefined
+            }
+
             let fileType
 
             if (stats.isFile()) {
@@ -60,7 +84,6 @@ export async function getDirectory(directoryPath: string, userId: string | undef
             }
 
             const pinned = pinnedFiles.includes(filePath)
-
 
             let share = db.prepare(`SELECT * FROM share WHERE local_path='${filePath.replace(/'/g, "''")}'`).get() as DatabaseShare | undefined
             if ((share?.expires_at && new Date(share?.expires_at) < new Date()) || (share?.id && !userShares.includes(share?.id))) {
@@ -79,19 +102,10 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 shareInfo: share,
                 mime: fileType.mime,
                 pinned: pinned,
+                gitStatus: gitStatus
             };
         })
     );
-
-    // let directoriesOut = directoryListing.filter(el => el.isDirectory).sort(function (a, b) {
-    //     if (a.name < b.name) {
-    //         return -1;
-    //     }
-    //     if (a.name > b.name) {
-    //         return 1;
-    //     }
-    //     return 0;
-    // });
 
     let directoriesOut = directoryListing.filter(el => el.isDirectory)
     directoriesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
@@ -99,15 +113,8 @@ export async function getDirectory(directoryPath: string, userId: string | undef
     let filesOut = directoryListing.filter(el => !el.isDirectory)
     filesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
 
-    // filesOut.sort(function (a, b) {
-    //     if (a.name < b.name) {
-    //         return -1;
-    //     }
-    //     if (a.name > b.name) {
-    //         return 1;
-    //     }
-    //     return 0;
-    // });
-
-    return [...directoriesOut, ...filesOut]
+    return {
+        files: [...directoriesOut, ...filesOut],
+        gitStatus: gitStatus
+    }
 }
