@@ -5,7 +5,7 @@ import GitMenu from "./GitMenu";
 import DirectoryListing from "./DirectoryListing";
 import { useState } from "react";
 
-export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: { files: FileStats[], gitStatus: StatusResult | undefined }, editable: boolean }) {
+export default function MainView({ path, directoryListing, editable }: { path: string, directoryListing: { files: FileStats[], gitStatus: StatusResult | undefined, pinned: boolean, shared: boolean }, editable: boolean }) {
 
     const [showGitStatus, setShowGitStatus] = useState<boolean>(false)
 

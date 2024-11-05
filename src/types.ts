@@ -8,7 +8,7 @@ export interface FileStats {
     iconPath: string;
     shared: boolean;
     shareInfo: DatabaseShare | undefined;
-    mime: string;
+    mime: string | undefined;
     pinned: boolean;
     gitStatus: StatusResult | undefined
 }

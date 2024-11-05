@@ -29,7 +29,6 @@ function getFileSize(size: number) {
 
 export async function getDirectory(directoryPath: string, userId: string | undefined) {
 
-    console.log(directoryPath)
 
     const git = simpleGit.simpleGit(directoryPath)
 
@@ -71,18 +70,6 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 gitStatus = undefined
             }
 
-            let fileType
-
-            if (stats.isFile()) {
-                try {
-                    fileType = await fileTypeFromFile(filePath) || { mime: "none" }
-                } catch {
-                    fileType = "none"
-                }
-            } else {
-                fileType = { mime: "dir" }
-            }
-
             const pinned = pinnedFiles.includes(filePath)
 
             let share = db.prepare(`SELECT * FROM share WHERE local_path='${filePath.replace(/'/g, "''")}'`).get() as DatabaseShare | undefined
@@ -100,7 +87,7 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: share == undefined ? false : true,
                 shareInfo: share,
-                mime: fileType.mime,
+                mime: undefined,
                 pinned: pinned,
                 gitStatus: gitStatus
             };
