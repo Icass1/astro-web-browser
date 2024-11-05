@@ -113,8 +113,15 @@ export async function getDirectory(directoryPath: string, userId: string | undef
     let filesOut = directoryListing.filter(el => !el.isDirectory)
     filesOut.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
 
+    let share = db.prepare(`SELECT * FROM share WHERE local_path='${directoryPath}'`).get() as DatabaseShare | undefined
+    if ((share?.expires_at && new Date(share?.expires_at) < new Date()) || (share?.id && !userShares.includes(share?.id))) {
+        share = undefined
+    }
+
     return {
         files: [...directoriesOut, ...filesOut],
-        gitStatus: gitStatus
+        gitStatus: gitStatus,
+        pinned: pinnedFiles.includes(directoryPath),
+        shared: share == undefined ? false : true,
     }
 }

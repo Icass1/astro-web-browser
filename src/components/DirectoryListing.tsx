@@ -15,6 +15,7 @@ import {
     FilePlus,
     FolderPlus,
     Pin,
+    PinOff,
     Share2,
     TableProperties,
     UploadIcon
@@ -42,11 +43,14 @@ import NewFileNameDialog from "./dialogs/NewFileNameDialog";
 import NewFolderDialog from "./dialogs/NewFolderDialog";
 import { uploadFile } from "@/lib/uploadFile";
 import downloadDirectory from "@/lib/downloadDirectory";
+import { handlePinFile, handleUnpinFile } from "@/lib/pin";
 
 
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
 
-export default function DirectoryListing({ path, directoryListing, editable }: { path: string, directoryListing: { files: FileStats[], gitStatus: StatusResult | undefined }, editable: boolean }) {
+type DirectoryListingParams = { path: string, directoryListing: { files: FileStats[], gitStatus: StatusResult | undefined, pinned: boolean, shared: boolean }, editable: boolean }
+
+export default function DirectoryListing({ path, directoryListing, editable }: DirectoryListingParams) {
 
 
     // const [isDragging, setIsDragging] = useState(false);
@@ -243,6 +247,8 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
         }
     }
 
+    console.log({ directoryListing: directoryListing })
+
     return (
         <Dialog>
             <ContextMenu>
@@ -386,7 +392,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
                             </>
                         )
                     }
-        
                     <ContextMenuSub>
                         <div className='hover:bg-muted transition-colors rounded'>
                             <ContextMenuSubTrigger onClick={() => { downloadDirectory({ path: path, format: "zip" }) }}>
@@ -410,12 +415,22 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
                         </ContextMenuSubContent>
                     </ContextMenuSub>
 
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem>
-                            <Pin className="mr-2 h-4 w-4" />
-                            <span>TODO - Pin</span>
-                        </ContextMenuItem>
-                    </div>
+                    {
+                        directoryListing.pinned ?
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={() => { handleUnpinFile(path) }} >
+                                    <PinOff className="mr-2 h-4 w-4" />
+                                    <span>Unpin</span>
+                                </ContextMenuItem>
+                            </div>
+                            :
+                            <div className='hover:bg-muted transition-colors rounded'>
+                                <ContextMenuItem onClick={() => { handlePinFile(path) }} >
+                                    <Pin className="mr-2 h-4 w-4" />
+                                    <span>Pin</span>
+                                </ContextMenuItem>
+                            </div>
+                    }
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
                             <TableProperties className="mr-2 h-4 w-4" />

@@ -97,6 +97,8 @@ Main container
             Show compress progress
         DONE - New folder
         DONE - Share directory
+        DONE - Pin directory
+        DONE - UnPin directory
 
         DONE - New file
             DONE - New excel file
