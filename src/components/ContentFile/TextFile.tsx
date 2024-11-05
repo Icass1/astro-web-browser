@@ -49,14 +49,7 @@ export default function TextFileView({ relativePath, fileContent }: { relativePa
 
 
         setEditor(tempEditor)
-
-        // editor.renderer.getContainerElement = () => { return editorContainer.current }
-
     }, [editorContainer])
-
-
-
-
 
     useEffect(() => {
 
@@ -97,8 +90,6 @@ export default function TextFileView({ relativePath, fileContent }: { relativePa
                 )
                 .join('\n')
 
-
-
         registerSnippets(
             editor,
             editor.session,
@@ -108,11 +99,20 @@ export default function TextFileView({ relativePath, fileContent }: { relativePa
             ])
         )
 
+
     }, [editor])
 
     const handleSave = () => {
         console.log(editor?.getValue())
-        alert("TODO")
+
+        // Path should be change to relative
+        fetch("/api/post-file-content", {
+            method: "POST",
+            body: JSON.stringify({
+                path: relativePath,
+                content: editor?.getValue()
+            })
+        })
     }
 
     const handleExit = () => {
