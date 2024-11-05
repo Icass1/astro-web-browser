@@ -30,7 +30,7 @@ export async function oldUploadFile(path: string, file: File) {
 
 export async function uploadFile(path: string, file: File) {
 
-    toast(`Uploading '${file.name}'`)
+    // toast(`Uploading '${file.name}'`)
 
     const formData = new FormData();
     formData.append('file', file);

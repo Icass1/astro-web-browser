@@ -17,17 +17,20 @@ export async function POST(context: APIContext): Promise<Response> {
     }
     try {
 
-        console.log(context.request)
-
         const formData = await context.request.formData();
 
         const file = formData.get("file") as File
         const filePath = formData.get("path") as string
 
+        console.log(filePath)
+
 
         const stream = file.stream()
         const reader = stream.getReader()
         const { value } = await reader.read();
+
+        console.log("mkdir", path.join(context.locals.user.scope, filePath))
+        await fs.mkdir(path.join(context.locals.user.scope, filePath), {recursive: true})
 
         const localFilePath = path.join(context.locals.user.scope, filePath, file.name); // Update this path as needed
 

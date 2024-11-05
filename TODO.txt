@@ -14,7 +14,6 @@ Git integration
 
 File container
     DONE - If is shared -> show icon 
-    Preview
     DONE - File name
     DONE - Date modified - Size
     DONE - Size
@@ -60,7 +59,7 @@ File container
                 Restore backup
                 Delete backup
                 DONE - Open backup file
-                Compare backup file with actual file
+                DONE - Compare backup file with actual file
             
     Double click
         DONE - If directory -> move to that directory
@@ -72,6 +71,9 @@ File container
             Add it to a list
             Add custom context menu to selected files
     Drag to other directory or to Current path
+    If directory
+        DONE - Drop file
+        DONE - Drop directory
 
 Main container
     Current path
@@ -84,8 +86,12 @@ Main container
     Context menu
         If shared -> Stop sharing button
         Upload file/folder
+            DONE - Upload file
+            Upload folder
         Download directory
-        New folder
+            Compress folder
+            Download compressed file
+        DONE - New folder
         DONE - Share directory
         Compress folder
             ZIP

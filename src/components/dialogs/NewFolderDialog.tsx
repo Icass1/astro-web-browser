@@ -10,7 +10,7 @@ export default function NewFolderDialog({ path }: { path: string }) {
 
     const handleNewFolder = (e: BaseSyntheticEvent) => {
         console.log("New Folder", e.target, folderName, path)
-        fetch("/api/create-file", {
+        fetch("/api/new-directory", {
             method: 'POST',
             body: JSON.stringify({
                 folder_name: folderName,
