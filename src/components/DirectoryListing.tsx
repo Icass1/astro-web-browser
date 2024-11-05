@@ -2,7 +2,7 @@
 import type { FileStats } from "@/types"
 import DetailsView from "./FileViews/DetailsView"
 import BigView from "./FileViews/BigView"
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useEffect, useRef, useState, type DragEvent, type ReactElement } from 'react';
 
 import Gallery from "./FileViews/Gallery";
 
@@ -44,6 +44,8 @@ import NewFolderDialog from "./dialogs/NewFolderDialog";
 import { uploadFile } from "@/lib/uploadFile";
 import downloadDirectory from "@/lib/downloadDirectory";
 import { handlePinFile, handleUnpinFile } from "@/lib/pin";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
@@ -53,7 +55,7 @@ type DirectoryListingParams = { path: string, directoryListing: { files: FileSta
 export default function DirectoryListing({ path, directoryListing, editable }: DirectoryListingParams) {
 
 
-    // const [isDragging, setIsDragging] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
     const [overDirectory, setOverDirectory] = useState(false);
 
 
@@ -71,46 +73,81 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
     const size = useWindowSize()
 
 
-    // const onDrop = async (files: FileList) => {
-    //     for (let fileToUpload of files) {
-    //         uploadFile(path ? (path) : (''), fileToUpload)
-    //     }
-    // }
+    const onDrop = async (files: FileList) => {
+        for (let fileToUpload of files) {
+            uploadFile(path ? (path) : (''), fileToUpload)
+        }
+    }
 
-    // const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
-    //     event.preventDefault();
-    //     event.stopPropagation();
+    const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    //     setIsDragging(true);
-    // };
+        setIsDragging(true);
+    };
 
-    // const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
-    //     event.preventDefault();
-    //     event.stopPropagation();
+    const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    //     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
-    //         setIsDragging(false);
-    //     }
-    // };
+        if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+            setIsDragging(false);
+        }
+    };
 
-    // const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
-    //     event.preventDefault();
-    //     event.stopPropagation();
-    // };
+    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
 
-    // const handleDrop = (event: DragEvent<HTMLDivElement>) => {
-    //     event.preventDefault();
-    //     event.stopPropagation();
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    //     setIsDragging(false);
-    //     if (overDirectory) {
-    //         return
-    //     }
+        setIsDragging(false);
+        if (overDirectory) {
+            return
+        }
 
-    //     if (event.dataTransfer.files.length > 0) {
-    //         onDrop(event.dataTransfer.files);
-    //     }
-    // };
+
+        function traverseFileTree(item: FileSystemEntry, path?: string) {
+            path = path || ""
+            console.log("item.name", path + item.name)
+            if (item.isFile) {
+                // Get file
+                // @ts-ignore
+                item.file(function (file: File) {
+                    console.log("File:", path + file.name);
+                    // console.log("File:", file);
+                    uploadFile(path, file)
+                });
+            } else if (item.isDirectory) {
+                fetch("/api/new-directory", { method: "POST", body: JSON.stringify({ path: path, folder_name: item.name }) }).then(response => {
+                    if (response.ok) {
+                        // Get folder contents
+                        // @ts-ignore
+                        var dirReader = item.createReader();
+                        dirReader.readEntries(function (entries: FileSystemEntry[]) {
+                            for (var i = 0; i < entries.length; i++) {
+                                traverseFileTree(entries[i], path + item.name + "/");
+                            }
+                        });
+                    } else {
+                        toast("Error creating directory", { style: { color: '#ed4337' } })
+                    }
+                })
+            }
+        }
+
+        var items = event.dataTransfer.items;
+        for (var i = 0; i < items.length; i++) {
+            // webkitGetAsEntry is where the magic happens
+            var item = items[i].webkitGetAsEntry();
+            if (item) {
+                traverseFileTree(item, (path ? (path + "/") : "") + "/");
+            }
+        }
+    };
 
     interface GridInfo {
         minWidth: number,
@@ -247,15 +284,19 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
         }
     }
 
-    console.log({ directoryListing: directoryListing })
-
     return (
         <Dialog>
             <ContextMenu>
                 <ContextMenuTrigger className="relative w-full min-h-0 max-h-full">
-                    <div className="relative w-full h-full ">
+                    <div
+                        className="relative w-full h-full pb-3"
+                        onDrop={handleDrop}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        onDragOver={handleDragOver}
+                    >
                         <div
-                            className="h-full w-full relative overflow-auto custom-slider"
+                            className={cn("h-full w-full relative overflow-auto custom-slider transition-all", (isDragging && !overDirectory) && "bg-muted/50 rounded outline-dashed outline-1 outline-blue-500    bord er-dashed bo rder-2 bord er-blue-700")}
                             ref={scrollRef}
                             onScroll={(e) => { setScrollTop((e.target as HTMLDivElement).scrollTop) }}
                         >

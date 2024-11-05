@@ -84,8 +84,8 @@ Main container
         Drop file or directory, move that file or directory to that location
     Download directory
     DONE - Files in current directory
-    Drop file to upload
-    Drop folder to upload
+    DONE - Drop file to upload
+    DONE - Drop folder to upload
     Context menu
         If shared -> Stop sharing button
         Upload file/folder
