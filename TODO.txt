@@ -3,7 +3,7 @@ User auth
     DONE - Logout
     Change password
 
-Text editor
+DONE - Text editor
 
 Git integration
     https://github.com/isomorphic-git/isomorphic-git
@@ -63,10 +63,9 @@ File container
                 Compare backup file with actual file
             
     Double click
-        If directory -> move to that directory
-        If image or video -> Open player
-        If text file -> open text editor
-        Else show Details
+        DONE - If directory -> move to that directory
+        DONE - If image or video -> Open player
+        DONE - If text file -> open text editor
 
     Single click
         Select file 
