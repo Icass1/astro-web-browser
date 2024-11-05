@@ -12,13 +12,13 @@ export default function Gallery(
     const [loaded, setLoaded] = useState<boolean>(false)
 
     const filePreview = () => {
-        if (file.mime.startsWith("image")) {
+        if (file.mime?.startsWith("image")) {
             return <img
                 onLoad={() => { setLoaded(true) }}
                 className="top-1/2 relative -translate-y-1/2 select-none"
                 src={"/api/file/" + path + "/" + file.name}
             />
-        } else if (file.mime.startsWith("video")) {
+        } else if (file.mime?.startsWith("video")) {
             return <img
                 onLoad={() => { setLoaded(true) }}
                 className="top-1/2 relative -translate-y-1/2 select-none"

@@ -114,7 +114,7 @@ const absolutePath = path.join(share.local_path, (Astro.params.path ? "/" + Astr
   
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    {isDirectory && <p class="text-sm text-muted-foreground">Total Files: {directoryListing && directoryListing?.length}</p>}
+                    {isDirectory && <p class="text-sm text-muted-foreground">Total Files: {directoryListing && directoryListing?.files.length}</p>}
                     <p class="text-sm text-muted-foreground">Share ID: {Astro.params.shareId}</p>
                 </div>
                 <div class="flex space-x-2">
