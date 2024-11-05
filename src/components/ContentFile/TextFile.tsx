@@ -106,7 +106,7 @@ export default function TextFileView({ relativePath, fileContent }: { relativePa
         console.log(editor?.getValue())
 
         // Path should be change to relative
-        fetch("/api/post-file-content", {
+        fetch("/api/file-content", {
             method: "POST",
             body: JSON.stringify({
                 path: relativePath,
