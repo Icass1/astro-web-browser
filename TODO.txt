@@ -20,7 +20,7 @@ File container
     Context Menu
         Delete
             DONE - Delete file
-            Check if path is shared and remove share
+            DONE - Check if path is shared and remove share
         Rename
             Check if dest file exists and ask for replace it
         DONE - Download
@@ -82,7 +82,6 @@ Main container
     Current path
         DONE - If click in directory, move to that directory
         Drop file or directory, move that file or directory to that location
-    Download directory
     DONE - Files in current directory
     DONE - Drop file to upload
     DONE - Drop folder to upload
@@ -99,7 +98,6 @@ Main container
         DONE - Share directory
         DONE - Pin directory
         DONE - UnPin directory
-
         DONE - New file
             DONE - New excel file
             DONE - New word file

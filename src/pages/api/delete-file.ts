@@ -1,3 +1,5 @@
+import { db } from "@/lib/db";
+import type { DatabaseShare, DatabaseUser } from "@/types";
 import type { APIContext } from "astro";
 import { promises as fs } from 'fs';
 
@@ -14,7 +16,7 @@ interface ErrnoException extends Error {
 
 export async function POST(context: APIContext): Promise<Response> {
 
-    if (!context.locals.user) {
+    if (!context.locals.user?.id) {
         return new Response(
             JSON.stringify({
                 error: "User not logged in"
@@ -27,6 +29,23 @@ export async function POST(context: APIContext): Promise<Response> {
 
     const data = await context.request.json()
     try {
+
+
+
+        let shares: DatabaseShare[] | string[] = db.prepare(`SELECT id FROM share WHERE local_path='${path.join(context.locals.user.scope, data.path)}'`).all() as DatabaseShare[]
+        shares = shares.map(share => share.id) as string[]
+
+        if (shares) {
+            db.exec(`DELETE FROM share WHERE local_path='${path.join(context.locals.user.scope, data.path)}'`)
+            const users = db.prepare(`SELECT id, shares FROM user`).all() as DatabaseUser[]
+
+            users.map(user => {
+                let userShares = JSON.parse(user.shares) as string[]
+                let newUserShares = userShares.filter(share => !shares.includes(share))
+                db.exec(`UPDATE user SET shares = '${JSON.stringify(newUserShares)}' WHERE id = '${context.locals.user?.id as string}'`)
+            })
+        }
+
 
         if (data.isDirectory) {
             await fs.rm(path.join(context.locals.user.scope, data.path), { recursive: true })
