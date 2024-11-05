@@ -41,6 +41,7 @@ import type { StatusResult } from "simple-git";
 import NewFileNameDialog from "./dialogs/NewFileNameDialog";
 import NewFolderDialog from "./dialogs/NewFolderDialog";
 import { uploadFile } from "@/lib/uploadFile";
+import downloadDirectory from "@/lib/downloadDirectory";
 
 
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
@@ -385,12 +386,30 @@ export default function DirectoryListing({ path, directoryListing, editable }: {
                             </>
                         )
                     }
-                    <div className='hover:bg-muted transition-colors rounded'>
-                        <ContextMenuItem>
-                            <Download className="mr-2 h-4 w-4" />
-                            <span>TODO - Download</span>
-                        </ContextMenuItem>
-                    </div>
+        
+                    <ContextMenuSub>
+                        <div className='hover:bg-muted transition-colors rounded'>
+                            <ContextMenuSubTrigger onClick={() => { downloadDirectory({ path: path, format: "zip" }) }}>
+                                <Download className="mr-2 h-4 w-4" />
+                                <span>Download</span>
+                            </ContextMenuSubTrigger>
+                        </div>
+                        <ContextMenuSubContent className="w-48">
+                            <DialogTrigger className='w-full' onClick={() => { setActualDialog("filename") }}>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={() => { downloadDirectory({ path: path, format: "zip" }) }}>
+                                        <span>ZIP</span>
+                                    </ContextMenuItem>
+                                </div>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={() => { downloadDirectory({ path: path, format: "tar" }) }}>
+                                        <span>TAR</span>
+                                    </ContextMenuItem>
+                                </div>
+                            </DialogTrigger>
+                        </ContextMenuSubContent>
+                    </ContextMenuSub>
+
                     <div className='hover:bg-muted transition-colors rounded'>
                         <ContextMenuItem>
                             <Pin className="mr-2 h-4 w-4" />

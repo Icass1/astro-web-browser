@@ -45,6 +45,9 @@ File container
         Cut
         DONE - Share File
         If shared -> Stop sharing button
+        If directory -> Compress folder
+            ZIP
+            TAR
         Backup
             DONE - Copy file to backups directory with id as file name
             DONE - Save backup in database
@@ -89,12 +92,12 @@ Main container
             DONE - Upload file
             Upload folder
         Download directory
-            Compress folder
-            Download compressed file
+            DONE - Compress folder
+            DONE - Download compressed file
+            Show compress progress
         DONE - New folder
         DONE - Share directory
-        Compress folder
-            ZIP
+
         DONE - New file
             DONE - New excel file
             DONE - New word file
