@@ -24,7 +24,19 @@ export async function POST(context: APIContext): Promise<Response> {
 
         db.exec(`UPDATE backup SET actual_file_path = '${dest}' WHERE actual_file_path = '${src}'`)
 
-        await fs.rename(src, dest)
+        try {
+            await fs.access(dest)
+            return new Response(
+                JSON.stringify({
+                    error: "File already exists"
+                }),
+                {
+                    status: 500
+                }
+            );
+        } catch {
+            await fs.rename(src, dest)
+        }
 
         return new Response(
             JSON.stringify({

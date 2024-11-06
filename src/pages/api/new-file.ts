@@ -28,7 +28,20 @@ export async function POST(context: APIContext): Promise<Response> {
     try {
         const dest = path.join(context.locals.user.scope, data.path, data.file_name)
 
-        await fs.copyFile("templates/template" + data.extension, dest)
+        try {
+            await fs.access(dest)
+            return new Response(
+                JSON.stringify({
+                    error: "File already exists"
+                }),
+                {
+                    status: 500
+                }
+            );
+        } catch {
+            await fs.copyFile("templates/template" + data.extension, dest)
+        }
+
 
         return new Response("OK")
 
