@@ -287,7 +287,7 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
         }
     }
 
-    const handleUpload = () => {
+    const handleUploadFile = () => {
 
         const input = document.createElement("input")
         input.type = "file"
@@ -298,6 +298,31 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
             const a = e as unknown
             const event = a as React.ChangeEvent<HTMLInputElement>
             console.log(e)
+            if (!event?.target?.files) { return }
+            const files = event.target.files
+
+            for (let index = 0; index < files.length; index++) {
+                if (files.item(index)) {
+                    uploadFile(path, files.item(index) as File)
+                }
+            }
+        }
+    }
+
+    const handleUploadDirectory = () => {
+        alert("This will upload all files in the selected folder without keeping any folder.")
+
+        const input = document.createElement("input")
+        input.type = "file"
+        input.multiple = true
+        input.webkitdirectory = true
+        
+        input.mozdirectory = true
+        input.click()
+
+        input.onchange = (e) => {
+            const a = e as unknown
+            const event = a as React.ChangeEvent<HTMLInputElement>
             if (!event?.target?.files) { return }
             const files = event.target.files
 
@@ -407,8 +432,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
                                                 </ContextMenuItem>
                                             </div>
                                         </DialogTrigger>
-
-
                                     </ContextMenuSubContent>
                                 </ContextMenuSub>
                                 <div className='hover:bg-muted transition-colors rounded'>
@@ -420,9 +443,15 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
                                     </DialogTrigger>
                                 </div>
                                 <div className='hover:bg-muted transition-colors rounded'>
-                                    <ContextMenuItem onClick={handleUpload} >
+                                    <ContextMenuItem onClick={handleUploadFile} >
                                         <UploadIcon className="mr-2 h-4 w-4" />
                                         <span>Upload file</span>
+                                    </ContextMenuItem>
+                                </div>
+                                <div className='hover:bg-muted transition-colors rounded'>
+                                    <ContextMenuItem onClick={handleUploadDirectory} >
+                                        <UploadIcon className="mr-2 h-4 w-4" />
+                                        <span>Upload folder</span>
                                     </ContextMenuItem>
                                 </div>
                             </>
