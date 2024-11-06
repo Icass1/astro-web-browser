@@ -22,7 +22,8 @@ File container
             DONE - Delete file
             DONE - Check if path is shared and remove share
         Rename
-            Check if dest file exists and ask for replace it
+            DONE - Check if dest file exists
+            Ask for replace it
         DONE - Download
         DONE - Pin
         DONE - Unpin
@@ -73,43 +74,49 @@ File container
         Select file 
             Add it to a list
             Add custom context menu to selected files
-    Drag to other directory or to Current path
+    DONE - Drag to other directory or to Current path
     If directory
         DONE - Drop file
         DONE - Drop directory
 
 Main container
-    Current path
-        DONE - If click in directory, move to that directory
-        Drop file or directory, move that file or directory to that location
-    DONE - Files in current directory
-    DONE - Drop file to upload
-    DONE - Drop folder to upload
-    Context menu
-        If shared -> Stop sharing button
-        Upload file/folder
-            DONE - Upload file
-            Upload folder
-        Download directory
-            DONE - Compress folder
-            DONE - Download compressed file
-            Show compress progress
-        DONE - New folder
-        DONE - Share directory
-        DONE - Pin directory
-        DONE - UnPin directory
-        DONE - New file
-            DONE - New excel file
-            DONE - New word file
-            DONE - New powerpoint file
-    Selection area
+    Header
+        Current path
+            DONE - If click in directory, move to that directory
+            DONE - Drop file or directory, move that file or directory to that location
+        
+        Git toggle
+    
+    Directory listing
+        DONE - Files in current directory
+        DONE - Drop file to upload
+        DONE - Drop folder to upload
         Context menu
-            Delete
-                Check if path is shared and remove share
-            Compress to zip file
-            Power Rename
-            Copy
-            Cut
+            If shared -> Stop sharing button
+            Upload file/folder
+                DONE - Upload file
+                DONE - Upload folder
+            Download directory
+                DONE - Compress folder
+                DONE - Download compressed file
+                Show compress progress
+            DONE - New folder
+            DONE - Share directory
+            DONE - Pin directory
+            DONE - UnPin directory
+            DONE - New file
+                DONE - New excel file
+                DONE - New word file
+                DONE - New powerpoint file
+            Details
+        Selection area
+            Context menu
+                Delete
+                    Check if path is shared and remove share
+                Compress to zip file
+                Power Rename
+                Copy
+                Cut
 
 Left panel
     Recently visited directories
