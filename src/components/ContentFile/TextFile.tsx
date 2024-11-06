@@ -117,7 +117,8 @@ export default function TextFileView({ relativePath, fileContent }: { relativePa
 
     const handleExit = () => {
         // @ts-ignore
-        navigation.navigate(window.location.pathname.split("/").slice(undefined, -1).join("/"))
+        // navigation.navigate(window.location.pathname.split("/").slice(undefined, -1).join("/"))
+        location.href = window.location.pathname.split("/").slice(undefined, -1).join("/")
     }
 
 

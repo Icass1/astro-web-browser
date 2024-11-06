@@ -275,7 +275,8 @@ export function LogoutButton() {
         fetch("/api/logout").then(response => {
             if (response.ok) {
                 // @ts-ignore
-                navigation.navigate("/login")
+                // navigation.navigate("/login")
+                location.href = "/login"
             } else {
                 response.json().then(data => {
                     toast(data.error, { style: { color: '#ed4337' } })
