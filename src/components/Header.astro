@@ -1,9 +1,9 @@
 ---
-import { ChangeView, NewFolder, Upload } from "./Buttons";
+import { ChangeView } from "./Buttons";
 import { ChevronRight, GitBranchIcon } from 'lucide-react'
 
 ---
-<div class="mb-4 min-w-0 max-w-full" data-id="21">
+<div class="min-w-0 max-w-full" data-id="21">
     <h2 class="text-2xl font-bold mb-2" data-id="22">File Browser</h2>
 
     <div class="flex items-center space-x-2 w-full gap-3" data-id="23">
@@ -19,7 +19,5 @@ import { ChevronRight, GitBranchIcon } from 'lucide-react'
 
         <ChangeView client:only="react" />
         <GitBranchIcon/>
-        <!-- <Upload path={Astro.params.path || "/"} client:visible/> -->
-        <!-- <NewFolder client:visible path={Astro.params.path || "/"}/> -->
     </div>
 </div>
