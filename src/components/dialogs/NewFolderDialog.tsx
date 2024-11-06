@@ -57,8 +57,7 @@ export default function NewFolderDialog({ path }: { path: string }) {
             <DialogFooter>
                 <Button type="submit" onClick={handleNewFolder}>Save changes</Button>
             </DialogFooter>
-            <DialogClose className="hidden">
-                <button type="submit" ref={closeRef}></button>
+            <DialogClose className="hidden" ref={closeRef}>
             </DialogClose>
         </DialogContent>
 
