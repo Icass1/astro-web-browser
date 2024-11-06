@@ -316,7 +316,7 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
         input.type = "file"
         input.multiple = true
         input.webkitdirectory = true
-        
+        // @ts-ignore
         input.mozdirectory = true
         input.click()
 
