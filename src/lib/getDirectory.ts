@@ -5,9 +5,14 @@ import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
 
 import { db } from "@/lib/db";
 
-import * as mime from "mime"
+// @ts-ignore
+import MimeLookup from "mime-lookup"
+// @ts-ignore
+import MimeDB from "mime-db"
 
 import * as simpleGit from "simple-git"
+
+const mime = new MimeLookup(MimeDB)
 
 function getFileSize(size: number) {
 
@@ -27,10 +32,7 @@ function getFileSize(size: number) {
     return outSize.toString() + " " + units[outUnitIndex]
 }
 
-
 export async function getDirectory(directoryPath: string, userId: string | undefined) {
-
-
     const git = simpleGit.simpleGit(directoryPath)
 
     let gitStatus
@@ -78,7 +80,8 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 share = undefined
             }
 
-            const fileMime = mime.default.getType(filePath)
+            // const fileMime = mime.default.getType(filePath)
+            const fileMime = mime.lookup(filePath)
 
             // Return file details
             return {

@@ -128,9 +128,12 @@ importers:
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@18.3.1)
-      mime:
-        specifier: ^4.0.4
-        version: 4.0.4
+      mime-db:
+        specifier: ^1.53.0
+        version: 1.53.0
+      mime-lookup:
+        specifier: ^0.0.2
+        version: 0.0.2
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
@@ -2734,14 +2737,16 @@ packages:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
+  mime-db@1.53.0:
+    resolution: {integrity: sha512-oHlN/w+3MQ3rba9rqFr6V/ypF10LSkdwUysQL7GkXoTgIWeV+tcXGA852TBxH+gsh8UWoyhR1hKcoMJTuWflpg==}
+    engines: {node: '>= 0.6'}
+
+  mime-lookup@0.0.2:
+    resolution: {integrity: sha512-6384dzMc9tsk9wBt/W9jG1hWEUPk7oPwj0ExsJCAI9peB11GbWniOWg0O/Uf8vZbvK8bkPKPtaVDtZI0FWlwbg==}
+
   mime@1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
     engines: {node: '>=4'}
-    hasBin: true
-
-  mime@4.0.4:
-    resolution: {integrity: sha512-v8yqInVjhXyqP6+Kw4fV3ZzeMRqEW6FotRsKXjRS5VMTNIuXsdRoAvklpoRgSqXm6o9VNH4/C0mgedko9DdLsQ==}
-    engines: {node: '>=16'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -6688,9 +6693,11 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.1
 
-  mime@1.6.0: {}
+  mime-db@1.53.0: {}
 
-  mime@4.0.4: {}
+  mime-lookup@0.0.2: {}
+
+  mime@1.6.0: {}
 
   mimic-fn@2.1.0: {}
 

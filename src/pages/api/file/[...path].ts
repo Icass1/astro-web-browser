@@ -2,9 +2,15 @@ import type { APIContext } from "astro";
 
 import fs from 'fs/promises';
 import path from 'path';
-import * as mime from "mime"
+// @ts-ignore
+import MimeLookup from "mime-lookup"
+// @ts-ignore
+import MimeDB from "mime-db"
 
 export async function GET(context: APIContext): Promise<Response> {
+
+    const mime = new MimeLookup(MimeDB)
+
 
     if (!context.locals.user) {
         return new Response(
@@ -41,7 +47,8 @@ export async function GET(context: APIContext): Promise<Response> {
             );
         } else {
             const fileContent = await fs.readFile(directoryPath)
-            const fileMime = mime.default.getType(directoryPath)
+            // const fileMime = mime.default.getType(directoryPath)
+            const fileMime = mime.lookup(directoryPath)
 
             return new Response(fileContent, {
                 headers: {
