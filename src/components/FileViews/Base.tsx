@@ -149,47 +149,45 @@ export default function BaseFile(
                     console.log("")
                 }
             })
-        }
+        } else {
+            function traverseFileTree(item: FileSystemEntry, path?: string) {
+                path = path || ""
+                console.log("item.name", path + item.name)
+                if (item.isFile) {
+                    // Get file
+                    // @ts-ignore
+                    item.file(function (file: File) {
+                        console.log("File:", path + file.name);
+                        // console.log("File:", file);
+                        uploadFile(path, file)
+                    });
+                } else if (item.isDirectory) {
+                    fetch("/api/new-directory", { method: "POST", body: JSON.stringify({ path: path, folder_name: item.name }) }).then(response => {
+                        if (response.ok) {
+                            // Get folder contents
+                            // @ts-ignore
+                            var dirReader = item.createReader();
+                            dirReader.readEntries(function (entries: FileSystemEntry[]) {
+                                for (var i = 0; i < entries.length; i++) {
+                                    traverseFileTree(entries[i], path + item.name + "/");
+                                }
+                            });
+                        } else {
+                            toast("Error creating directory", { style: { color: '#ed4337' } })
+                        }
+                    })
+                }
+            }
 
-
-        function traverseFileTree(item: FileSystemEntry, path?: string) {
-            path = path || ""
-            console.log("item.name", path + item.name)
-            if (item.isFile) {
-                // Get file
-                // @ts-ignore
-                item.file(function (file: File) {
-                    console.log("File:", path + file.name);
-                    // console.log("File:", file);
-                    uploadFile(path, file)
-                });
-            } else if (item.isDirectory) {
-                fetch("/api/new-directory", { method: "POST", body: JSON.stringify({ path: path, folder_name: item.name }) }).then(response => {
-                    if (response.ok) {
-                        // Get folder contents
-                        // @ts-ignore
-                        var dirReader = item.createReader();
-                        dirReader.readEntries(function (entries: FileSystemEntry[]) {
-                            for (var i = 0; i < entries.length; i++) {
-                                traverseFileTree(entries[i], path + item.name + "/");
-                            }
-                        });
-                    } else {
-                        toast("Error creating directory", { style: { color: '#ed4337' } })
-                    }
-                })
+            var items = event.dataTransfer.items;
+            for (var i = 0; i < items.length; i++) {
+                // webkitGetAsEntry is where the magic happens
+                var item = items[i].webkitGetAsEntry();
+                if (item) {
+                    traverseFileTree(item, (path ? (path + "/") : "") + file.name + "/");
+                }
             }
         }
-
-        var items = event.dataTransfer.items;
-        for (var i = 0; i < items.length; i++) {
-            // webkitGetAsEntry is where the magic happens
-            var item = items[i].webkitGetAsEntry();
-            if (item) {
-                traverseFileTree(item, (path ? (path + "/") : "") + file.name + "/");
-            }
-        }
-
     };
 
     const handleDragStart = async (event: DragEvent<HTMLDivElement>) => {
