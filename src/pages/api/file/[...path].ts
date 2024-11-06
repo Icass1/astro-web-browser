@@ -2,7 +2,7 @@ import type { APIContext } from "astro";
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileTypeFromBuffer } from 'file-type'
+import * as mime from "mime"
 
 export async function GET(context: APIContext): Promise<Response> {
 
@@ -41,13 +41,11 @@ export async function GET(context: APIContext): Promise<Response> {
             );
         } else {
             const fileContent = await fs.readFile(directoryPath)
-            const fileType = await fileTypeFromBuffer(fileContent)
-
-            directoryPath.split("/")
+            const fileMime = mime.default.getType(directoryPath)
 
             return new Response(fileContent, {
                 headers: {
-                    'Content-Type': `${fileType?.mime}`, // MIME type of the file
+                    'Content-Type': `${fileMime}`, // MIME type of the file
                     'Cache-Control': 'public, max-age=3600', // Prevent caching
                     'Custom-Header': 'CustomHeaderValue', // Example of a custom header
                     'Content-Disposition': 'inline'
