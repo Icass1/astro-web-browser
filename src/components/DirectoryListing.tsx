@@ -47,7 +47,6 @@ import { handlePinFile, handleUnpinFile } from "@/lib/pin";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-
 type fileTypes = "Excel" | "Word" | "Powerpoint" | "Text" | "Python" | undefined
 
 type DirectoryListingParams = { path: string, directoryListing: { files: FileStats[], gitStatus: StatusResult | undefined, pinned: boolean, shared: boolean }, editable: boolean }
@@ -167,53 +166,51 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
         }
     }, [view])
 
+
     const getFileView = (file: FileStats) => {
 
         const shareId = location.pathname.split("/")[2]
         const href = location.pathname.startsWith("/files") ? (path ? ("/files/" + path + "/" + file.name) : ("/files/" + file.name)) : (path ? (`/share/${shareId}/` + path + "/" + file.name) : (`/share/${shareId}/` + file.name))
 
-
-        function BaseFileTemplate(
-            {
-                children,
-                className
-            }: {
-                children: ReactElement[] | ReactElement,
-                className?: string | undefined,
-            }
-        ) {
-            return (
-                <BaseFile
-                    className={className}
-                    file={file}
-                    path={path}
-                    setOverDirectory={setOverDirectory}
-                    href={href}
-                    editable={editable}
-                >
-                    {children}
-                </BaseFile>
-            )
-        }
-
         switch (view) {
             case "details":
                 return (
-                    <BaseFileTemplate className="grid grid-cols-[24px_2fr_200px_30px_30px] gap-3 items-center border-0 py-1" >
+                    <BaseFile
+                        className="grid grid-cols-[24px_2fr_200px_30px_30px] gap-3 items-center border-0 py-1"
+                        file={file}
+                        path={path}
+                        setOverDirectory={setOverDirectory}
+                        href={href}
+                        editable={editable}
+                    >
                         <DetailsView key={file.name} file={file} />
-                    </BaseFileTemplate>
+                    </BaseFile>
                 )
             case "big":
                 return (
-                    <BaseFileTemplate className="flex flex-row gap-3 items-center" >
+                    <BaseFile
+                        className="flex flex-row gap-3 items-center"
+                        file={file}
+                        path={path}
+                        setOverDirectory={setOverDirectory}
+                        href={href}
+                        editable={editable}
+                    >
                         <BigView key={file.name} file={file} />
-                    </BaseFileTemplate>
+                    </BaseFile>
                 )
             case "gallery":
                 return (
-                    <BaseFileTemplate className="shadow relative p-0 flex flex-col gap-2" >
+                    <BaseFile
+                        className="shadow relative p-0 flex flex-col gap-2"
+                        file={file}
+                        path={path}
+                        setOverDirectory={setOverDirectory}
+                        href={href}
+                        editable={editable}
+                    >
                         <Gallery key={file.name} path={path} file={file} />
-                    </BaseFileTemplate>
+                    </BaseFile>
                 )
             default:
                 console.warn("Unknow view")
@@ -254,13 +251,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
             return <NewFileNameDialog path={path} fileType={newFileType} />
         }
     }
-
-    // const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    //     setLowerIndex(e.target.scrollTop / (height + gap))
-    //     console.log()
-    // }
-
-
 
     const handleUpload = () => {
 
@@ -307,7 +297,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
                                     <div className="" style={{ minHeight: `${Math.ceil(directoryListing.files.length / columns) * height + (Math.ceil(directoryListing.files.length / columns) + 1) * gap}px` }}></div>
 
                                     {directoryListing.files.map((file, index) => {
-                                        // console.log(file.name, index)
 
                                         if (scrollTop > gap + Math.floor((index) / columns) * (height + gap) + height) {
                                             return
@@ -316,15 +305,6 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
                                         if (scrollRef.current?.clientHeight && scrollTop + scrollRef.current.clientHeight < gap + Math.floor((index) / columns) * (height + gap)) {
                                             return
                                         }
-
-
-                                        // if (index < lowerIndex) {
-                                        //     return
-                                        // }
-
-                                        // if (upperIndex && index > upperIndex) {
-                                        //     return
-                                        // }
 
                                         return (
                                             <div
@@ -336,14 +316,14 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
                                                     width: `${width}px`,
                                                 }}
                                             >
+
+                                                {/* {index} */}
                                                 {getFileView(file)}
                                             </div>
                                         )
                                     })}
                                 </>
                             }
-
-
                         </div>
                     </div>
                 </ContextMenuTrigger >
