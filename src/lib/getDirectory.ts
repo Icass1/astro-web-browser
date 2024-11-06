@@ -2,9 +2,10 @@ import type { DatabaseShare, DatabaseUser, FileStats } from "@/types";
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { getFileIcon, getFolderIcon } from '@/lib/getIcons'
-// @ts-ignore
-import { fileTypeFromFile } from 'file-type'
+
 import { db } from "@/lib/db";
+
+import * as mime from "mime"
 
 import * as simpleGit from "simple-git"
 
@@ -77,6 +78,8 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 share = undefined
             }
 
+            const fileMime = mime.default.getType(filePath)
+
             // Return file details
             return {
                 name: file,
@@ -87,7 +90,7 @@ export async function getDirectory(directoryPath: string, userId: string | undef
                 iconPath: stats.isDirectory() ? getFolderIcon(file) : getFileIcon(file),
                 shared: share == undefined ? false : true,
                 shareInfo: share,
-                mime: undefined,
+                mime: fileMime || "none",
                 pinned: pinned,
                 gitStatus: gitStatus
             };
