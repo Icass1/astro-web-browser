@@ -52,17 +52,21 @@ export default function DetailsView(
         <>
             <img src={file.iconPath} className="w-6 h-6" />
             <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
-            <p className="text-sm text-muted-foreground truncate max-w-full min-w-0 text-right">
+            <p className="text-xs md:text-sm text-muted-foreground truncate max-w-full min-w-0 text-right">
                 {file.isDirectory ? ' ' : file.size + ' • '}
                 {file.modified}
             </p>
-            {
-                file.shared ?
-                    <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />
-                    :
-                    <label></label>
-            }
-            {gitStatus()}
+            <div className="hidden md:block">
+                {
+                    file.shared ?
+                        <Share2 className="w-4 h-4 text-blue-500 inline-block ml-2" />
+                        :
+                        <label></label>
+                }
+            </div>
+            <div className="hidden md:block">
+                {gitStatus()}
+            </div>
         </>
     )
 }

@@ -197,9 +197,9 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
             case "big":
                 return setGridInfo({ minWidth: 400, height: () => (62) })
             case "gallery":
-                return setGridInfo({ minWidth: 300, height: (width: number) => (width + 68) })
+                return setGridInfo({ minWidth: (size.width > 767 ? 300 : 130), height: (width: number) => (width + (size.width > 767 ? 68 : 52)) })
         }
-    }, [view])
+    }, [view, size])
 
 
     const getFileView = (file: FileStats) => {
@@ -211,7 +211,7 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
             case "details":
                 return (
                     <BaseFile
-                        className="grid grid-cols-[24px_2fr_200px_30px_30px] gap-3 items-center border-0 py-1"
+                        className="grid grid-cols-[24px_2fr_100px] md:grid-cols-[24px_2fr_200px_30px_30px] gap-3 items-center border-0 py-1"
                         file={file}
                         path={path}
                         setOverDirectory={setOverDirectory}
@@ -237,7 +237,7 @@ export default function DirectoryListing({ path, directoryListing, editable }: D
             case "gallery":
                 return (
                     <BaseFile
-                        className="shadow relative p-0 flex flex-col gap-2"
+                        className="shadow relative p-0 flex flex-col md:gap-2"
                         file={file}
                         path={path}
                         setOverDirectory={setOverDirectory}

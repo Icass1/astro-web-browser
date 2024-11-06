@@ -45,11 +45,11 @@ export default function Gallery(
                 }
             </div>
 
-            <div className="p-2 grid grid-cols-[1fr_min-content] gap-2 w-full items-center justify-between ">
+            <div className="p-2 grid grid-cols-[1fr_min-content] md:gap-y-2 w-full items-center justify-between ">
 
                 <div className="min-w-0 max-w-full">
-                    <h3 className="font-semibold truncate max-w-full min-w-0">{file.name}</h3>
-                    <p className="text-sm text-muted-foreground truncate max-w-full min-w-0">
+                    <h3 className="text-sm md:text-base font-semibold truncate max-w-full min-w-0">{file.name}</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground truncate max-w-full min-w-0">
                         {file.isDirectory ? ' ' : file.size + ' • '}
                         {file.modified}
                     </p>
