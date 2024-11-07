@@ -1,7 +1,6 @@
 User auth
     DONE - Login
     DONE - Logout
-    Change password
 
 DONE - Text editor
 
@@ -123,7 +122,12 @@ Left panel
     DONE - Pinned directories
     Shares
         Click to Details
-
+        
+User
+    Change password 
+    See active sessions
+        TODO - Close active sessions
+        
 Shares
     Custom path
     Password Optional
