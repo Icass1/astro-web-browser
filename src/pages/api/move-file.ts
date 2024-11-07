@@ -47,10 +47,9 @@ export async function POST(context: APIContext): Promise<Response> {
             }
         );
     } catch (error) {
-        console.log(error)
         return new Response(
             JSON.stringify({
-                error: "File already exists"
+                error: "File already exists."
             }),
             {
                 status: 500
